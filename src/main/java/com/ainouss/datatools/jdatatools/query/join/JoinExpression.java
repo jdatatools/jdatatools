@@ -1,0 +1,28 @@
+package com.ainouss.datatools.jdatatools.query.join;
+
+import com.ainouss.datatools.jdatatools.query.Expression;
+
+/**
+ * Join expression, intermediate operation that returns a join through on function
+ * On clause is  mandatory all joins except cross join
+ *
+ * @param <T> source
+ * @param <U> target
+ */
+public class JoinExpression<T, U> {
+    private final Join<T, U> join;
+
+    public JoinExpression(Join<T, U> join) {
+        this.join = join;
+    }
+
+    /**
+     * On condition, not applicable to a cartesian product
+     */
+    public Join<T, U> on(Expression expression) {
+        if (join.getJoinType() == JoinType.CROSS) {
+            return join;
+        }
+        return join.on(expression);
+    }
+}

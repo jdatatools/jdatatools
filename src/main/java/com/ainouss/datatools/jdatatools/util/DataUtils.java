@@ -1,0 +1,40 @@
+package com.ainouss.datatools.jdatatools.util;
+
+
+public final class DataUtils {
+
+    public static boolean isBlank(String s) {
+        if (s == null) {
+            return true;
+        }
+        return skipSpaceTab(s, s.length()) == s.length();
+    }
+
+    public static boolean isNotBlank(String s) {
+        if (s == null) {
+            return false;
+        }
+        return !isBlank(s);
+    }
+
+    private static int skipSpaceTab(CharSequence s, int endIndex) {
+        for (int i = 0; i < endIndex; i++) {
+            switch (s.charAt(i)) {
+                case ' ':
+                case '\t':
+                    break;
+                default:
+                    return i;
+            }
+        }
+        return endIndex;
+    }
+
+    public static String trimToNull(String s) {
+        if (s == null) {
+            return null;
+        }
+        String trimmed = s.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+}
