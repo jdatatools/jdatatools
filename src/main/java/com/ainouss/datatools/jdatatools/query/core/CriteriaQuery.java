@@ -188,7 +188,7 @@ public class CriteriaQuery<T> {
      * Order by path
      *
      * @param path  path
-     * @param order order direction
+     * @param order order's direction
      * @return this
      */
     public CriteriaQuery<T> orderBy(Path<?> path, OrderDirection order) {
@@ -228,7 +228,7 @@ public class CriteriaQuery<T> {
         String select = selection
                 .stream()
                 .sorted(Comparator.comparing(o -> o.attribute))
-                .map(expression -> new StringBuilder(render(expression))
+                .map(expression -> new StringBuilder(expression.render())
                         .append(expression.getAttribute() != null ? " as " : "")
                         .append(expression.getAttribute() != null ? expression.getAttribute() : "")
                 )
@@ -251,21 +251,6 @@ public class CriteriaQuery<T> {
         return render;
     }
 
-    /**
-     * Render selection
-     *
-     * @param target selection
-     * @return SQL subset
-     */
-    private String render(Selection<?> target) {
-        if (target == null) {
-            return "";
-        }
-        if (target.expression != null) {
-            return target.expression.render();
-        }
-        return EntityRegistry.fullResolve(target);
-    }
     /**
      * insert column names
      *

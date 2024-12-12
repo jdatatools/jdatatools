@@ -1,5 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import lombok.EqualsAndHashCode;
 
 /**
