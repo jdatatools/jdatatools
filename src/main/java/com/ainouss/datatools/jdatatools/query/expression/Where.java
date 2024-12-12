@@ -7,12 +7,18 @@ import com.ainouss.datatools.jdatatools.query.core.Expression;
  */
 public class Where extends Expression {
 
+    public Where() {
+    }
+
     public Where(Expression expression) {
-        this.and.add(expression);
+        this.expression = expression;
     }
 
     @Override
     protected String sql() {
-        return "";
+        if (expression == null) {
+            return "";
+        }
+        return " where ";
     }
 }

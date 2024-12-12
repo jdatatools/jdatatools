@@ -1,8 +1,13 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * An expression is defined on a path, has a value and can have a logical combination of embedded expressions using
@@ -11,6 +16,7 @@ import java.util.List;
  */
 public abstract class Expression {
 
+    protected Expression expression;
     protected Object value;
     protected Path<?> path;
     protected List<Expression> and = new ArrayList<>();
@@ -51,5 +57,51 @@ public abstract class Expression {
      */
     protected abstract String sql();
 
+    protected String render() {
 
+        String ands = this.and
+                .stream()
+                .map(Expression::render)
+                .collect(Collectors.joining(" and "));
+
+        String ors = this.or
+                .stream()
+                .map(Expression::render)
+                .collect(Collectors.joining(" or "));
+
+        String nots = this.not
+                .stream()
+                .map(Expression::render)
+                .collect(Collectors.joining(" and "));
+
+        var sql = new StringBuilder(EntityRegistry.fullResolve(this.path));
+
+        sql.append(this.sql());
+
+        if (expression != null) {
+            sql.append("(")
+                    .append(expression.render())
+                    .append(")");
+        }
+
+        if (!this.not.isEmpty()) {
+            sql.append("(")
+                    .append(nots)
+                    .append(")");
+        }
+
+        if (isNotBlank(ands)) {
+            sql.append(sql.isEmpty() ? "" : " and ")
+                    .append("(")
+                    .append(ands)
+                    .append(")");
+        }
+        if (isNotBlank(ors)) {
+            sql.append(sql.isEmpty() ? "" : " or ")
+                    .append("(")
+                    .append(ors)
+                    .append(")");
+        }
+        return sql.toString();
+    }
 }

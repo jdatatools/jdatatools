@@ -5,7 +5,7 @@ import com.ainouss.datatools.jdatatools.query.core.Expression;
 import java.util.Optional;
 
 /**
- * Predicate expression : when(condition).then(expression1).otherwise(expression2)
+ * Predicate expression: when(condition).then(expression1).otherwise(expression2)
  * depending on the value of condition, the predicate expression will be resolved to either expression1 or expression2
  * use end() to quit the predicate and return to the parent flow
  */

@@ -1,9 +1,9 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import com.ainouss.datatools.jdatatools.query.expression.Where;
 import com.ainouss.datatools.jdatatools.query.join.Join;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class CriteriaQuery<T> {
 
     private final Root<T> root;
-    private Expression where;
+    private Expression where = new Where();
     private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
     private final List<Join<?, ?>> joins = new ArrayList<>();
     private final LinkedHashSet<Selection<?>> selection = new LinkedHashSet<>();
@@ -136,8 +136,7 @@ public class CriteriaQuery<T> {
         if (from.equals(root.getJavaType())) {
             return (Root<R>) root;
         }
-        Root<R> root = new Root<>(from);
-        return root;
+        return new Root<>(from);
     }
 
     /**
@@ -245,11 +244,11 @@ public class CriteriaQuery<T> {
      * @return where clause
      */
     private String where() {
-        String render = render(where);
-        if (render.trim().isEmpty()) {
+        String render = where.render();
+        if (render.equals(where.sql()) || render.equals(" where ()") ) {
             return "";
         }
-        return " where " + render;
+        return render;
     }
 
     /**
@@ -263,60 +262,10 @@ public class CriteriaQuery<T> {
             return "";
         }
         if (target.expression != null) {
-            return render(target.expression);
+            return target.expression.render();
         }
         return EntityRegistry.fullResolve(target);
     }
-
-    /**
-     * Render expression to a sql fragment.
-     *
-     * @param target expression
-     * @return sql fragment
-     */
-    private String render(Expression target) {
-        if (target == null) {
-            return "";
-        }
-        String ands = target.and
-                .stream()
-                .map(this::render)
-                .collect(Collectors.joining(" and "));
-
-        String ors = target.or
-                .stream()
-                .map(this::render)
-                .collect(Collectors.joining(" or "));
-
-        String nots = target.not
-                .stream()
-                .map(this::render)
-                .collect(Collectors.joining(" and "));
-
-        var sql = new StringBuilder(EntityRegistry.fullResolve(target.path));
-        sql.append(target.sql());
-
-        if (!target.not.isEmpty()) {
-            sql.append("(")
-                    .append(nots)
-                    .append(")");
-        }
-
-        if (isNotBlank(ands)) {
-            sql.append(sql.isEmpty() ? "" : " and ")
-                    .append("(")
-                    .append(ands)
-                    .append(")");
-        }
-        if (isNotBlank(ors)) {
-            sql.append(sql.isEmpty() ? "" : " or ")
-                    .append("(")
-                    .append(ors)
-                    .append(")");
-        }
-        return sql.toString();
-    }
-
     /**
      * insert column names
      *
@@ -392,18 +341,9 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Source table
+     * count Query from a criteria, order by is omitted
      *
-     * @return table name
-     */
-    public String sourceTable() {
-        return sourceTable(root);
-    }
-
-    /**
-     * count query from a criteria, order by is omitted
-     *
-     * @return count query
+     * @return count Query
      */
     public String buildCountQuery() {
         return new StringBuilder().append("select count(*)")
@@ -436,7 +376,7 @@ public class CriteriaQuery<T> {
                         .append(" ")
                         .append(alias(join.getTarget()))
                         .append(join.getOn() != null ? " on " : "")
-                        .append(render(join.getOn()))
+                        .append(join.getOn() != null ? join.getOn().render() : "")
                         .toString()
                 )
                 .collect(Collectors.joining(" "));

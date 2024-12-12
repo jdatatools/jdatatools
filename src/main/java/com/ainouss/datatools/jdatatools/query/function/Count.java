@@ -7,6 +7,7 @@ import com.ainouss.datatools.jdatatools.query.core.Selection;
  * Count aggregate function
  */
 public class Count extends Expression {
+
     public Count(Selection<?> path) {
         this.value = path;
     }
