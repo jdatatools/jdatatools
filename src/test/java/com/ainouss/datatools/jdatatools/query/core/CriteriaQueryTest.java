@@ -3,10 +3,7 @@ package com.ainouss.datatools.jdatatools.query.core;
 import com.ainouss.datatools.jdatatools.query.model.Employee;
 import com.ainouss.datatools.jdatatools.query.model.Profile;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
-import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
-import com.ainouss.datatools.jdatatools.query.registery.SampleEntityResolver;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -17,13 +14,8 @@ import java.util.List;
 @ExtendWith(SpringExtension.class)
 class CriteriaQueryTest {
 
-    private CriteriaBuilder cb;
+    private final CriteriaBuilder cb = new CriteriaBuilder();
 
-    @BeforeEach
-    public void setUp() {
-        EntityRegistry entityRegistry = new EntityRegistry(new SampleEntityResolver(List.of(Employee.class, Profile.class)));
-        cb = entityRegistry.getCriteriaBuilder();
-    }
 
     @Test
     public void should__simple_query() {
@@ -490,6 +482,7 @@ class CriteriaQueryTest {
         String insert = cr.buildInsertQuery();
         Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:lastName)", insert);
     }
+
     @Test
     public void should_insert_with_prefix_2() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);

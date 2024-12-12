@@ -3,16 +3,46 @@ package com.ainouss.datatools.jdatatools.query.operator;
 import com.ainouss.datatools.jdatatools.query.core.Expression;
 
 /**
- * The WHERE clause can contain one or more OR operators.
+ * Represents the logical OR operator in a query.
  * <p>
- * The OR operator is used to filter records based on more than one condition
+ * This class is used to combine multiple expressions into a single
+ * conditional statement where at least one expression must evaluate
+ * to true for the overall condition to be true.
+ * <p>
+ * Example usage:
+ * <pre>
+ *  CriteriaBuilder cb = new CriteriaBuilder();
+ *  CriteriaQuery<MyEntity> query = cb.createQuery(MyEntity.class);
+ *  Root<MyEntity> root = query.from();
+ *  query.where(
+ *      cb.or(
+ *          cb.eq(root.get("city"), "New York"),
+ *          cb.eq(root.get("city"), "Los Angeles")
+ *      )
+ *  );
+ * </pre>
+ * This would generate the following SQL WHERE clause:
+ * <pre>
+ *  WHERE city = 'New York' OR city = 'Los Angeles'
+ * </pre>
  */
 public class Or extends Expression {
 
+    /**
+     * Constructs a new {@code Or} operator with the given expression.
+     *
+     * @param expression The expression to add to the OR condition.
+     */
     public Or(Expression expression) {
         this.or.add(expression);
     }
 
+    /**
+     * Returns an empty string since the rendering of the OR condition
+     * is handled by the parent {@code Expression} class.
+     *
+     * @return An empty string.
+     */
     @Override
     protected String sql() {
         return "";

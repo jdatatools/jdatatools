@@ -1,10 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
 import com.ainouss.datatools.jdatatools.query.model.Employee;
-import com.ainouss.datatools.jdatatools.query.model.Profile;
-import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
-import com.ainouss.datatools.jdatatools.query.registery.SampleEntityResolver;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -16,13 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 class CriteriaBuilderTest {
 
-    private CriteriaBuilder cb;
-
-    @BeforeEach
-    public void setUp() {
-        EntityRegistry entityRegistry = new EntityRegistry(new SampleEntityResolver(List.of(Employee.class, Profile.class)));
-        cb = entityRegistry.getCriteriaBuilder();
-    }
+    private final CriteriaBuilder cb = new CriteriaBuilder();
 
     @Test
     void createQuery() {
@@ -142,7 +132,7 @@ class CriteriaBuilderTest {
     void in() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from();
-        String sql = cb.in(root.get("lastName"), List.of("john","jane")).render();
+        String sql = cb.in(root.get("lastName"), List.of("john", "jane")).render();
         assertEquals("EMPLOYEES.LAST_NAME in  ('john','jane')", sql);
     }
 
@@ -158,7 +148,7 @@ class CriteriaBuilderTest {
     void between() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from();
-        String sql = cb.between(root.get("age"), 10,20).render();
+        String sql = cb.between(root.get("age"), 10, 20).render();
         assertEquals("EMPLOYEES.AGE between 10 and 20", sql);
     }
 
@@ -183,8 +173,8 @@ class CriteriaBuilderTest {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from();
         String sql = cb.and(
-                cb.eq(root.get("firstName"),"John"),
-                cb.eq(root.get("lastName"),"doe")
+                cb.eq(root.get("firstName"), "John"),
+                cb.eq(root.get("lastName"), "doe")
         ).render();
         assertEquals("(EMPLOYEES.FIRST_NAME = 'John' and (EMPLOYEES.LAST_NAME = 'doe'))", sql);
     }
@@ -194,18 +184,19 @@ class CriteriaBuilderTest {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from();
         String sql = cb.or(
-                cb.eq(root.get("firstName"),"John"),
-                cb.eq(root.get("lastName"),"doe")
+                cb.eq(root.get("firstName"), "John"),
+                cb.eq(root.get("lastName"), "doe")
         ).render();
         assertEquals("(EMPLOYEES.FIRST_NAME = 'John' or (EMPLOYEES.LAST_NAME = 'doe'))", sql);
     }
+
     @Test
     void not() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from();
         String sql = cb.not(
-                cb.eq(root.get("firstName"),"John"),
-                cb.eq(root.get("lastName"),"doe")
+                cb.eq(root.get("firstName"), "John"),
+                cb.eq(root.get("lastName"), "doe")
         ).render();
         assertEquals(" NOT ((EMPLOYEES.FIRST_NAME = 'John' and EMPLOYEES.LAST_NAME = 'doe'))", sql);
     }
@@ -258,7 +249,6 @@ class CriteriaBuilderTest {
         String sql = cb.distinct(root.get("age")).render();
         assertEquals("distinct EMPLOYEES.AGE", sql);
     }
-
 
 
 }
