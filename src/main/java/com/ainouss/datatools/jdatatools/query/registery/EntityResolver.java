@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools.query;
+package com.ainouss.datatools.jdatatools.query.registery;
 
 import java.util.List;
 

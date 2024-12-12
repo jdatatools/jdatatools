@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.Expression;
-import com.ainouss.datatools.jdatatools.query.Selection;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Selection;
 
 /**
  * Distinct aggregate function

@@ -1,5 +1,6 @@
-package com.ainouss.datatools.jdatatools.query;
+package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import com.ainouss.datatools.jdatatools.query.expression.Where;
 import com.ainouss.datatools.jdatatools.query.join.Join;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
@@ -9,7 +10,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.ainouss.datatools.jdatatools.query.EntityRegistry.fullResolve;
+import static com.ainouss.datatools.jdatatools.query.registery.EntityRegistry.fullResolve;
 import static com.ainouss.datatools.jdatatools.util.QueryBuilder.getSelectableFields;
 import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;

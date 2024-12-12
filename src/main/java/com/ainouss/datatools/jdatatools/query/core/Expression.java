@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools.query;
+package com.ainouss.datatools.jdatatools.query.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * An expression is defined on a path, has a value and can have a logical combination of embedded expressions using
  * (and, or, not)
- * An expression can have a sql string
+ * An expression can have an SQL string
  */
 public abstract class Expression {
 
@@ -51,8 +51,5 @@ public abstract class Expression {
      */
     protected abstract String sql();
 
-    protected boolean hasAny() {
-        return and.isEmpty() || or.isEmpty() || not.isEmpty();
-    }
 
 }

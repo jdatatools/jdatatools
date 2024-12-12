@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.expression;
 
-import com.ainouss.datatools.jdatatools.query.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
 
 import java.util.Optional;
 

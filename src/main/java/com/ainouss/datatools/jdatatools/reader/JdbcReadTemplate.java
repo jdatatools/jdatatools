@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.reader;
 
 import com.ainouss.datatools.jdatatools.data.Chunk;
-import com.ainouss.datatools.jdatatools.query.CriteriaQuery;
+import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

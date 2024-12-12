@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.Expression;
-import com.ainouss.datatools.jdatatools.query.Path;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Path;
 
 /**
  * A field with a NULL value is a field with no value.

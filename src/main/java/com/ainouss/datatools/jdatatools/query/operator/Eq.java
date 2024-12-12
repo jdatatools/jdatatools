@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.operator;
 
-import com.ainouss.datatools.jdatatools.query.Path;
-import com.ainouss.datatools.jdatatools.query.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
 
 import static org.springframework.util.ObjectUtils.isArray;
 

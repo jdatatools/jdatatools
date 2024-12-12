@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools;
+package com.ainouss.datatools.jdatatools.query.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;

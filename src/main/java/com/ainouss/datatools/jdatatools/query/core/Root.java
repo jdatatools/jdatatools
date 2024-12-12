@@ -1,5 +1,6 @@
-package com.ainouss.datatools.jdatatools.query;
+package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import com.ainouss.datatools.jdatatools.query.join.Join;
 import com.ainouss.datatools.jdatatools.query.join.JoinExpression;
 import com.ainouss.datatools.jdatatools.query.join.JoinType;

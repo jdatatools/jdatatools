@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.util;
 
 
-import com.ainouss.datatools.jdatatools.query.CriteriaQuery;
+import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

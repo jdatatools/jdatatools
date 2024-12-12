@@ -1,10 +1,10 @@
-package com.ainouss.datatools.jdatatools.query;
+package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.expression.*;
+import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
+import com.ainouss.datatools.jdatatools.query.expression.PredicateExpression;
 import com.ainouss.datatools.jdatatools.query.function.*;
 import com.ainouss.datatools.jdatatools.query.operator.*;
 
-import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -113,9 +113,6 @@ public class CriteriaBuilder {
         return new Lt(path, value);
     }
 
-    public <R> Expression lt(Path<R> date, Timestamp ts) {
-        return new Lt(date, ts);
-    }
 
     /**
      * In expression
@@ -234,26 +231,6 @@ public class CriteriaBuilder {
      */
     public <R> Path<R> toDate(Path<R> path) {
         return new Selection<>(path.head, path.attribute, new ToDate(new Selection<>(path)));
-    }
-
-    public <R> Path<R> toTimestamp(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new ToTimestamp(new Selection<>(path)));
-    }
-
-
-    /**
-     * Min expression
-     *
-     * @param path attribute
-     * @param <R>  type
-     * @return min(attribute)
-     */
-    public <R> Path<R> toDate(Path<R> path, String dateFormat) {
-        return new Selection<>(path.head, path.attribute, new ToDate(new Selection<>(path), dateFormat));
-    }
-
-    public <R> Path<R> toTimestamp(Path<R> path, String dateFormat) {
-        return new Selection<>(path.head, path.attribute, new ToTimestamp(new Selection<>(path), dateFormat));
     }
 
     /**

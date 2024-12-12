@@ -1,5 +1,8 @@
-package com.ainouss.datatools.jdatatools.query;
+package com.ainouss.datatools.jdatatools.query.registery;
 
+import com.ainouss.datatools.jdatatools.query.core.CriteriaBuilder;
+import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.Root;
 import com.ainouss.datatools.jdatatools.util.QueryBuilder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;

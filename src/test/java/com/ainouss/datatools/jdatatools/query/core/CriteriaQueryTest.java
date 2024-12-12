@@ -1,7 +1,10 @@
-package com.ainouss.datatools.jdatatools;
+package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.*;
+import com.ainouss.datatools.jdatatools.query.model.Employee;
+import com.ainouss.datatools.jdatatools.query.model.Profile;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
+import com.ainouss.datatools.jdatatools.query.registery.SampleEntityResolver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,7 @@ import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 class CriteriaQueryTest {
+
     private CriteriaBuilder cb;
 
     @BeforeEach
@@ -460,5 +464,30 @@ class CriteriaQueryTest {
                 .orderBy(id);
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select count(tbl.FIRST_NAME) as firstName,tbl.ID as id from EMPLOYEES tbl where (tbl.ID > 3) group by tbl.ID order by tbl.ID ASC", select);
+    }
+
+    @Test
+    public void should_generate_insert_one_field() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        var rt = cr.from();
+        cr.select(rt.get("id"));
+        String insert = cr.buildInsertQuery();
+        Assertions.assertEquals("insert into EMPLOYEES (ID) values (:id)", insert);
+    }
+
+    @Test
+    public void should_generate_insert_multiple_fields() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        var rt = cr.from();
+        cr.select(rt.get("id"), rt.get("firstName"));
+        String insert = cr.buildInsertQuery();
+        Assertions.assertEquals("insert into EMPLOYEES (ID,FIRST_NAME) values (:id,:firstName)", insert);
+    }
+
+    @Test
+    public void should_generate_insert_all_fields() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        String insert = cr.buildInsertQuery();
+        Assertions.assertEquals("insert into EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:name)", insert);
     }
 }

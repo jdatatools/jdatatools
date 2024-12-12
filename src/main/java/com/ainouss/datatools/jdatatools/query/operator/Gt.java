@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.operator;
 
-import com.ainouss.datatools.jdatatools.query.Expression;
-import com.ainouss.datatools.jdatatools.query.Path;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Path;
 
 /**
  * Greater Than operator, denoted as ">", is used to compare values in a database table

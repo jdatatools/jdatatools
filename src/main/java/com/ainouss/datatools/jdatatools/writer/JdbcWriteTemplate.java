@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.writer;
 
-import com.ainouss.datatools.jdatatools.query.CriteriaQuery;
+import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.jdbc.core.JdbcTemplate;

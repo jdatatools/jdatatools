@@ -1,10 +1,10 @@
 package com.ainouss.datatools.jdatatools.reader;
 
 import com.ainouss.datatools.jdatatools.data.Chunk;
-import com.ainouss.datatools.jdatatools.query.EntityRegistry;
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import com.ainouss.datatools.jdatatools.util.QueryBuilder;
-import com.ainouss.datatools.jdatatools.query.CriteriaBuilder;
-import com.ainouss.datatools.jdatatools.query.CriteriaQuery;
+import com.ainouss.datatools.jdatatools.query.core.CriteriaBuilder;
+import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;

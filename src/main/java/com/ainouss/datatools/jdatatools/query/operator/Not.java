@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.operator;
 
-import com.ainouss.datatools.jdatatools.query.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
 
 /**
  * The NOT operator is used in combination with other operators to give the opposite result, also called the negative result.

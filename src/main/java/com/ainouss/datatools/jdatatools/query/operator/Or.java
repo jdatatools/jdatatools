@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.operator;
 
-import com.ainouss.datatools.jdatatools.query.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
 
 /**
  * The WHERE clause can contain one or more OR operators.

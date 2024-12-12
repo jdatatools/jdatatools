@@ -1,8 +1,8 @@
 package com.ainouss.datatools.jdatatools.query.join;
 
-import com.ainouss.datatools.jdatatools.query.Path;
-import com.ainouss.datatools.jdatatools.query.Root;
-import com.ainouss.datatools.jdatatools.query.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.Root;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
 import lombok.Getter;
 
 @Getter

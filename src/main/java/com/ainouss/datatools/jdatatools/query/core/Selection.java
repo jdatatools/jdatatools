@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools.query;
+package com.ainouss.datatools.jdatatools.query.core;
 
 import lombok.EqualsAndHashCode;
 

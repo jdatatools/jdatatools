@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.join;
 
-import com.ainouss.datatools.jdatatools.query.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Expression;
 
 /**
  * Join expression, intermediate operation that returns a join through on function
