@@ -250,5 +250,14 @@ class CriteriaBuilderTest {
         assertEquals("distinct EMPLOYEES.AGE", sql);
     }
 
+    @Test
+    void ne() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from();
+        String sql = cb.ne(root.get("name"), "John Doe").render();
+        assertEquals("EMPLOYEES.name != 'John Doe'", sql);
+    }
+
 
 }
