@@ -120,13 +120,13 @@ class CriteriaQueryTest {
     public void should__order_by() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
-        cr.select(
+        var query = cr.select(
                 rt.get("id"),
                 rt.get("firstName")
         ).orderBy(
                 rt.get("id"), OrderDirection.ASC
         );
-        String select = cr.buildSelectQuery();
+        String select = query.buildSelectQuery();
         Assertions.assertEquals("select tbl.FIRST_NAME as firstName,tbl.ID as id from EMPLOYEES tbl order by tbl.ID ASC", select);
     }
 
@@ -489,5 +489,20 @@ class CriteriaQueryTest {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         String insert = cr.buildInsertQuery();
         Assertions.assertEquals("insert into EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:name)", insert);
+    }
+
+    @Test
+    public void should_insert_with_table_name_mapper() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        cr.from(s -> "tab_" + s);
+        String insert = cr.buildInsertQuery();
+        Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:name)", insert);
+    }
+    @Test
+    public void should_insert_with_prefix_2() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        cr.prefix("tab_");
+        String insert = cr.buildInsertQuery();
+        Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:name)", insert);
     }
 }

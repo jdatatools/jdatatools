@@ -1,14 +1,13 @@
 package com.ainouss.datatools.jdatatools.reader;
 
 import com.ainouss.datatools.jdatatools.data.Chunk;
-import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
-import com.ainouss.datatools.jdatatools.util.QueryBuilder;
 import com.ainouss.datatools.jdatatools.query.core.CriteriaBuilder;
 import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
+import com.ainouss.datatools.jdatatools.util.QueryBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -17,12 +16,12 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import static com.ainouss.datatools.jdatatools.util.DataUtils.isBlank;
 import static com.ainouss.datatools.jdatatools.reader.RowExtractor.extract;
+import static com.ainouss.datatools.jdatatools.util.DataUtils.isBlank;
 
 /**
  * An opinionated implementation of reading data from a database through a jdbc template.
- * Replaces a sql string based approach to read data
+ * Replaces an SQL string-based approach to read data
  * Instead, queries are compiled from entity definitions re-using the same specifications as JPA
  * Some functionalities are inspired from Hibernate criteria builder
  */
@@ -41,8 +40,8 @@ public class JdbcChunkReader {
     private static final int MIN_CHUNK_SIZE = 1000;
 
     /**
-     * Reads data from a table using criteria through chunking :
-     * - counts the total result by issuing a count query
+     * Reads data from a table using criteria through chunking:
+     * - counts the total result by issuing count query
      * - fetches data in parallel as a completable future
      * - returns a future that completed when all sub-futures are completed
      *
@@ -146,7 +145,7 @@ public class JdbcChunkReader {
      * @param start  start row
      * @return the list of data
      */
-    private <T, R> Chunk<R> getChunk(JdbcReadTemplate<T, R> template, final int start, @Nullable List<Field> fields) {
+    private <T, R> Chunk<R> getChunk(JdbcReadTemplate<T, R> template, final int start, List<Field> fields) {
         var jdbc = template.getJdbcTemplate();
         var clazz = template.getClazz();
         var mapper = template.getMapper();
