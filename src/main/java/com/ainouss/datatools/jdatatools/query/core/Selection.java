@@ -55,4 +55,11 @@ public class Selection<T> extends Path<T> {
         }
         return expression.sql();
     }
+
+    public String render() {
+        if (expression == null) {
+            return super.toString();
+        }
+        return expression.render();
+    }
 }

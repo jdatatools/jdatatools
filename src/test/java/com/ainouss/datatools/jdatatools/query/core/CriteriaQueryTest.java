@@ -30,7 +30,7 @@ class CriteriaQueryTest {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
 
-        cr.select(rt.get("id"), rt.get("name"))
+        cr.select(rt.get("id"), rt.get("lastName"))
                 .from(rt)
                 .where(cb.gt(rt.get("id"), 0)
                         .and(
@@ -41,7 +41,7 @@ class CriteriaQueryTest {
                                 cb.lt(rt.get("id"), 19)
                         ));
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ID as id,tbl.LAST_NAME as name from EMPLOYEES tbl where (tbl.ID > 0 and (tbl.ID < 30 and tbl.ID > 10 and tbl.ID < 20 and tbl.ID > 17 and tbl.ID < 19))", select);
+        Assertions.assertEquals("select tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where (tbl.ID > 0 and (tbl.ID < 30 and tbl.ID > 10 and tbl.ID < 20 and tbl.ID > 17 and tbl.ID < 19))", select);
     }
 
     @Test
@@ -70,10 +70,10 @@ class CriteriaQueryTest {
 
                         )
                         .and(cb.like(rt.get("age"), "TEST"))
-                        .and(cb.isNull(rt.get("name")))
+                        .and(cb.isNull(rt.get("lastName")))
                         .and(cb.isNotNull(rt.get("enabled"))));
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as name from EMPLOYEES tbl where (tbl.FIRST_NAME = 'XYZ' and (tbl.AGE like '%TEST%' and tbl.LAST_NAME is null and tbl.ENABLED is not null ) or (tbl.FIRST_NAME = 'ABCD' and (tbl.ID = 1000) or tbl.FIRST_NAME = 'ABBFSTO' and (tbl.ID = 15 or (tbl.ID between 5 and 1000))))", select);
+        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where (tbl.FIRST_NAME = 'XYZ' and (tbl.AGE like '%TEST%' and tbl.LAST_NAME is null and tbl.ENABLED is not null ) or (tbl.FIRST_NAME = 'ABCD' and (tbl.ID = 1000) or tbl.FIRST_NAME = 'ABBFSTO' and (tbl.ID = 15 or (tbl.ID between 5 and 1000))))", select);
     }
 
     @Test
@@ -98,7 +98,7 @@ class CriteriaQueryTest {
                 )
         );
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as name from EMPLOYEES tbl where ((tbl.ID > 10 and (tbl.ID < 20 and tbl.ID > 10 and (tbl.ID < 1000))) or (tbl.ID > 55 and (tbl.ID < 99)))", select);
+        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where ((tbl.ID > 10 and (tbl.ID < 20 and tbl.ID > 10 and (tbl.ID < 1000))) or (tbl.ID > 55 and (tbl.ID < 99)))", select);
     }
 
 
@@ -161,7 +161,7 @@ class CriteriaQueryTest {
                                 )
                 );
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as name from EMPLOYEES tbl left join PROFILES child on tbl.ID = child.ID where ((child.ID = 0 and (tbl.ID > 1)))", select);
+        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl left join PROFILES child on tbl.ID = child.ID where ((child.ID = 0 and (tbl.ID > 1)))", select);
     }
 
     @Test
@@ -186,7 +186,7 @@ class CriteriaQueryTest {
                                 )
                 );
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as name from DB.EMPLOYEES tbl left join DB2.PROFILES child on tbl.ID = child.ID where ((child.ID = 0 and (tbl.ID > 1)))", select);
+        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from DB.EMPLOYEES tbl left join DB2.PROFILES child on tbl.ID = child.ID where ((child.ID = 0 and (tbl.ID > 1)))", select);
     }
 
     @Test
@@ -207,14 +207,6 @@ class CriteriaQueryTest {
         Assertions.assertEquals("select min(tbl.ID) as id from EMPLOYEES tbl", select);
     }
 
-    @Test
-    public void should__select_toDate() {
-        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
-        Root<Employee> rt = cr.from(Employee.class).as("tbl");
-        cr.select(cb.toDate(rt.get("id")));
-        String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select TO_DATE(tbl.ID,'YYYYMMDD HH:MI:SS') as id from EMPLOYEES tbl", select);
-    }
 
     @Test
     public void should__select_sum() {
@@ -320,7 +312,7 @@ class CriteriaQueryTest {
         );
         CriteriaQuery<?> criteria = cr.where(not);
         String select = criteria.buildSelectQuery();
-        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as name from EMPLOYEES tbl where ( NOT (tbl.ID = 3 and ( NOT (tbl.ID = 4))))", select);
+        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where ( NOT (tbl.ID = 3 and ( NOT (tbl.ID = 4))))", select);
     }
 
     @Test
@@ -334,7 +326,7 @@ class CriteriaQueryTest {
 
         );
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as name from EMPLOYEES tbl where (tbl.ID in ('3','4','5'))", select);
+        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where (tbl.ID in ('3','4','5'))", select);
     }
 
     @Test
@@ -348,7 +340,7 @@ class CriteriaQueryTest {
 
         );
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as name from EMPLOYEES tbl", select);
+        Assertions.assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl", select);
     }
 
     @Test
@@ -488,7 +480,7 @@ class CriteriaQueryTest {
     public void should_generate_insert_all_fields() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         String insert = cr.buildInsertQuery();
-        Assertions.assertEquals("insert into EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:name)", insert);
+        Assertions.assertEquals("insert into EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:lastName)", insert);
     }
 
     @Test
@@ -496,13 +488,13 @@ class CriteriaQueryTest {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         cr.from(s -> "tab_" + s);
         String insert = cr.buildInsertQuery();
-        Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:name)", insert);
+        Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:lastName)", insert);
     }
     @Test
     public void should_insert_with_prefix_2() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         cr.prefix("tab_");
         String insert = cr.buildInsertQuery();
-        Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:name)", insert);
+        Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:lastName)", insert);
     }
 }

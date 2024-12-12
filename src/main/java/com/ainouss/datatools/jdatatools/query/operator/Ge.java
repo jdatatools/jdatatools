@@ -1,0 +1,27 @@
+package com.ainouss.datatools.jdatatools.query.operator;
+
+import com.ainouss.datatools.jdatatools.query.core.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Path;
+
+/**
+ * Greater Than operator or equal, denoted as ">", is used to compare values in a database table
+ * and retrieve rows where a specific column's value is greater than a given criteria.
+ */
+public class Ge extends Expression {
+
+    public Ge(Path<?> path, Object value) {
+        this.path = path;
+        this.value = value;
+    }
+
+
+    public String sql() {
+        if (value == null) {
+            throw new RuntimeException("Greater than operator should be used with a single expression or a non null value.");
+        }
+        if (value instanceof String) {
+            return " >= '" + value + "'";
+        }
+        return " >= " + value;
+    }
+}

@@ -15,7 +15,7 @@ public class Employee {
     private String firstName;
 
     @Column(name = "LAST_NAME")
-    private String name;
+    private String lastName;
 
     @Column(name = "AGE")
     private int age;

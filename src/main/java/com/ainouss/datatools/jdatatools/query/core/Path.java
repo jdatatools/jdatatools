@@ -38,6 +38,10 @@ public class Path<T> {
         return EntityRegistry.fullResolve(this);
     }
 
+    public String render() {
+        return EntityRegistry.fullResolve(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -113,6 +113,28 @@ public class CriteriaBuilder {
         return new Lt(path, value);
     }
 
+    /**
+     * Lesser than or equal a number
+     *
+     * @param path  path
+     * @param value value
+     * @return Lesser than a number
+     */
+    public Expression le(Path<?> path, Number value) {
+        return new Le(path, value);
+    }
+
+    /**
+     * Lesser than or equal a number
+     *
+     * @param path  path
+     * @param value value
+     * @return Lesser than a number
+     */
+    public Expression ge(Path<?> path, Number value) {
+        return new Ge(path, value);
+    }
+
 
     /**
      * In expression
@@ -222,16 +244,6 @@ public class CriteriaBuilder {
         return new Selection<>(path.head, path.attribute, new Min(new Selection<>(path)));
     }
 
-    /**
-     * Min expression
-     *
-     * @param path attribute
-     * @param <R>  type
-     * @return min(attribute)
-     */
-    public <R> Path<R> toDate(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new ToDate(new Selection<>(path)));
-    }
 
     /**
      * Sum expression
@@ -298,5 +310,16 @@ public class CriteriaBuilder {
         return new Not(expression);
     }
 
+    /**
+     * NOT expressions
+     *
+     * @param expression  expression
+     * @param expressions other expressions
+     * @return combined expressions with OR operator
+     */
+    public Expression not(Expression expression, Expression... expressions) {
+        Expression and = new IdentityExpression().and(expression, expressions);
+        return new Not(and);
+    }
 
 }
