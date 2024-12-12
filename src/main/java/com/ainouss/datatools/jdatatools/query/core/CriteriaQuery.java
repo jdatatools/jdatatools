@@ -16,9 +16,11 @@ import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
- * Criteria query builder
+ * Criteria query builder. This class provides a fluent API for constructing SQL queries
+ * in a type-safe manner. It supports various operations such as selecting columns,
+ * filtering data with where clauses, joining tables, ordering results, and grouping.
  *
- * @param <T> class
+ * @param <T> The type of the entity being queried.
  */
 public class CriteriaQuery<T> {
 
@@ -31,9 +33,12 @@ public class CriteriaQuery<T> {
     private Function<String, String> from = table -> table;
 
     /**
-     * Criteria query does not resolve annotations by its own, a map of paths should be passed as a parameter
+     * Constructs a new {@code CriteriaQuery} instance.
+     * <p>
+     * Note: This constructor does not resolve annotations automatically.
+     * A map of paths should be provided for annotation resolution.
      *
-     * @param javaType java class
+     * @param javaType The Java class of the entity being queried.
      */
     CriteriaQuery(Class<T> javaType) {
         this.root = new Root<>(javaType);
@@ -41,10 +46,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Multi op selection, select attribute or selection
+     * Selects multiple attributes or expressions.
      *
-     * @param paths paths
-     * @return this
+     * @param paths The paths representing the attributes or expressions to select.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public final CriteriaQuery<T> select(Path<?>... paths) {
         if (paths != null) {
@@ -57,10 +62,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Unselect some attributes
-     * Should be called after {@see #select()}
+     * Unselects specific attributes from the selection. This method should be called
+     * after {@link #select()} to remove attributes from the previously defined selection.
      *
-     * @param paths paths
+     * @param paths The paths representing the attributes to unselect.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> unselect(Path<?>... paths) {
         if (paths != null) {
@@ -73,10 +79,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Select entire root, all columns in that root are selected
+     * Selects all columns from the specified root entity.
      *
-     * @param root root
-     * @return this
+     * @param root The root entity from which to select all columns.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public final CriteriaQuery<T> select(Root<?> root) {
         var select = EntityRegistry.columns.keySet()
@@ -90,10 +96,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Prefix the table name at runtime. useful to reuse the table name already set in the @Table annotation
+     * Prefixes the table name with the given string. This is useful for reusing
+     * the table name already defined in the {@code @Table} annotation.
      *
-     * @param prefix prefix to be added to the table name
-     * @return root
+     * @param prefix The prefix to be added to the table name.
+     * @return The root entity.
      */
     public Root<?> prefix(String prefix) {
         if (prefix != null) {
@@ -103,10 +110,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Override table name,
+     * Overrides the table name with the specified string.
      *
-     * @param from table name
-     * @return this for chaining
+     * @param from The new table name.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> from(String from) {
         this.from = str -> from;
@@ -114,10 +121,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Override table name,
+     * Overrides the table name using the provided function. The function takes the
+     * original table name as input and returns the modified table name.
      *
-     * @param from table name
-     * @return this for chaining
+     * @param from The function to apply to the table name.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> from(Function<String, String> from) {
         this.from = from;
@@ -125,11 +133,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Overload a root object
+     * Overloads the root object with a new entity type.
      *
-     * @param from java class
-     * @param <R>  class type
-     * @return root object
+     * @param from   The Java class of the new root entity.
+     * @param <R>    The type of the new root entity.
+     * @return The new root object.
      */
     public <R> Root<R> from(Class<R> from) {
         EntityRegistry.registerClass(from);
@@ -140,10 +148,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * does only
+     * Sets the root object without modifying the existing root.
      *
-     * @param from from
-     * @return this
+     * @param from The new root object.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> from(Root<?> from) {
         EntityRegistry.registerClass(from.getJavaType());
@@ -151,20 +159,19 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Root
+     * Returns the root entity of this query.
      *
-     * @return root
+     * @return The root entity.
      */
-
     public Root<T> from() {
         return root;
     }
 
     /**
-     * Where expression
+     * Adds a where clause to the query.
      *
-     * @param expression expression
-     * @return where
+     * @param expression The expression for the where clause.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> where(Expression expression) {
         this.where = new Where(expression);
@@ -172,12 +179,12 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Join a table from this root
+     * Joins a table to this query.
      *
-     * @param join join expression
-     * @param <X>  join start
-     * @param <Y>  joined root
-     * @return join expression
+     * @param join The join expression.
+     * @param <X>  The type of the starting entity in the join.
+     * @param <Y>  The type of the joined entity.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public <X, Y> CriteriaQuery<T> join(Join<X, Y> join) {
         this.joins.add(join);
@@ -185,11 +192,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Order by path
+     * Adds an order by clause to the query.
      *
-     * @param path  path
-     * @param order order's direction
-     * @return this
+     * @param path  The path representing the attribute to order by.
+     * @param order The order direction (ascending or descending).
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> orderBy(Path<?> path, OrderDirection order) {
         this.orderBy.put(path, order);
@@ -197,10 +204,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Order by path, default order ASC
+     * Adds an order by clause to the query with the default ascending order.
      *
-     * @param path path
-     * @return this for chaining
+     * @param path The path representing the attribute to order by.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> orderBy(Path<?> path) {
         this.orderBy.put(path, OrderDirection.ASC);
@@ -208,10 +215,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Group by path
+     * Adds a group by clause to the query.
      *
-     * @param path path
-     * @return this for chaining
+     * @param path The path representing the attribute to group by.
+     * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> groupBy(Path<?> path) {
         this.groupBy.add(path);
@@ -219,9 +226,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Select column names with alias, alias is the java field name
+     * Generates the select clause of the SQL query. Column names are aliased with
+     * their corresponding Java field names.
      *
-     * @return column names
+     * @return The select clause of the SQL query.
      */
     private String select() {
         checkSelection();
@@ -239,22 +247,22 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Where clause
+     * Generates the where clause of the SQL query.
      *
-     * @return where clause
+     * @return The where clause of the SQL query.
      */
     private String where() {
         String render = where.render();
-        if (render.equals(where.sql()) || render.equals(" where ()") ) {
+        if (render.equals(where.sql()) || render.equals(" where ()")) {
             return "";
         }
         return render;
     }
 
     /**
-     * insert column names
+     * Generates the column names for an insert query.
      *
-     * @return insert column names
+     * @return The comma-separated list of column names.
      */
     private String insert() {
         return selection
@@ -264,9 +272,9 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * insert field names
+     * Generates the values placeholder for an insert query.
      *
-     * @return insert field names
+     * @return The comma-separated list of values placeholders.
      */
     private String values() {
         return selection
@@ -276,9 +284,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Table alias
+     * Returns the alias of the given root entity. If no alias is explicitly set,
+     * the source table name is used as the alias.
      *
-     * @return alias
+     * @param root The root entity.
+     * @return The alias of the root entity.
      */
     private String alias(Root<?> root) {
         if (isNotBlank(root.getAlias())) {
@@ -288,9 +298,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Source table name
+     * Returns the source table name for the given root entity. This method takes
+     * into account any prefixes or custom table name mappings applied to the query.
      *
-     * @return table
+     * @param root The root entity.
+     * @return The source table name.
      */
     private String sourceTable(Root<?> root) {
         String rootTable = EntityRegistry.tables.get(root);
@@ -301,9 +313,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * select #{fields} from #{sourceTable} #{alias} #{joins} #{where} #{order}
+     * Builds a select query based on the criteria defined in this query builder.
+     * The query includes the select clause, from clause, joins, where clause,
+     * group by clause, and order by clause.
      *
-     * @return select query
+     * @return The complete select query.
      */
     public String buildSelectQuery() {
         return new StringBuilder().append("select ")
@@ -326,9 +340,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * count Query from a criteria, order by is omitted
+     * Builds a count query based on the criteria defined in this query builder.
+     * The query counts all rows matching the criteria, excluding the order by clause.
      *
-     * @return count Query
+     * @return The count query.
      */
     public String buildCountQuery() {
         return new StringBuilder().append("select count(*)")
@@ -349,9 +364,9 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * To be implemented
+     * Generates the joins clause of the SQL query.
      *
-     * @return joins clause
+     * @return The joins clause of the SQL query.
      */
     private String joins() {
         return this.joins.stream()
@@ -368,9 +383,10 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * delete from #{targetTable} #{alias} #{where}
+     * Builds a delete query based on the criteria defined in this query builder.
+     * The query deletes all rows matching the where clause.
      *
-     * @return delete query
+     * @return The delete query.
      */
     public String buildDeleteQuery() {
         return new StringBuilder().append("delete from ")
@@ -386,11 +402,11 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Build insert query with template
-     * insert into #{targetTable} (#{columns}) values (#{values})
-     * use {@link #select()} to limit the scope of attributes to insert
+     * Builds an insert query with named parameters. The query inserts data into
+     * the specified columns. Use {@link #select()} to limit the scope of attributes
+     * to be inserted.
      *
-     * @return named insert query
+     * @return The parameterized insert query.
      */
     public String buildInsertQuery() {
         checkSelection();
@@ -409,9 +425,9 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Order by clause
+     * Generates the order by clause of the SQL query.
      *
-     * @return Order by clause
+     * @return The order by clause of the SQL query.
      */
     private String orderBy() {
         String orderBy = this.orderBy.entrySet()
@@ -426,25 +442,23 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * Group by clause
+     * Generates the group by clause of the SQL query.
      *
-     * @return Order by clause
+     * @return The group by clause of the SQL query.
      */
     private String groupBy() {
-        String orderBy = this.groupBy
+        String groupByClause = this.groupBy
                 .stream()
-                .map(orderEntry -> new StringBuilder(fullResolve(orderEntry))
-                        .append(" ")
-                )
-                .map(StringBuilder::toString)
+                .map(EntityRegistry::fullResolve)
                 .collect(Collectors.joining(","));
-        return orderBy.isEmpty() ? "" : " group by " + orderBy;
+        return groupByClause.isEmpty() ? "" : " group by " + groupByClause;
     }
 
     /**
-     * Selected fields based on criteria selection
+     * Returns a list of fields selected in this query. If no specific selection
+     * is defined, all selectable fields of the root entity are returned.
      *
-     * @return selected fields
+     * @return The list of selected fields.
      */
     public List<Field> getFields() {
         List<Field> selectableFields = getSelectableFields(root.getJavaType());
@@ -465,7 +479,8 @@ public class CriteriaQuery<T> {
     }
 
     /**
-     * If the selection is empty, select all
+     * Ensures that at least one column is selected in the query. If no selection
+     * is explicitly defined, all columns from the root entity are selected.
      */
     private void checkSelection() {
         if (this.selection.isEmpty()) {
@@ -473,4 +488,3 @@ public class CriteriaQuery<T> {
         }
     }
 }
-
