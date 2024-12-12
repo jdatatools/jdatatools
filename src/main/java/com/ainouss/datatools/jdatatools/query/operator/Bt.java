@@ -6,11 +6,11 @@ import com.ainouss.datatools.jdatatools.query.Expression;
 /**
  * Between clause, accepts numbers and paths
  */
-public class Between extends Expression {
+public class Bt extends Expression {
     private final Object value1;
     private final Object value2;
 
-    public Between(Path<?> path, Object value1, Object value2) {
+    public Bt(Path<?> path, Object value1, Object value2) {
         this.path = path;
         this.value1 = value1;
         this.value2 = value2;

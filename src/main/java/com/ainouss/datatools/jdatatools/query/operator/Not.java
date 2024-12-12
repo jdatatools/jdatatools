@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools.query.expression;
+package com.ainouss.datatools.jdatatools.query.operator;
 
 import com.ainouss.datatools.jdatatools.query.Expression;
 

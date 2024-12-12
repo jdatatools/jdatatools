@@ -3,6 +3,7 @@ package com.ainouss.datatools.jdatatools.query.function;
 import com.ainouss.datatools.jdatatools.query.Expression;
 import com.ainouss.datatools.jdatatools.query.Path;
 
+
 public class ToDate extends Expression {
     private String dateFormat = "YYYYMMDD HH:MI:SS";
 

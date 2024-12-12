@@ -5,7 +5,6 @@ import com.ainouss.datatools.jdatatools.query.function.*;
 import com.ainouss.datatools.jdatatools.query.operator.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -103,18 +102,6 @@ public class CriteriaBuilder {
         return new Gt(path, path2);
     }
 
-    public <R> Expression gt(Path<R> date, LocalDateTime localDateTime) {
-        return new Gt(date, localDateTime);
-    }
-
-    public <R> Expression gt(Path<R> date, Timestamp ts) {
-        return new Gt(date, ts);
-    }
-
-    public <R> Expression gt(Path<R> date, LocalDateTime localDateTime, String dateFormat) {
-        return new Gt(date, localDateTime, dateFormat);
-    }
-
     /**
      * Lesser than a number
      *
@@ -166,7 +153,7 @@ public class CriteriaBuilder {
      * @return between value1 and value2
      */
     public Expression between(Path<?> path, Number value1, Number value2) {
-        return new Between(path, value1, value2);
+        return new Bt(path, value1, value2);
     }
 
     /**

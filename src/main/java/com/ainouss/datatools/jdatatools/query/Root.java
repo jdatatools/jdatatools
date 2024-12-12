@@ -11,7 +11,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * Root object, equivalent to a table in RDBMS
- * Alias is a sql alias for table name
+ * Alias is a SQL alias for table name
  * Every root should be annotated with {@link jakarta.persistence.Table} annotation
  *
  * @param <T> Java class
