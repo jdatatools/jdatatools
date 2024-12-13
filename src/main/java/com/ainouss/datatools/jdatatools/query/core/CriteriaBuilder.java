@@ -69,6 +69,7 @@ public class CriteriaBuilder {
     public Expression ne(Path<?> path, Object value) {
         return new Ne(path, value);
     }
+
     /**
      * @param path       path
      * @param expression expression
@@ -329,6 +330,4 @@ public class CriteriaBuilder {
         Expression and = new IdentityExpression().and(expression, expressions);
         return new Not(and);
     }
-
-
 }

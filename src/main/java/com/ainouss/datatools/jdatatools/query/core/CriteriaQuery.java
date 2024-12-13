@@ -1,5 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
 import com.ainouss.datatools.jdatatools.query.expression.Where;
 import com.ainouss.datatools.jdatatools.query.join.Join;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
@@ -26,9 +27,10 @@ public class CriteriaQuery<T> {
 
     private final Root<T> root;
     private Expression where = new Where();
+    private final Expression having = new IdentityExpression();
     private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
     private final List<Join<?, ?>> joins = new ArrayList<>();
-    private final LinkedHashSet<PathExpression<?>> pathExpression = new LinkedHashSet<>();
+    private final LinkedHashSet<PathExpression<?>> selections = new LinkedHashSet<>();
     private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     private Function<String, String> from = table -> table;
 
@@ -56,7 +58,7 @@ public class CriteriaQuery<T> {
             var list = Arrays.stream(paths)
                     .map(PathExpression::new)
                     .toList();
-            pathExpression.addAll(list);
+            selections.addAll(list);
         }
         return this;
     }
@@ -73,7 +75,7 @@ public class CriteriaQuery<T> {
             var list = Arrays.stream(paths)
                     .map(PathExpression::new)
                     .toList();
-            list.forEach(pathExpression::remove);
+            list.forEach(selections::remove);
         }
         return this;
     }
@@ -91,7 +93,7 @@ public class CriteriaQuery<T> {
                 .peek(path -> path.head.as(root.getAlias()))
                 .map(path -> new PathExpression<>(path.head, path.attribute))
                 .toList();
-        this.pathExpression.addAll(select);
+        this.selections.addAll(select);
         return this;
     }
 
@@ -135,8 +137,8 @@ public class CriteriaQuery<T> {
     /**
      * Overloads the root object with a new entity type.
      *
-     * @param from   The Java class of the new root entity.
-     * @param <R>    The type of the new root entity.
+     * @param from The Java class of the new root entity.
+     * @param <R>  The type of the new root entity.
      * @return The new root object.
      */
     public <R> Root<R> from(Class<R> from) {
@@ -204,6 +206,16 @@ public class CriteriaQuery<T> {
     }
 
     /**
+     * Adds a Having clause to the query.
+     *
+     * @return This {@code CriteriaQuery} instance for method chaining.
+     */
+    public CriteriaQuery<T> having(Expression expression) {
+        this.having.and(expression);
+        return this;
+    }
+
+    /**
      * Adds an order by clause to the query with the default ascending order.
      *
      * @param path The path representing the attribute to order by.
@@ -233,7 +245,7 @@ public class CriteriaQuery<T> {
      */
     private String select() {
         checkSelection();
-        String select = pathExpression
+        String select = selections
                 .stream()
                 .sorted(Comparator.comparing(o -> o.attribute))
                 .map(expression -> new StringBuilder(expression.render())
@@ -265,7 +277,7 @@ public class CriteriaQuery<T> {
      * @return The comma-separated list of column names.
      */
     private String insert() {
-        return pathExpression
+        return selections
                 .stream()
                 .map(EntityRegistry::resolve)
                 .collect(Collectors.joining(","));
@@ -277,7 +289,7 @@ public class CriteriaQuery<T> {
      * @return The comma-separated list of values placeholders.
      */
     private String values() {
-        return pathExpression
+        return selections
                 .stream()
                 .map(path -> new StringBuilder(":").append(path.getAttribute()))
                 .collect(Collectors.joining(","));
@@ -333,10 +345,20 @@ public class CriteriaQuery<T> {
                 .append(" ")
                 .append(groupBy())
                 .append(" ")
+                .append(having())
+                .append(" ")
                 .append(orderBy())
                 .toString()
                 .trim()
                 .replaceAll("  +", " ");
+    }
+
+    private String having() {
+        String render = this.having.render();
+        if (render.isEmpty()) {
+            return "";
+        }
+        return " having " + render;
     }
 
     /**
@@ -462,10 +484,10 @@ public class CriteriaQuery<T> {
      */
     public List<Field> getFields() {
         List<Field> selectableFields = getSelectableFields(root.getJavaType());
-        if (this.pathExpression.isEmpty()) {
+        if (this.selections.isEmpty()) {
             return selectableFields;
         }
-        return this.pathExpression
+        return this.selections
                 .stream()
                 .map(select -> {
                     try {
@@ -483,7 +505,7 @@ public class CriteriaQuery<T> {
      * is explicitly defined, all columns from the root entity are selected.
      */
     private void checkSelection() {
-        if (this.pathExpression.isEmpty()) {
+        if (this.selections.isEmpty()) {
             select(root);
         }
     }

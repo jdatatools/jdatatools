@@ -10,6 +10,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 @ExtendWith(SpringExtension.class)
 class CriteriaQueryTest {
@@ -448,6 +450,30 @@ class CriteriaQueryTest {
                 .orderBy(id);
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select count(tbl.FIRST_NAME) as firstName,tbl.ID as id from EMPLOYEES tbl where (tbl.ID > 3) group by tbl.ID order by tbl.ID ASC", select);
+    }
+
+    @Test
+    void should__having() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class).as("tbl");
+        String sql = query.having(cb.gt(cb.avg(emp.get("age")), 30)).buildSelectQuery();
+        assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl having (avg(tbl.AGE) > 30)", sql);
+    }
+
+    @Test
+    void should__group__by__having() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        Root<Employee> root = cr.from(Employee.class).as("tbl");
+
+        String sql = cr
+                .select(root.get("id"))
+                .groupBy(root.get("age"))
+                .having(cb.gt(cb.avg(root.get("age")), 30))
+                .buildSelectQuery();
+
+        assertEquals("select tbl.ID as id from EMPLOYEES tbl group by tbl.AGE having (avg(tbl.AGE) > 30)", sql);
     }
 
     @Test
