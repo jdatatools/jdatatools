@@ -28,7 +28,7 @@ public class CriteriaQuery<T> {
     private Expression where = new Where();
     private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
     private final List<Join<?, ?>> joins = new ArrayList<>();
-    private final LinkedHashSet<Selection<?>> selection = new LinkedHashSet<>();
+    private final LinkedHashSet<PathExpression<?>> pathExpression = new LinkedHashSet<>();
     private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     private Function<String, String> from = table -> table;
 
@@ -54,9 +54,9 @@ public class CriteriaQuery<T> {
     public final CriteriaQuery<T> select(Path<?>... paths) {
         if (paths != null) {
             var list = Arrays.stream(paths)
-                    .map(Selection::new)
+                    .map(PathExpression::new)
                     .toList();
-            selection.addAll(list);
+            pathExpression.addAll(list);
         }
         return this;
     }
@@ -71,9 +71,9 @@ public class CriteriaQuery<T> {
     public CriteriaQuery<T> unselect(Path<?>... paths) {
         if (paths != null) {
             var list = Arrays.stream(paths)
-                    .map(Selection::new)
+                    .map(PathExpression::new)
                     .toList();
-            list.forEach(selection::remove);
+            list.forEach(pathExpression::remove);
         }
         return this;
     }
@@ -89,9 +89,9 @@ public class CriteriaQuery<T> {
                 .stream()
                 .filter(path -> path.head.equals(root))
                 .peek(path -> path.head.as(root.getAlias()))
-                .map(path -> new Selection<>(path.head, path.attribute))
+                .map(path -> new PathExpression<>(path.head, path.attribute))
                 .toList();
-        this.selection.addAll(select);
+        this.pathExpression.addAll(select);
         return this;
     }
 
@@ -233,7 +233,7 @@ public class CriteriaQuery<T> {
      */
     private String select() {
         checkSelection();
-        String select = selection
+        String select = pathExpression
                 .stream()
                 .sorted(Comparator.comparing(o -> o.attribute))
                 .map(expression -> new StringBuilder(expression.render())
@@ -265,7 +265,7 @@ public class CriteriaQuery<T> {
      * @return The comma-separated list of column names.
      */
     private String insert() {
-        return selection
+        return pathExpression
                 .stream()
                 .map(EntityRegistry::resolve)
                 .collect(Collectors.joining(","));
@@ -277,7 +277,7 @@ public class CriteriaQuery<T> {
      * @return The comma-separated list of values placeholders.
      */
     private String values() {
-        return selection
+        return pathExpression
                 .stream()
                 .map(path -> new StringBuilder(":").append(path.getAttribute()))
                 .collect(Collectors.joining(","));
@@ -462,10 +462,10 @@ public class CriteriaQuery<T> {
      */
     public List<Field> getFields() {
         List<Field> selectableFields = getSelectableFields(root.getJavaType());
-        if (this.selection.isEmpty()) {
+        if (this.pathExpression.isEmpty()) {
             return selectableFields;
         }
-        return this.selection
+        return this.pathExpression
                 .stream()
                 .map(select -> {
                     try {
@@ -483,7 +483,7 @@ public class CriteriaQuery<T> {
      * is explicitly defined, all columns from the root entity are selected.
      */
     private void checkSelection() {
-        if (this.selection.isEmpty()) {
+        if (this.pathExpression.isEmpty()) {
             select(root);
         }
     }

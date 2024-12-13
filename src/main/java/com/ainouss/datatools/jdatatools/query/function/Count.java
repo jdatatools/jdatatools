@@ -1,14 +1,14 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Selection;
+import com.ainouss.datatools.jdatatools.query.core.PathExpression;
 
 /**
  * Count aggregate function
  */
 public class Count extends Expression {
 
-    public Count(Selection<?> path) {
+    public Count(PathExpression<?> path) {
         this.value = path;
     }
 

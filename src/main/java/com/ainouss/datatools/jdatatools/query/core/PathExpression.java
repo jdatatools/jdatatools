@@ -1,6 +1,5 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -9,11 +8,11 @@ import lombok.EqualsAndHashCode;
  * @param <T> type
  */
 @EqualsAndHashCode(callSuper = true)
-public class Selection<T> extends Path<T> {
+public class PathExpression<T> extends Path<T> {
 
     protected final Expression expression;
 
-    public Selection(Root<T> head, String attribute, Expression expression) {
+    public PathExpression(Root<T> head, String attribute, Expression expression) {
         super(head, attribute);
         this.expression = expression;
     }
@@ -24,7 +23,7 @@ public class Selection<T> extends Path<T> {
      * @param head      head
      * @param attribute attribute
      */
-    public Selection(Root<T> head, String attribute) {
+    public PathExpression(Root<T> head, String attribute) {
         super(head, attribute);
         this.expression = null;
     }
@@ -35,10 +34,10 @@ public class Selection<T> extends Path<T> {
      * @param selection selection
      */
 
-    public Selection(Path<T> selection) {
+    public PathExpression(Path<T> selection) {
         super(selection.head, selection.attribute);
-        if (selection instanceof Selection) {
-            this.expression = ((Selection<?>) selection).expression;
+        if (selection instanceof PathExpression) {
+            this.expression = ((PathExpression<?>) selection).expression;
         } else {
             this.expression = null;
         }

@@ -74,34 +74,42 @@ public abstract class Expression {
                 .map(Expression::render)
                 .collect(Collectors.joining(" and "));
 
-        var sql = new StringBuilder(EntityRegistry.fullResolve(this.path));
+        String sub;
 
-        sql.append(this.sql());
+        if (this.path instanceof PathExpression<?>) {
+            sub = this.path.toString();
+        } else {
+            sub = EntityRegistry.fullResolve(this.path);
+        }
+
+        var builder = new StringBuilder(sub);
+
+        builder.append(this.sql());
 
         if (expression != null) {
-            sql.append("(")
+            builder.append("(")
                     .append(expression.render())
                     .append(")");
         }
 
         if (!this.not.isEmpty()) {
-            sql.append("(")
+            builder.append("(")
                     .append(nots)
                     .append(")");
         }
 
         if (isNotBlank(ands)) {
-            sql.append(sql.isEmpty() ? "" : " and ")
+            builder.append(builder.isEmpty() ? "" : " and ")
                     .append("(")
                     .append(ands)
                     .append(")");
         }
         if (isNotBlank(ors)) {
-            sql.append(sql.isEmpty() ? "" : " or ")
+            builder.append(builder.isEmpty() ? "" : " or ")
                     .append("(")
                     .append(ors)
                     .append(")");
         }
-        return sql.toString();
+        return builder.toString();
     }
 }

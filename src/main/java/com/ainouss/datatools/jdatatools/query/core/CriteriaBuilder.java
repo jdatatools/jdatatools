@@ -238,7 +238,7 @@ public class CriteriaBuilder {
      * @return max(attribute)
      */
     public <R> Path<R> max(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new Max(new Selection<>(path)));
+        return new PathExpression<>(path.head, path.attribute, new Max(new PathExpression<>(path)));
     }
 
     /**
@@ -249,7 +249,7 @@ public class CriteriaBuilder {
      * @return min(attribute)
      */
     public <R> Path<R> min(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new Min(new Selection<>(path)));
+        return new PathExpression<>(path.head, path.attribute, new Min(new PathExpression<>(path)));
     }
 
 
@@ -261,7 +261,7 @@ public class CriteriaBuilder {
      * @return min(attribute)
      */
     public <R> Path<R> sum(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new Sum(new Selection<>(path)));
+        return new PathExpression<>(path.head, path.attribute, new Sum(new PathExpression<>(path)));
     }
 
     /**
@@ -272,7 +272,7 @@ public class CriteriaBuilder {
      * @return avg(attribute)
      */
     public <R> Path<R> avg(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new Avg(new Selection<>(path)));
+        return new PathExpression<>(path.head, path.attribute, new Avg(new PathExpression<>(path)));
     }
 
     /**
@@ -283,7 +283,7 @@ public class CriteriaBuilder {
      * @return count(attribute)
      */
     public <R> Path<R> count(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new Count(new Selection<>(path)));
+        return new PathExpression<>(path.head, path.attribute, new Count(new PathExpression<>(path)));
     }
 
     /**
@@ -294,7 +294,7 @@ public class CriteriaBuilder {
      * @return distinct(attribute)
      */
     public <R> Path<R> distinct(Path<R> path) {
-        return new Selection<>(path.head, path.attribute, new Distinct(new Selection<>(path)));
+        return new PathExpression<>(path.head, path.attribute, new Distinct(new PathExpression<>(path)));
     }
 
     /**
@@ -305,7 +305,7 @@ public class CriteriaBuilder {
      * @return count(attribute)
      */
     public <R> Path<R> count(Root<R> path) {
-        return new Selection<>(path, null, new Count());
+        return new PathExpression<>(path, null, new Count());
     }
 
     /**

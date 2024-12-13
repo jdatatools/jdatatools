@@ -258,6 +258,15 @@ class CriteriaBuilderTest {
         String sql = cb.ne(root.get("name"), "John Doe").render();
         assertEquals("EMPLOYEES.name != 'John Doe'", sql);
     }
+    @Test
+    void test(){
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> book = query.from(Employee.class).as("tbl");
+        // Group books by author
+        String sql = cb.gt(cb.sum(book.get("age")), 1000L).render();
+        assertEquals("sum(tbl.AGE) > 1000", sql);
+    }
 
 
 }

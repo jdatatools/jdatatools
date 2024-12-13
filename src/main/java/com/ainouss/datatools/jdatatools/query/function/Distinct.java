@@ -1,13 +1,13 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Selection;
+import com.ainouss.datatools.jdatatools.query.core.PathExpression;
 
 /**
  * Distinct aggregate function
  */
 public class Distinct extends Expression {
-    public Distinct(Selection<?> path) {
+    public Distinct(PathExpression<?> path) {
         this.value = path;
     }
 
