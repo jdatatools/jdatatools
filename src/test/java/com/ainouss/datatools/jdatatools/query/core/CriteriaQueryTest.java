@@ -1,5 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.model.Department;
 import com.ainouss.datatools.jdatatools.query.model.Employee;
 import com.ainouss.datatools.jdatatools.query.model.Profile;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
@@ -549,10 +550,22 @@ class CriteriaQueryTest {
     public void all_subquery() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from();
+        CriteriaQuery<Employee> sub = cb.createQuery(Employee.class).as("sub");
+        Root<Employee> r = sub.from();
         String sql = query.where(
-                cb.ge(root.get("id"), cb.all(cb.createQuery(Employee.class).as("sub").select(r -> r.get("id"))))
+                cb.ge(root.get("id"), cb.all(sub.select(r.get("id"))))
         ).buildSelectQuery();
         assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.ID >= all (select sub.ID as id from EMPLOYEES sub))", sql);
+    }
+
+    @Test
+    public void scalar_select() {
+        CriteriaQuery<Department> dep = cb.createQuery(Department.class);
+        Root<Department> root = dep.from();
+        CriteriaQuery<Employee> emp = cb.createQuery(Employee.class);
+        Root<Employee> empRoot = emp.from();
+        String sql = dep.select(root.get("name"), emp.select(cb.max(empRoot.get("salary")))).buildSelectQuery();
+        assertEquals("select DEPARTMENTS.NAME as name, (select max(EMPLOYEES.SALARY) as salary from EMPLOYEES EMPLOYEES) as salary from DEPARTMENTS DEPARTMENTS", sql);
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.Objects;
  * @param <T> Type
  */
 @Getter
-public class Path<T> {
+public class Path<T> implements Projection<T>{
 
     protected final Root<T> head;
 
@@ -53,5 +53,20 @@ public class Path<T> {
     @Override
     public int hashCode() {
         return Objects.hash(head, attribute);
+    }
+
+    @Override
+    public String output() {
+        return render();
+    }
+
+    @Override
+    public String attribute() {
+        return attribute;
+    }
+
+    @Override
+    public Root<T> head() {
+        return head;
     }
 }

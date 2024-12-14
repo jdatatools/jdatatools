@@ -23,14 +23,14 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  *
  * @param <T> The type of the entity being queried.
  */
-public class CriteriaQuery<T> {
+public class CriteriaQuery<T> implements Projection<T> {
 
     private final Root<T> root;
     private Expression where = new Where();
     private final Expression having = new IdentityExpression();
     private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
     private final List<Join<?, ?>> joins = new ArrayList<>();
-    private final LinkedHashSet<PathExpression<?>> selections = new LinkedHashSet<>();
+    private final LinkedHashSet<Projection> selections = new LinkedHashSet<>();
     private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     private Function<String, String> from = table -> table;
 
@@ -50,49 +50,14 @@ public class CriteriaQuery<T> {
     /**
      * Selects multiple attributes or expressions.
      *
-     * @param paths The paths representing the attributes or expressions to select.
+     * @param projections The paths representing the attributes or expressions to select.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public final CriteriaQuery<T> select(Path<?>... paths) {
-        if (paths != null) {
-            var list = Arrays.stream(paths)
-                    .map(PathExpression::new)
+    public final CriteriaQuery<T> select(Projection<?>... projections) {
+        if (projections != null) {
+            var list = Arrays.stream(projections)
                     .toList();
             selections.addAll(list);
-        }
-        return this;
-    }
-
-    /**
-     * Selects multiple attributes or expressions.
-     *
-     * @return This {@code CriteriaQuery} instance for method chaining.
-     */
-    @SafeVarargs
-    public final CriteriaQuery<T> select(Function<Root<T>, Path<?>>... functions) {
-        if (functions != null) {
-            var list = Arrays.stream(functions)
-                    .map(select -> select.apply(root))
-                    .map(PathExpression::new)
-                    .toList();
-            selections.addAll(list);
-        }
-        return this;
-    }
-
-    /**
-     * Unselects specific attributes from the selection. This method should be called
-     * after {@link #select()} to remove attributes from the previously defined selection.
-     *
-     * @param paths The paths representing the attributes to unselect.
-     * @return This {@code CriteriaQuery} instance for method chaining.
-     */
-    public CriteriaQuery<T> unselect(Path<?>... paths) {
-        if (paths != null) {
-            var list = Arrays.stream(paths)
-                    .map(PathExpression::new)
-                    .toList();
-            list.forEach(selections::remove);
         }
         return this;
     }
@@ -264,10 +229,10 @@ public class CriteriaQuery<T> {
         checkSelection();
         String select = selections
                 .stream()
-                .sorted(Comparator.comparing(o -> o.attribute))
-                .map(expression -> new StringBuilder(expression.render())
-                        .append(expression.getAttribute() != null ? " as " : "")
-                        .append(expression.getAttribute() != null ? expression.getAttribute() : "")
+                .sorted(Comparator.comparing(Projection::attribute))
+                .map(projection -> new StringBuilder(projection.output())
+                        .append(projection.attribute() != null ? " as " : "")
+                        .append(projection.attribute() != null ? projection.attribute() : "")
                 )
                 .map(StringBuilder::toString)
                 .collect(Collectors.joining(","));
@@ -308,7 +273,7 @@ public class CriteriaQuery<T> {
     private String values() {
         return selections
                 .stream()
-                .map(path -> new StringBuilder(":").append(path.getAttribute()))
+                .map(path -> new StringBuilder(":").append(path.attribute()))
                 .collect(Collectors.joining(","));
     }
 
@@ -508,7 +473,7 @@ public class CriteriaQuery<T> {
                 .stream()
                 .map(select -> {
                     try {
-                        return select.head.getJavaType().getDeclaredField(select.attribute);
+                        return select.head().getJavaType().getDeclaredField(select.attribute());
                     } catch (NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
@@ -532,4 +497,18 @@ public class CriteriaQuery<T> {
         return this;
     }
 
+    @Override
+    public String output() {
+        return " (" + buildSelectQuery() + ")";
+    }
+
+    @Override
+    public String attribute() {
+        return this.selections.stream().map(Projection::attribute).findAny().orElse("");
+    }
+
+    @Override
+    public Root<T> head() {
+        return root;
+    }
 }

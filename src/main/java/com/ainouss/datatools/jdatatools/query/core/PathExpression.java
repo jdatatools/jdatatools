@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
  * @param <T> type
  */
 @EqualsAndHashCode(callSuper = true)
-public class PathExpression<T> extends Path<T> {
+public class PathExpression<T> extends Path<T> implements Projection<T> {
 
     protected final Expression expression;
 
@@ -34,7 +34,7 @@ public class PathExpression<T> extends Path<T> {
      * @param selection selection
      */
 
-    public PathExpression(Path<T> selection) {
+    public <P extends Path<T>> PathExpression(P selection) {
         super(selection.head, selection.attribute);
         if (selection instanceof PathExpression) {
             this.expression = ((PathExpression<?>) selection).expression;
@@ -61,5 +61,15 @@ public class PathExpression<T> extends Path<T> {
             return super.toString();
         }
         return expression.render();
+    }
+
+    @Override
+    public String output() {
+        return render();
+    }
+
+    @Override
+    public Root<T> head() {
+        return head;
     }
 }

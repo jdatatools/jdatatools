@@ -1,9 +1,9 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import com.ainouss.datatools.jdatatools.query.join.Join;
 import com.ainouss.datatools.jdatatools.query.join.JoinExpression;
 import com.ainouss.datatools.jdatatools.query.join.JoinType;
+import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import lombok.Getter;
 
 import java.util.Objects;
@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @param <T> Java class
  */
 @Getter
-public class Root<T> {
+public class Root<T> implements Projection<T> {
     /**
      * underlying Java type
      */
@@ -147,5 +147,20 @@ public class Root<T> {
     @Override
     public int hashCode() {
         return Objects.hash(javaType);
+    }
+
+    @Override
+    public String output() {
+        return toString();
+    }
+
+    @Override
+    public String attribute() {
+        return "";
+    }
+
+    @Override
+    public Root<T> head() {
+        return this;
     }
 }

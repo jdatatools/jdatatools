@@ -2,6 +2,7 @@ package com.ainouss.datatools.jdatatools.query.registery;
 
 import com.ainouss.datatools.jdatatools.query.core.CriteriaBuilder;
 import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.Projection;
 import com.ainouss.datatools.jdatatools.query.core.Root;
 import com.ainouss.datatools.jdatatools.util.QueryBuilder;
 import jakarta.persistence.Column;
@@ -89,17 +90,16 @@ public class EntityRegistry {
     /**
      * Resolve path to a column name, all paths are known before the query execution
      *
-     * @param path path
      * @return column name
      */
-    public static String resolve(Path<?> path) {
-        if (path == null) {
+    public static String resolve(Projection<?> projection) {
+        if (projection == null) {
             return "";
         }
-        String column = columns.get(new Path<>(path.getHead(), path.getAttribute()));
+        String column = columns.get(new Path<>(projection.head(), projection.attribute()));
         if (column == null) {
-            log.warn("Could not locate column for path {}, make sure to add a @Column annotation, the given attribute name will be used", path);
-            return path.getAttribute();
+            log.warn("Could not locate column for path {}, make sure to add a @Column annotation, the given attribute name will be used", projection);
+            return projection.attribute();
         }
         return column;
     }
