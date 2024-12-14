@@ -516,4 +516,43 @@ class CriteriaQueryTest {
         String insert = cr.buildInsertQuery();
         Assertions.assertEquals("insert into tab_EMPLOYEES (AGE,ENABLED,FIRST_NAME,ID,LAST_NAME) values (:age,:enabled,:firstName,:id,:lastName)", insert);
     }
+
+    @Test
+    public void exists_subquery() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class).as("emp");
+        Root<Employee> root = query.from();
+        CriteriaQuery<Profile> sub = cb.createQuery(Profile.class).as("pro");
+        Root<Profile> subRoot = sub.from();
+        String sql = query.where(
+                cb.exists(sub.where(cb.eq(root.get("id"), subRoot.get("id"))))
+        ).buildSelectQuery();
+        assertEquals("select emp.AGE as age,emp.ENABLED as enabled,emp.FIRST_NAME as firstName,emp.ID as id,emp.LAST_NAME as lastName from EMPLOYEES emp where ( exists (select pro.ID as id,pro.VALUE as value from PROFILES pro where (emp.ID = pro.ID)))", sql);
+    }
+
+    @Test
+    public void any_subquery() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class)
+                .as("tbl");
+        Root<Employee> root = query.from();
+        CriteriaQuery<Employee> emp = cb.createQuery(Employee.class);
+        Root<Employee> empRoot = emp.from();
+        //
+        String sql = query.where(
+                cb.gt(
+                        root.get("id"), cb.any(emp.select(empRoot.get("id")).where(cb.eq(empRoot.get("id"), 1L)))
+                )
+        ).buildSelectQuery();
+        assertEquals("select tbl.AGE as age,tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where (tbl.ID > any (select EMPLOYEES.ID as id from EMPLOYEES EMPLOYEES where (EMPLOYEES.ID = 1)))", sql);
+    }
+
+    @Test
+    public void all_subquery() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from();
+        String sql = query.where(
+                cb.ge(root.get("id"), cb.all(cb.createQuery(Employee.class).as("sub").select(r -> r.get("id"))))
+        ).buildSelectQuery();
+        assertEquals("select EMPLOYEES.AGE as age,EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName from EMPLOYEES EMPLOYEES where (EMPLOYEES.ID >= all (select sub.ID as id from EMPLOYEES sub))", sql);
+    }
+
 }

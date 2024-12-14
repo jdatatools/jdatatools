@@ -4,6 +4,9 @@ import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
 import com.ainouss.datatools.jdatatools.query.expression.PredicateExpression;
 import com.ainouss.datatools.jdatatools.query.function.*;
 import com.ainouss.datatools.jdatatools.query.operator.*;
+import com.ainouss.datatools.jdatatools.query.subquery.All;
+import com.ainouss.datatools.jdatatools.query.subquery.Any;
+import com.ainouss.datatools.jdatatools.query.subquery.Exists;
 
 import java.util.Arrays;
 import java.util.List;
@@ -111,6 +114,10 @@ public class CriteriaBuilder {
         return new Gt(path, path2);
     }
 
+    public Expression gt(Path<?> path, Expression expression) {
+        return new Gt(path, expression);
+    }
+
     /**
      * Lesser than a number
      *
@@ -141,6 +148,17 @@ public class CriteriaBuilder {
      * @return Lesser than a number
      */
     public Expression ge(Path<?> path, Number value) {
+        return new Ge(path, value);
+    }
+
+    /**
+     * Lesser than or equal a number
+     *
+     * @param path  path
+     * @param value value
+     * @return Lesser than a number
+     */
+    public Expression ge(Path<?> path, Expression value) {
         return new Ge(path, value);
     }
 
@@ -330,4 +348,36 @@ public class CriteriaBuilder {
         Expression and = new IdentityExpression().and(expression, expressions);
         return new Not(and);
     }
+
+    /**
+     * EXISTS subquery
+     *
+     * @param subquery subquery
+     * @return EXISTS expression
+     */
+    public Expression exists(CriteriaQuery<?> subquery) {
+        return new Exists(subquery);
+    }
+
+    /**
+     * ANY subquery
+     *
+     * @param subquery subquery
+     * @return ANY expression
+     */
+    public Expression any(CriteriaQuery<?> subquery) {
+        return new Any(subquery);
+    }
+
+    /**
+     * ALL subquery
+     *
+     * @param subquery subquery
+     * @return ALL expression
+     */
+    public Expression all(CriteriaQuery<?> subquery) {
+        return new All(subquery);
+    }
+
+
 }

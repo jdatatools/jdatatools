@@ -64,6 +64,23 @@ public class CriteriaQuery<T> {
     }
 
     /**
+     * Selects multiple attributes or expressions.
+     *
+     * @return This {@code CriteriaQuery} instance for method chaining.
+     */
+    @SafeVarargs
+    public final CriteriaQuery<T> select(Function<Root<T>, Path<?>>... functions) {
+        if (functions != null) {
+            var list = Arrays.stream(functions)
+                    .map(select -> select.apply(root))
+                    .map(PathExpression::new)
+                    .toList();
+            selections.addAll(list);
+        }
+        return this;
+    }
+
+    /**
      * Unselects specific attributes from the selection. This method should be called
      * after {@link #select()} to remove attributes from the previously defined selection.
      *
@@ -509,4 +526,10 @@ public class CriteriaQuery<T> {
             select(root);
         }
     }
+
+    public CriteriaQuery<T> as(String tbl) {
+        this.root.as(tbl);
+        return this;
+    }
+
 }
