@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @param <T> Java class
  */
 @Getter
-public class Root<T> implements Projection<T> {
+public class Root<T> implements Selectable<T> {
     /**
      * underlying Java type
      */
@@ -150,17 +150,17 @@ public class Root<T> implements Projection<T> {
     }
 
     @Override
-    public String output() {
+    public String toSql() {
         return toString();
     }
 
     @Override
-    public String attribute() {
+    public String column() {
         return "";
     }
 
     @Override
-    public Root<T> head() {
+    public Root<T> root() {
         return this;
     }
 }

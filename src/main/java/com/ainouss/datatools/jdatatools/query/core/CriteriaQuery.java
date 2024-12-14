@@ -23,14 +23,14 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  *
  * @param <T> The type of the entity being queried.
  */
-public class CriteriaQuery<T> implements Projection<T> {
+public class CriteriaQuery<T> {
 
     private final Root<T> root;
     private Expression where = new Where();
     private final Expression having = new IdentityExpression();
     private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
     private final List<Join<?, ?>> joins = new ArrayList<>();
-    private final LinkedHashSet<Projection> selections = new LinkedHashSet<>();
+    private final LinkedHashSet<Selectable<?>> selections = new LinkedHashSet<>();
     private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     private Function<String, String> from = table -> table;
 
@@ -50,12 +50,12 @@ public class CriteriaQuery<T> implements Projection<T> {
     /**
      * Selects multiple attributes or expressions.
      *
-     * @param projections The paths representing the attributes or expressions to select.
+     * @param selectables The paths representing the attributes or expressions to select.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public final CriteriaQuery<T> select(Projection<?>... projections) {
-        if (projections != null) {
-            var list = Arrays.stream(projections)
+    public final CriteriaQuery<T> select(Selectable<?>... selectables) {
+        if (selectables != null) {
+            var list = Arrays.stream(selectables)
                     .toList();
             selections.addAll(list);
         }
@@ -229,10 +229,10 @@ public class CriteriaQuery<T> implements Projection<T> {
         checkSelection();
         String select = selections
                 .stream()
-                .sorted(Comparator.comparing(Projection::attribute))
-                .map(projection -> new StringBuilder(projection.output())
-                        .append(projection.attribute() != null ? " as " : "")
-                        .append(projection.attribute() != null ? projection.attribute() : "")
+                .sorted(Comparator.comparing(Selectable::column))
+                .map(projection -> new StringBuilder(projection.toSql())
+                        .append(projection.column() != null ? " as " : "")
+                        .append(projection.column() != null ? projection.column() : "")
                 )
                 .map(StringBuilder::toString)
                 .collect(Collectors.joining(","));
@@ -273,7 +273,7 @@ public class CriteriaQuery<T> implements Projection<T> {
     private String values() {
         return selections
                 .stream()
-                .map(path -> new StringBuilder(":").append(path.attribute()))
+                .map(path -> new StringBuilder(":").append(path.column()))
                 .collect(Collectors.joining(","));
     }
 
@@ -473,7 +473,7 @@ public class CriteriaQuery<T> implements Projection<T> {
                 .stream()
                 .map(select -> {
                     try {
-                        return select.head().getJavaType().getDeclaredField(select.attribute());
+                        return select.root().getJavaType().getDeclaredField(select.column());
                     } catch (NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
@@ -496,19 +496,7 @@ public class CriteriaQuery<T> implements Projection<T> {
         this.root.as(tbl);
         return this;
     }
-
-    @Override
-    public String output() {
-        return " (" + buildSelectQuery() + ")";
-    }
-
-    @Override
-    public String attribute() {
-        return this.selections.stream().map(Projection::attribute).findAny().orElse("");
-    }
-
-    @Override
-    public Root<T> head() {
-        return root;
+    public LinkedHashSet<Selectable<?>> getSelect(){
+        return selections;
     }
 }

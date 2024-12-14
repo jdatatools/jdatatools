@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
  * @param <T> type
  */
 @EqualsAndHashCode(callSuper = true)
-public class PathExpression<T> extends Path<T> implements Projection<T> {
+public class PathExpression<T> extends Path<T> implements Selectable<T> {
 
     protected final Expression expression;
 
@@ -64,12 +64,12 @@ public class PathExpression<T> extends Path<T> implements Projection<T> {
     }
 
     @Override
-    public String output() {
+    public String toSql() {
         return render();
     }
 
     @Override
-    public Root<T> head() {
+    public Root<T> root() {
         return head;
     }
 }

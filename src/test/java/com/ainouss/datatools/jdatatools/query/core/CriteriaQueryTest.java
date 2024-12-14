@@ -564,7 +564,7 @@ class CriteriaQueryTest {
         Root<Department> root = dep.from();
         CriteriaQuery<Employee> emp = cb.createQuery(Employee.class);
         Root<Employee> empRoot = emp.from();
-        String sql = dep.select(root.get("name"), emp.select(cb.max(empRoot.get("salary")))).buildSelectQuery();
+        String sql = dep.select(root.get("name"), cb.scalar(emp.select(cb.max(empRoot.get("salary"))))).buildSelectQuery();
         assertEquals("select DEPARTMENTS.NAME as name, (select max(EMPLOYEES.SALARY) as salary from EMPLOYEES EMPLOYEES) as salary from DEPARTMENTS DEPARTMENTS", sql);
     }
 

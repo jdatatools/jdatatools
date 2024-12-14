@@ -27,6 +27,10 @@ public class CriteriaBuilder {
         return new CriteriaQuery<>(clazz);
     }
 
+    public <T> ScalarQuery<T> scalar(CriteriaQuery<T> cr) {
+        return new ScalarQuery<>(cr);
+    }
+
     /**
      * @param path  pth
      * @param value value

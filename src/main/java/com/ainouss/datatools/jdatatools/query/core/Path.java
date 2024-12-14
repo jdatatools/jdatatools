@@ -11,7 +11,7 @@ import java.util.Objects;
  * @param <T> Type
  */
 @Getter
-public class Path<T> implements Projection<T>{
+public class Path<T> implements Selectable<T> {
 
     protected final Root<T> head;
 
@@ -56,17 +56,17 @@ public class Path<T> implements Projection<T>{
     }
 
     @Override
-    public String output() {
+    public String toSql() {
         return render();
     }
 
     @Override
-    public String attribute() {
+    public String column() {
         return attribute;
     }
 
     @Override
-    public Root<T> head() {
+    public Root<T> root() {
         return head;
     }
 }
