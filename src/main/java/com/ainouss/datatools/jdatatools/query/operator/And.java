@@ -17,13 +17,13 @@ import com.ainouss.datatools.jdatatools.query.core.Expression;
  *  query.where(
  *      cb.and(
  *          cb.eq(root.get("name"), "John Doe"),
- *          cb.gt(root.get("age"), 30)
+ *          cb.gt(root.get("salary"), 30)
  *      )
  *  );
  * </pre>
  * This would generate the following SQL WHERE clause:
  * <pre>
- *  WHERE name = 'John Doe' AND age > 30
+ *  WHERE name = 'John Doe' AND salary > 30
  * </pre>
  */
 public class And extends Expression {

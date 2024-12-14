@@ -14,11 +14,11 @@ import com.ainouss.datatools.jdatatools.query.core.Path;
  *  CriteriaBuilder cb = new CriteriaBuilder();
  *  CriteriaQuery<MyEntity> query = cb.createQuery(MyEntity.class);
  *  Root<MyEntity> root = query.from();
- *  query.where(cb.ge(root.get("age"), 30));
+ *  query.where(cb.ge(root.get("salary"), 30));
  * </pre>
  * This would generate the following SQL WHERE clause:
  * <pre>
- *  WHERE age >= 30
+ *  WHERE salary >= 30
  * </pre>
  */
 public class Ge extends Expression {

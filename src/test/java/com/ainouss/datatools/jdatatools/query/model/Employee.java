@@ -17,8 +17,8 @@ public class Employee {
     @Column(name = "LAST_NAME")
     private String lastName;
 
-    @Column(name = "AGE")
-    private int age;
+    @Column(name = "SALARY")
+    private int salary;
 
     @Column(name = "ENABLED")
     private String enabled;
