@@ -2,14 +2,14 @@ package com.ainouss.datatools.jdatatools.query.join;
 
 import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Path;
-import com.ainouss.datatools.jdatatools.query.core.Root;
+import com.ainouss.datatools.jdatatools.query.core.From;
 import lombok.Getter;
 
 @Getter
-public class Join<X, Y> extends Path<X> {
+public class Join<X, Y> {
 
-    private final Root<Y> target;
+    private final From target;
+    private final From source;
 
     private final JoinType joinType;
 
@@ -18,8 +18,8 @@ public class Join<X, Y> extends Path<X> {
     private CriteriaQuery<?> subquery;
 
 
-    public Join(Root<X> source, Root<Y> target, JoinType joinType) {
-        super(source, null);
+    public Join(From source, From target, JoinType joinType) {
+        this.source = source;
         this.target = target;
         this.joinType = joinType;
     }
@@ -42,10 +42,7 @@ public class Join<X, Y> extends Path<X> {
     public String render() {
         return new StringBuilder(this.getJoinType().name().toLowerCase())
                 .append(" join ")
-                .append(target.schema())
-                .append(target.getTable())
-                .append(" ")
-                .append(target.getAlias())
+                .append(target.render())
                 .append(" ")
                 .append(getStatement())
                 .toString();

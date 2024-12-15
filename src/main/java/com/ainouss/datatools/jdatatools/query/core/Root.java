@@ -18,21 +18,14 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @param <T> Java class
  */
 @Getter
-public class Root<T> implements Selectable {
-    /**
-     * underlying Java type
-     */
+public class Root<T> implements Selectable, From {
+
     private final Class<T> javaType;
-    /**
-     * SQL alias
-     */
+
     private String alias;
 
     private final String table;
 
-    /**
-     * SQL schema
-     */
     private String schema;
 
     public Root(Class<T> from) {
@@ -107,7 +100,7 @@ public class Root<T> implements Selectable {
      * @param <U>  target classs
      * @return join expression
      */
-    public <U> Join<T, U> join(Root<U> root) {
+    public <U> Join<T, U> join(From root) {
         return new Join<>(this, root, JoinType.CROSS);
     }
 
@@ -137,6 +130,15 @@ public class Root<T> implements Selectable {
     @Override
     public String toString() {
         return alias;
+    }
+
+    @Override
+    public String render() {
+        return new StringBuilder(schema())
+                .append(EntityRegistry.tables.get(this))
+                .append(" ")
+                .append(getAlias())
+                .toString();
     }
 
     @Override

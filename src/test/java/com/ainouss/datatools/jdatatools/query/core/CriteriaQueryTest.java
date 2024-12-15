@@ -680,4 +680,22 @@ class CriteriaQueryTest {
         String expectedSql = "select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 1) except select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 2)";
         assertEquals(expectedSql, exceptSql);
     }
+
+    @Test
+    void testDerivedTable() {
+
+        CriteriaQuery<Department> query = cb.createQuery(Department.class);
+        Root<Department> depRoot = query.from(Department.class).as("d");
+        //
+        Subquery<Employee> subquery = query.subquery(Employee.class); //
+        Root<Employee> emp = subquery.from(Employee.class).as("e");
+        subquery.select(emp)
+                .where(cb.gt(emp.get("salary"), 1000));
+
+        //subquery.as("high_earners"); TODO : overload alias
+        query.select(depRoot.get("name"), emp.get("firstName"))
+                .join(depRoot.join(subquery).on(cb.eq(depRoot.get("id"), emp.get("id"))));
+        String sql = query.buildSelectQuery(); // Build the query from the outer query
+        assertEquals("select e.FIRST_NAME as firstName,d.NAME as name from DEPARTMENTS d cross join (select e.ENABLED,e.FIRST_NAME,e.ID,e.LAST_NAME,e.SALARY from EMPLOYEES e where (e.SALARY > 1000)) e on d.ID = e.ID", sql);
+    }
 }

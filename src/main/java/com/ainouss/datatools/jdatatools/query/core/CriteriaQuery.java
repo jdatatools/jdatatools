@@ -29,7 +29,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class CriteriaQuery<T> {
 
-    private final Root<T> root;
+    protected final Root<T> root;
+    protected final List<From> froms = new ArrayList<>();
     private Where where = new Where();
     private final Expression having = new IdentityExpression();
     private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
@@ -40,6 +41,7 @@ public class CriteriaQuery<T> {
     private Function<String, String> from = table -> table;
     private Integer limit;
     private Integer offset;
+    protected boolean subquery = false;
 
     /**
      * Constructs a new {@code CriteriaQuery} instance.
@@ -50,8 +52,14 @@ public class CriteriaQuery<T> {
      * @param javaType The Java class of the entity being queried.
      */
     CriteriaQuery(Class<T> javaType) {
-        this.root = new Root<>(javaType);
         EntityRegistry.registerClass(javaType);
+        this.root = new Root<>(javaType);
+        this.froms.add(root);
+    }
+
+    public CriteriaQuery<T> from(From from) {
+        this.froms.add(from);
+        return this;
     }
 
     /**
@@ -157,6 +165,10 @@ public class CriteriaQuery<T> {
         return root;
     }
 
+    private String froms() {
+        return froms.stream().map(From::render).collect(Collectors.joining(","));
+    }
+
     /**
      * Adds a where clause to the query.
      *
@@ -214,6 +226,10 @@ public class CriteriaQuery<T> {
         return this;
     }
 
+    public <U> Subquery<U> subquery(Class<U> type) {
+        return new Subquery<>(this,type);
+    }
+
     /**
      * Adds a group by clause to the query.
      *
@@ -266,14 +282,21 @@ public class CriteriaQuery<T> {
         String select = selections
                 .stream()
                 .sorted(Comparator.comparing(Selectable::column))
-                .map(attr -> new StringBuilder(attr.toString())
-                        .append(isNotBlank(attr.column()) ? " as " : "")
-                        .append(isNotBlank(attr.column()) ? attr.column() : "")
-                )
-                .map(StringBuilder::toString)
+                .map(this::attributeAlias)
                 .collect(Collectors.joining(","));
         return defaultIfEmpty(select, " * ");
 
+    }
+
+    private String attributeAlias(Selectable attr) {
+        String str = attr.toString();
+        if (subquery) {
+            return str;
+        }
+        if (isNotBlank(attr.column())) {
+            return str + " as " + attr.column();
+        }
+        return str;
     }
 
     /**
@@ -353,9 +376,7 @@ public class CriteriaQuery<T> {
         return new StringBuilder().append("select ")
                 .append(select())
                 .append(" from ")
-                .append(sourceTable(root))
-                .append(" ")
-                .append(alias(root))
+                .append(froms())
                 .append(" ")
                 .append(joins())
                 .append(" ")
