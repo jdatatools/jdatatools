@@ -2,6 +2,7 @@ package com.ainouss.datatools.jdatatools.query.core;
 
 import com.ainouss.datatools.jdatatools.query.model.Department;
 import com.ainouss.datatools.jdatatools.query.model.Employee;
+import com.ainouss.datatools.jdatatools.query.model.EmployeeDetails;
 import com.ainouss.datatools.jdatatools.query.model.Profile;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
 import org.junit.jupiter.api.Assertions;
@@ -182,6 +183,30 @@ class CriteriaQueryTest {
                 );
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from DB.EMPLOYEES tbl left join DB2.PROFILES child on tbl.ID = child.ID where ((child.ID = 0 and (tbl.ID > 1)))", select);
+    }
+
+    @Test
+    void testSubqueryInJoinCondition() {
+
+        CriteriaBuilder cb = new CriteriaBuilder();
+
+        CriteriaQuery<Employee> employeeQuery = cb.createQuery(Employee.class);
+        Root<Employee> employee = employeeQuery.from(Employee.class).as("e");
+
+        Root<Department> department = employeeQuery.from(Department.class).as("d");
+
+        CriteriaQuery<EmployeeDetails> subquery = cb.createQuery(EmployeeDetails.class);
+        Root<EmployeeDetails> details = subquery.from(EmployeeDetails.class);
+
+        subquery.select(details.get("departmentId")) // Select department_id
+                .where(cb.eq(details.get("employeeId"), employee.get("id")));  // Correlate with outer query
+
+
+        employeeQuery.select(employee.get("lastName"), department.get("name"))  // Select names
+                .join(employee.join(department).on(subquery));
+
+        String sql = employeeQuery.buildSelectQuery();
+        assertEquals("select e.LAST_NAME as lastName,d.NAME as name from EMPLOYEES e cross join DEPARTMENTS d on (select EMPLOYEE_DETAILS.DEPARTMENT_ID as departmentId from EMPLOYEE_DETAILS EMPLOYEE_DETAILS where (EMPLOYEE_DETAILS.EMPLOYEE_ID = e.ID))", sql);
     }
 
     @Test

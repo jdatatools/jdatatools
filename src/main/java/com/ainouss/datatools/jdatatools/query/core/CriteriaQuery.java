@@ -422,15 +422,7 @@ public class CriteriaQuery<T> {
      */
     private String joins() {
         return this.joins.stream()
-                .map(join -> new StringBuilder(join.getJoinType().name().toLowerCase())
-                        .append(" join ")
-                        .append(sourceTable(join.getTarget()))
-                        .append(" ")
-                        .append(alias(join.getTarget()))
-                        .append(join.getOn() != null ? " on " : "")
-                        .append(join.getOn() != null ? join.getOn().toString() : "")
-                        .toString()
-                )
+                .map(Join::render)
                 .collect(Collectors.joining(" "));
     }
 

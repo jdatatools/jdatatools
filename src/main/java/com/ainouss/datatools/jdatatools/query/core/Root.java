@@ -28,6 +28,8 @@ public class Root<T> implements Selectable {
      */
     private String alias;
 
+    private final String table;
+
     /**
      * SQL schema
      */
@@ -36,6 +38,7 @@ public class Root<T> implements Selectable {
     public Root(Class<T> from) {
         this.javaType = from;
         this.alias = EntityRegistry.tables.get(this);
+        this.table = EntityRegistry.tables.get(this);
     }
 
     /**
