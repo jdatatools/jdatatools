@@ -14,21 +14,46 @@ import java.util.stream.Collectors;
  * This class is used to check if a value matches any value within a given list
  * or collection. It can be used with numbers, paths, and strings.
  * <p>
- * Example usage:
+ * Example usage 1:
+ * <pre>
+ *  CriteriaBuilder cb = new CriteriaBuilder();
+ *  CriteriaQuery<MyEntity> query = cb.createQuery(MyEntity.class);
+ *  Root<MyEntity> root = query.from();
+ *  query.where(
+ *      cb.inL(
+ *          root.get("country"), Arrays.asList("USA", "Canada")
+ *      )
+ *  );
+ * </pre>
+ * would generate the following WHERE clause :
+ * <pre> WHERE country IN ('USA', 'Canada') </pre>
+ * <p>
+ * Example usage 2:
  * <pre>
  *  CriteriaBuilder cb = new CriteriaBuilder();
  *  CriteriaQuery<MyEntity> query = cb.createQuery(MyEntity.class);
  *  Root<MyEntity> root = query.from();
  *  query.where(
  *      cb.in(
- *          root.get("country"), Arrays.asList("USA", "Canada")
+ *          root.get("country"), "USA", "Canada"
  *      )
  *  );
  * </pre>
- * This would generate the following SQL WHERE clause:
+ * <p>
+ * would generate the following WHERE clause (the same as above):
+ * <pre> WHERE country IN ('USA', 'Canada') </pre>
+ * Example usage 3:
  * <pre>
- *  WHERE country IN ('USA', 'Canada')
+ *  CriteriaBuilder cb = new CriteriaBuilder();
+ *  CriteriaQuery<MyEntity> query = cb.createQuery(MyEntity.class);
+ *  Root<MyEntity> root = query.from();
+ *  query.where(
+ *      cb.inn(
+ *          root.get("country"), List.of()
+ *      )
+ *  );
  * </pre>
+ * This would generate an empty SQL WHERE clause.
  */
 public class In extends Expression {
 
@@ -48,9 +73,9 @@ public class In extends Expression {
     }
 
     /**
-     * Generates the SQL representation of the IN operator.
+     * Generates the SQL representation of the 'IN' operator.
      *
-     * @return The SQL representation of the IN operator.
+     * @return The SQL representation of the 'IN' operator.
      */
     public String toString() {
         String values = args.stream()

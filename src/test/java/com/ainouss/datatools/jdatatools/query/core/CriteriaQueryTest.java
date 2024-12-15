@@ -568,4 +568,27 @@ class CriteriaQueryTest {
         assertEquals("select DEPARTMENTS.NAME as name, (select max(EMPLOYEES.SALARY) as salary from EMPLOYEES EMPLOYEES) as salary from DEPARTMENTS DEPARTMENTS", sql);
     }
 
+    @Test
+    void testLimitOffset() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class);
+
+        query.select(emp).limit(5).offset(10);
+        String sql = query.buildSelectQuery();
+        assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES limit 5 offset 10", sql);
+
+        query.limit(null).offset(null); // Test with null values
+        sql = query.buildSelectQuery();
+        assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES", sql); //no limit or offset
+
+
+        query.limit(50).offset(null); //Just limit
+        sql = query.buildSelectQuery();
+        assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES limit 50", sql);
+
+
+        query.limit(null).offset(150); //Just offset
+        sql = query.buildSelectQuery();
+        assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES offset 150", sql);
+    }
 }

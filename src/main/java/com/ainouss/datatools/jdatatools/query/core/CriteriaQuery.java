@@ -33,6 +33,8 @@ public class CriteriaQuery<T> {
     private final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     private Function<String, String> from = table -> table;
+    private Integer limit;
+    private Integer offset;
 
     /**
      * Constructs a new {@code CriteriaQuery} instance.
@@ -218,6 +220,16 @@ public class CriteriaQuery<T> {
         return this;
     }
 
+    public CriteriaQuery<T> limit(Integer limit) {
+        this.limit = limit;
+        return this;
+    }
+
+    public CriteriaQuery<T> offset(Integer offset) {
+        this.offset = offset;
+        return this;
+    }
+
     /**
      * Generates the select clause of the SQL query. Column names are aliased with
      * their corresponding Java field names.
@@ -329,6 +341,7 @@ public class CriteriaQuery<T> {
                 .append(having())
                 .append(" ")
                 .append(orderBy())
+                .append(limitOffset())
                 .toString()
                 .trim()
                 .replaceAll("  +", " ");
@@ -442,6 +455,17 @@ public class CriteriaQuery<T> {
                 .map(StringBuilder::toString)
                 .collect(Collectors.joining(","));
         return orderBy.isEmpty() ? "" : " order by " + orderBy;
+    }
+
+    private String limitOffset() {
+        StringBuilder sb = new StringBuilder();
+        if (limit != null) {
+            sb.append(" limit ").append(limit);
+        }
+        if (offset != null) {
+            sb.append(" offset ").append(offset);
+        }
+        return sb.toString();
     }
 
     /**
