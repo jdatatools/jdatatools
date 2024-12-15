@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.operator;
 
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
  * Represents the BETWEEN operator in a query.
@@ -22,33 +22,26 @@ import com.ainouss.datatools.jdatatools.query.core.Path;
  * </pre>
  */
 public class Bt extends Expression {
-    private final Object value1;
-    private final Object value2;
+
+    private final Selectable attribute;
+    private final Selectable left;
+    private final Selectable right;
 
     /**
      * Constructs a new {@code Bt} operator with the given path and range values.
      *
-     * @param path   The path representing the attribute to compare.
-     * @param value1 The lower bound of the range.
-     * @param value2 The upper bound of the range.
+     * @param selectable The path representing the attribute to compare.
+     * @param left     The lower bound of the range.
+     * @param right     The upper bound of the range.
      */
-    public Bt(Path<?> path, Object value1, Object value2) {
-        this.path = path;
-        this.value1 = value1;
-        this.value2 = value2;
-        this.value = new Object[]{value1, value2};
+    public Bt(Selectable selectable, Selectable left, Selectable right) {
+        this.attribute = selectable;
+        this.left = left;
+        this.right = right;
     }
 
-    /**
-     * Generates the SQL representation of the BETWEEN operator.
-     *
-     * @return The SQL representation of the BETWEEN operator.
-     * @throws RuntimeException If the operator is used with null values.
-     */
-    public String sql() {
-        if (value == null || value1 == null || value2 == null) {
-            throw new RuntimeException("Between operator should be used with a two non null values");
-        }
-        return " between " + value1 + " and " + value2;
+
+    public String toString() {
+        return attribute + " between " + left + " and " + right;
     }
 }

@@ -1,18 +1,21 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.PathExpression;
+import com.ainouss.datatools.jdatatools.query.core.AggregateFunction;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
- * Distinct aggregate function
+ * Avg aggregate function
  */
-public class Distinct extends Expression {
-    public Distinct(PathExpression<?> path) {
-        this.value = path;
+public class Distinct extends AggregateFunction {
+
+
+    public Distinct(Selectable selectable) {
+        super(selectable);
     }
 
     @Override
-    protected String sql() {
-        return "distinct " + value;
+    public String toString() {
+        return "distinct " + selectable.toString();
     }
+
 }

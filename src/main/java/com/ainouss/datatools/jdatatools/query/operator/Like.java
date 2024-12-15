@@ -1,7 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.operator;
 
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
  * Represents the LIKE operator in a query.
@@ -26,15 +26,19 @@ import com.ainouss.datatools.jdatatools.query.core.Path;
  */
 public class Like extends Expression {
 
+    private final Selectable attribute;
+    private final Selectable right;
+
     /**
      * Constructs a new {@code Like} operator with the given path and value.
      *
-     * @param path  The path representing the attribute to compare.
-     * @param value The value used for pattern matching.
+     * @param attribute The attribute representing the attribute to compare.
+     * @param right     The value used for pattern matching.
      */
-    public Like(Path<?> path, Object value) {
-        this.path = path;
-        this.value = value;
+
+    public Like(Selectable attribute, Selectable right) {
+        this.attribute = attribute;
+        this.right = right;
     }
 
     /**
@@ -42,7 +46,8 @@ public class Like extends Expression {
      *
      * @return The SQL representation of the LIKE operator.
      */
-    public String sql() {
-        return " like '%" + value + "%'";
+    public String toString() {
+        String escaped = right.toString().replace("'", "");
+        return attribute + " like '%" + escaped + "%'";
     }
 }

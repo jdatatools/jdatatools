@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools.query.operator;
+package com.ainouss.datatools.jdatatools.query.logical;
 
 import com.ainouss.datatools.jdatatools.query.core.Expression;
 
@@ -11,7 +11,7 @@ import com.ainouss.datatools.jdatatools.query.core.Expression;
  * <p>
  * Example usage:
  * <pre>
- *  CriteriaBuilder cb = new CriteriaBuilder();   
+ *  CriteriaBuilder cb = new CriteriaBuilder();
  *  CriteriaQuery<MyEntity> query = cb.createQuery(MyEntity.class);
  *  Root<MyEntity> root = query.from();
  *  query.where(
@@ -35,16 +35,5 @@ public class And extends Expression {
      */
     public And(Expression expression) {
         this.and.add(expression);
-    }
-
-    /**
-     * Returns an empty string since the rendering of the AND condition
-     * is handled by the parent {@code Expression} class.
-     *
-     * @return An empty string.
-     */
-    @Override
-    protected String sql() {
-        return "";
     }
 }

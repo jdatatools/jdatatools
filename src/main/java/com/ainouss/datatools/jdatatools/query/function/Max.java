@@ -1,18 +1,21 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.AggregateFunction;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
- * Max aggregate function
+ * Avg aggregate function
  */
-public class Max extends Expression {
-    public Max(Path<?> path) {
-        this.value = path;
+public class Max extends AggregateFunction {
+
+
+    public Max(Selectable selectable) {
+        super(selectable);
     }
 
     @Override
-    protected String sql() {
-        return "max(" + value + ")";
+    public String toString() {
+        return "max(" + selectable.toString() + ")";
     }
+
 }

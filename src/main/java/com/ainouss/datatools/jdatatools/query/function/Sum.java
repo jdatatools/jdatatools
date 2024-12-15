@@ -1,18 +1,21 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.AggregateFunction;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
- * Sum aggregate function
+ * Avg aggregate function
  */
-public class Sum extends Expression {
-    public Sum(Path<?> path) {
-        this.value = path;
+public class Sum extends AggregateFunction {
+
+
+    public Sum(Selectable selectable) {
+        super(selectable);
     }
 
     @Override
-    protected String sql() {
-        return "sum(" + value + ")";
+    public String toString() {
+        return "sum(" + selectable.toString() + ")";
     }
+
 }

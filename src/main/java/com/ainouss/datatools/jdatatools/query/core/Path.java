@@ -11,7 +11,7 @@ import java.util.Objects;
  * @param <T> Type
  */
 @Getter
-public class Path<T> implements Selectable<T> {
+public class Path<T> implements Selectable {
 
     protected final Root<T> head;
 
@@ -34,15 +34,6 @@ public class Path<T> implements Selectable<T> {
     }
 
     @Override
-    public String toString() {
-        return EntityRegistry.fullResolve(this);
-    }
-
-    public String render() {
-        return EntityRegistry.fullResolve(this);
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -56,8 +47,8 @@ public class Path<T> implements Selectable<T> {
     }
 
     @Override
-    public String toSql() {
-        return render();
+    public String toString() {
+        return EntityRegistry.fullResolve(this);
     }
 
     @Override

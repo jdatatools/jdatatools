@@ -1,11 +1,8 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -16,9 +13,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public abstract class Expression {
 
-    protected Expression expression;
-    protected Object value;
-    protected Path<?> path;
     protected List<Expression> and = new ArrayList<>();
     protected List<Expression> or = new ArrayList<>();
     protected List<Expression> not = new ArrayList<>();
@@ -26,12 +20,10 @@ public abstract class Expression {
     /**
      * Adds to its ands
      *
-     * @param expression  expression
      * @param expressions other expressions
      * @return this
      */
-    public Expression and(Expression expression, Expression... expressions) {
-        and.add(expression);
+    public Expression and(Expression... expressions) {
         and.addAll(Arrays.asList(expressions));
         return this;
     }
@@ -40,12 +32,10 @@ public abstract class Expression {
     /**
      * Adds to its ors
      *
-     * @param expression  expression
      * @param expressions other expressions
      * @return this
      */
-    public Expression or(Expression expression, Expression... expressions) {
-        or.add(expression);
+    public Expression or(Expression... expressions) {
         or.addAll(Arrays.asList(expressions));
         return this;
     }
@@ -55,45 +45,28 @@ public abstract class Expression {
      *
      * @return sql fragment
      */
-    protected abstract String sql();
 
-    protected String render() {
+    public String render() {
 
-        String ands = this.and
-                .stream()
+        String ands = this.and.stream()
                 .map(Expression::render)
-                .collect(Collectors.joining(" and "));
+                .reduce((a, b) -> a + " and " + b)
+                .orElse("");
 
-        String ors = this.or
-                .stream()
+        String ors = this.or.stream()
                 .map(Expression::render)
-                .collect(Collectors.joining(" or "));
+                .reduce((a, b) -> a + " or " + b)
+                .orElse("");
 
-        String nots = this.not
-                .stream()
+        String nots = this.not.stream()
                 .map(Expression::render)
-                .collect(Collectors.joining(" and "));
+                .reduce((a, b) -> a + " and " + b)
+                .orElse("");
 
-        String sub;
-
-        if (this.path instanceof PathExpression<?>) {
-            sub = this.path.toString();
-        } else {
-            sub = EntityRegistry.fullResolve(this.path);
-        }
-
-        var builder = new StringBuilder(sub);
-
-        builder.append(this.sql());
-
-        if (expression != null) {
-            builder.append("(")
-                    .append(expression.render())
-                    .append(")");
-        }
+        var builder = new StringBuilder(toString());
 
         if (!this.not.isEmpty()) {
-            builder.append("(")
+            builder.append(" NOT (")
                     .append(nots)
                     .append(")");
         }
@@ -110,6 +83,12 @@ public abstract class Expression {
                     .append(ors)
                     .append(")");
         }
+
         return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "";
     }
 }

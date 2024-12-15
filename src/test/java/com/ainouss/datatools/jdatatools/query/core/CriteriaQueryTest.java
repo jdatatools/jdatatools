@@ -321,7 +321,7 @@ class CriteriaQueryTest {
 
         );
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where (tbl.ID in ('3','4','5'))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where (tbl.ID in (3,4,5))", select);
     }
 
     @Test

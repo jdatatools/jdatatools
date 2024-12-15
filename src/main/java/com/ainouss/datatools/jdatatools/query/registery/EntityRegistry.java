@@ -92,7 +92,7 @@ public class EntityRegistry {
      *
      * @return column name
      */
-    public static String resolve(Selectable<?> selectable) {
+    public static String resolve(Selectable selectable) {
         if (selectable == null) {
             return "";
         }
@@ -107,14 +107,13 @@ public class EntityRegistry {
     /**
      * Resolve path to a column name, all paths are known before the query execution
      *
-     * @param path path
      * @return column name
      */
-    public static String fullResolve(Path<?> path) {
-        if (path == null) {
+    public static String fullResolve(Selectable selectable) {
+        if (selectable == null) {
             return "";
         }
-        return resolve(path.getHead()) + "." + resolve(path);
+        return resolve(selectable.root()) + "." + resolve(selectable);
     }
 
     /**

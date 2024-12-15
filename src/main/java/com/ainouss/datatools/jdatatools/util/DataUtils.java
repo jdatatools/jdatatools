@@ -37,4 +37,11 @@ public final class DataUtils {
         String trimmed = s.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
+
+    public static String escapeSql(String str) {
+        if (str == null) {
+            return null;
+        }
+        return str.replace("'", "''");
+    }
 }

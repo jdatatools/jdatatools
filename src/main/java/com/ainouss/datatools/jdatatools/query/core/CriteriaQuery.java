@@ -26,11 +26,11 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class CriteriaQuery<T> {
 
     private final Root<T> root;
-    private Expression where = new Where();
+    private Where where = new Where();
     private final Expression having = new IdentityExpression();
     private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
     private final List<Join<?, ?>> joins = new ArrayList<>();
-    private final LinkedHashSet<Selectable<?>> selections = new LinkedHashSet<>();
+    private final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     private Function<String, String> from = table -> table;
 
@@ -53,7 +53,7 @@ public class CriteriaQuery<T> {
      * @param selectables The paths representing the attributes or expressions to select.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public final CriteriaQuery<T> select(Selectable<?>... selectables) {
+    public final CriteriaQuery<T> select(Selectable... selectables) {
         if (selectables != null) {
             var list = Arrays.stream(selectables)
                     .toList();
@@ -65,15 +65,14 @@ public class CriteriaQuery<T> {
     /**
      * Selects all columns from the specified root entity.
      *
-     * @param root The root entity from which to select all columns.
+     * @param selected The root entity from which to select all columns.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public final CriteriaQuery<T> select(Root<?> root) {
+    public final CriteriaQuery<T> select(Root<?> selected) {
         var select = EntityRegistry.columns.keySet()
                 .stream()
-                .filter(path -> path.head.equals(root))
-                .peek(path -> path.head.as(root.getAlias()))
-                .map(path -> new PathExpression<>(path.head, path.attribute))
+                .filter(path -> path.head.equals(selected))
+                .peek(path -> path.head.as(selected.getAlias()))
                 .toList();
         this.selections.addAll(select);
         return this;
@@ -178,7 +177,7 @@ public class CriteriaQuery<T> {
     /**
      * Adds an order by clause to the query.
      *
-     * @param path  The path representing the attribute to order by.
+     * @param path  The attribute representing the attribute to order by.
      * @param order The order direction (ascending or descending).
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
@@ -230,9 +229,9 @@ public class CriteriaQuery<T> {
         String select = selections
                 .stream()
                 .sorted(Comparator.comparing(Selectable::column))
-                .map(projection -> new StringBuilder(projection.toSql())
-                        .append(projection.column() != null ? " as " : "")
-                        .append(projection.column() != null ? projection.column() : "")
+                .map(attr -> new StringBuilder(attr.toString())
+                        .append(isNotBlank(attr.column()) ? " as " : "")
+                        .append(isNotBlank(attr.column()) ? attr.column() : "")
                 )
                 .map(StringBuilder::toString)
                 .collect(Collectors.joining(","));
@@ -246,11 +245,11 @@ public class CriteriaQuery<T> {
      * @return The where clause of the SQL query.
      */
     private String where() {
-        String render = where.render();
-        if (render.equals(where.sql()) || render.equals(" where ()")) {
+        String sql = where.sql();
+        if (sql.isEmpty()) {
             return "";
         }
-        return render;
+        return " where (" + sql + ")";
     }
 
     /**
@@ -336,11 +335,11 @@ public class CriteriaQuery<T> {
     }
 
     private String having() {
-        String render = this.having.render();
-        if (render.isEmpty()) {
+        String toString = this.having.render();
+        if (toString.isEmpty()) {
             return "";
         }
-        return " having " + render;
+        return " having " + toString;
     }
 
     /**
@@ -380,7 +379,7 @@ public class CriteriaQuery<T> {
                         .append(" ")
                         .append(alias(join.getTarget()))
                         .append(join.getOn() != null ? " on " : "")
-                        .append(join.getOn() != null ? join.getOn().render() : "")
+                        .append(join.getOn() != null ? join.getOn().toString() : "")
                         .toString()
                 )
                 .collect(Collectors.joining(" "));
@@ -496,7 +495,8 @@ public class CriteriaQuery<T> {
         this.root.as(tbl);
         return this;
     }
-    public LinkedHashSet<Selectable<?>> getSelect(){
+
+    public LinkedHashSet<Selectable> getSelect() {
         return selections;
     }
 }

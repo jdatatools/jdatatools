@@ -1,10 +1,8 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public interface Selectable<T> {
-
-    String toSql();
+public interface Selectable {
 
     String column();
 
-    Root<T> root();
+    Root<?> root();
 }

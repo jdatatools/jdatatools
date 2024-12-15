@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools.query.operator;
+package com.ainouss.datatools.jdatatools.query.logical;
 
 import com.ainouss.datatools.jdatatools.query.core.Expression;
 
@@ -32,14 +32,5 @@ public class Not extends Expression {
      */
     public Not(Expression expression) {
         this.not.add(expression);
-    }
-
-    /**
-     * Generates the SQL representation of the NOT operator.
-     *
-     * @return The SQL representation of the NOT operator.
-     */
-    public String sql() {
-        return " NOT ";
     }
 }

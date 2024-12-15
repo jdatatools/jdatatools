@@ -1,25 +1,25 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.PathExpression;
+import com.ainouss.datatools.jdatatools.query.core.AggregateFunction;
+import com.ainouss.datatools.jdatatools.query.core.Root;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
- * Count aggregate function
+ * Avg aggregate function
  */
-public class Count extends Expression {
+public class Count extends AggregateFunction {
 
-    public Count(PathExpression<?> path) {
-        this.value = path;
-    }
 
-    public Count() {
+    public Count(Selectable selectable) {
+        super(selectable);
     }
 
     @Override
-    protected String sql() {
-        if (value == null) {
+    public String toString() {
+        if (selectable == null || selectable instanceof Root<?>) {
             return "count(*)";
         }
-        return "count(" + value + ")";
+        return "count(" + selectable + ")";
     }
+
 }

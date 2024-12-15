@@ -3,6 +3,9 @@ package com.ainouss.datatools.jdatatools.query.core;
 import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
 import com.ainouss.datatools.jdatatools.query.expression.PredicateExpression;
 import com.ainouss.datatools.jdatatools.query.function.*;
+import com.ainouss.datatools.jdatatools.query.logical.And;
+import com.ainouss.datatools.jdatatools.query.logical.Not;
+import com.ainouss.datatools.jdatatools.query.logical.Or;
 import com.ainouss.datatools.jdatatools.query.operator.*;
 import com.ainouss.datatools.jdatatools.query.subquery.All;
 import com.ainouss.datatools.jdatatools.query.subquery.Any;
@@ -31,59 +34,52 @@ public class CriteriaBuilder {
         return new ScalarQuery<>(cr);
     }
 
-    /**
-     * @param path  pth
-     * @param value value
-     * @return like expression
-     */
-    public Expression like(Path<?> path, Object value) {
-        return new Like(path, value);
+
+    public Expression like(Selectable attribute, Selectable exp) {
+        return new Like(attribute, exp);
     }
 
-    /**
-     * @param path pth
-     * @param str  value
-     * @return like expression
-     */
-    public Expression endsWith(Path<?> path, String str) {
-        return new EndsWith(path, str);
-    }
-
-    /**
-     * @param path pth
-     * @param str  value
-     * @return like expression
-     */
-    public Expression startsWith(Path<?> path, String str) {
-        return new StartsWith(path, str);
+    public Expression like(Selectable attribute, Object value) {
+        return new Like(attribute, new LiteralValue(value));
     }
 
 
-    /**
-     * @param path  path
-     * @param value value
-     * @return eq expression
-     */
-    public Expression eq(Path<?> path, Object value) {
-        return new Eq(path, value);
+    public Expression endsWith(Selectable attribute, Selectable exp) {
+        return new EndsWith(attribute, exp);
+    }
+
+    public Expression endsWith(Selectable attribute, Object exp) {
+        return new EndsWith(attribute, new LiteralValue(exp));
+    }
+
+    public Expression startsWith(Selectable attribute, Selectable exp) {
+        return new StartsWith(attribute, exp);
+    }
+
+    public Expression startsWith(Selectable attribute, Object exp) {
+        return new StartsWith(attribute, new LiteralValue(exp));
+    }
+
+
+    public Expression eq(Selectable attribute, Selectable exp) {
+        return new Eq(attribute, exp);
+    }
+
+    public Expression eq(Selectable attribute, Object exp) {
+        return new Eq(attribute, new LiteralValue(exp));
     }
 
     /**
-     * @param path  path
-     * @param value value
+     * @param attribute attribute
+     * @param exp       exp
      * @return ne expression
      */
-    public Expression ne(Path<?> path, Object value) {
-        return new Ne(path, value);
+    public Expression ne(Selectable attribute, Selectable exp) {
+        return new Ne(attribute, exp);
     }
 
-    /**
-     * @param path       path
-     * @param expression expression
-     * @return eq expression
-     */
-    public Expression eq(Path<?> path, Path<?> expression) {
-        return new Eq(path, expression);
+    public Expression ne(Selectable attribute, Object exp) {
+        return new Ne(attribute, new LiteralValue(exp));
     }
 
     /**
@@ -99,111 +95,100 @@ public class CriteriaBuilder {
     /**
      * Greater than expression
      *
-     * @param path  path
-     * @param value value
      * @return greater than
      */
-    public Expression gt(Path<?> path, Number value) {
-        return new Gt(path, value);
+    public Expression gt(Selectable attribute, Selectable exp) {
+        return new Gt(attribute, exp);
     }
 
-    /**
-     * Greater than
-     *
-     * @param path  path
-     * @param path2 path2
-     * @return greater than for two paths
-     */
-    public Expression gt(Path<?> path, Path<?> path2) {
-        return new Gt(path, path2);
+    public Expression gt(Selectable attribute, Object exp) {
+        return new Gt(attribute, new LiteralValue(exp));
     }
 
-    public Expression gt(Path<?> path, Expression expression) {
-        return new Gt(path, expression);
-    }
 
     /**
      * Lesser than a number
      *
-     * @param path  path
-     * @param value value
+     * @param attribute attribute
+     * @param exp       exp
      * @return Lesser than a number
      */
-    public Expression lt(Path<?> path, Number value) {
-        return new Lt(path, value);
+    public Expression lt(Selectable attribute, Selectable exp) {
+        return new Lt(attribute, exp);
+    }
+
+    public Expression lt(Selectable attribute, Object exp) {
+        return new Lt(attribute, new LiteralValue(exp));
     }
 
     /**
      * Lesser than or equal a number
      *
-     * @param path  path
-     * @param value value
+     * @param attribute attribute
+     * @param exp       exp
      * @return Lesser than a number
      */
-    public Expression le(Path<?> path, Number value) {
-        return new Le(path, value);
+    public Expression le(Selectable attribute, Selectable exp) {
+        return new Le(attribute, exp);
+    }
+
+    public Expression le(Selectable attribute, Object exp) {
+        return new Le(attribute, new LiteralValue(exp));
     }
 
     /**
      * Lesser than or equal a number
      *
-     * @param path  path
-     * @param value value
+     * @param attribute attribute
+     * @param exp       exp
      * @return Lesser than a number
      */
-    public Expression ge(Path<?> path, Number value) {
-        return new Ge(path, value);
+    public Expression ge(Selectable attribute, Selectable exp) {
+        return new Ge(attribute, exp);
     }
 
-    /**
-     * Lesser than or equal a number
-     *
-     * @param path  path
-     * @param value value
-     * @return Lesser than a number
-     */
-    public Expression ge(Path<?> path, Expression value) {
-        return new Ge(path, value);
+    public Expression ge(Selectable attribute, Object exp) {
+        return new Ge(attribute, new LiteralValue(exp));
     }
 
+    public Expression in(Selectable attribute, Object... values) {
+        List<Selectable> list = Arrays.stream(values).map(LiteralValue::new)
+                .map(literalValue -> (Selectable) literalValue)
+                .toList();
+        return new In(attribute, list);
+    }
 
-    /**
-     * In expression
-     *
-     * @param path   path
-     * @param value  array of values
-     * @param values values
-     * @return in expression
-     */
-    public Expression in(Path<?> path, Object value, Object... values) {
-        return new In(path, value, values);
+    public Expression inL(Selectable attribute, List<?> values) {
+        List<Selectable> list = values.stream().map(LiteralValue::new)
+                .map(literalValue -> (Selectable) literalValue)
+                .toList();
+        return new In(attribute, list);
     }
 
     /**
      * In with a nullable or empty collection of parameters
      * if the collection is empty, an IdentityExpression is returned
      *
-     * @param path   path
      * @param values nullable in values
      * @return expression
      */
-    public Expression inn(Path<?> path, List<?> values) {
+    public Expression inn(Selectable attribute, List<?> values) {
         if (values == null || values.isEmpty()) {
             return new IdentityExpression();
         }
-        return new In(path, values, null);
+        List<Selectable> list = values.stream().map(LiteralValue::new)
+                .map(literalValue -> (Selectable) literalValue)
+                .toList();
+        return new In(attribute, list);
     }
 
-    /**
-     * Between two numbers
-     *
-     * @param path   path
-     * @param value1 lower bound
-     * @param value2 higher bound
-     * @return between value1 and value2
-     */
-    public Expression between(Path<?> path, Number value1, Number value2) {
-        return new Bt(path, value1, value2);
+
+    public Expression between(Selectable attribute, Selectable exp1, Selectable exp2) {
+        return new Bt(attribute, exp1, exp2);
+    }
+
+    public Expression between(Selectable attribute, Object exp1, Object exp2) {
+        return new Bt(attribute, new LiteralValue(exp1), new LiteralValue(exp2));
     }
 
     /**
@@ -256,79 +241,59 @@ public class CriteriaBuilder {
     /**
      * Max expression
      *
-     * @param path attribute
-     * @param <R>  type
      * @return max(attribute)
      */
-    public <R> Path<R> max(Path<R> path) {
-        return new PathExpression<>(path.head, path.attribute, new Max(new PathExpression<>(path)));
+    public Selectable max(Selectable selectable) {
+        return new Max(selectable);
     }
 
     /**
      * Min expression
      *
-     * @param path attribute
-     * @param <R>  type
      * @return min(attribute)
      */
-    public <R> Path<R> min(Path<R> path) {
-        return new PathExpression<>(path.head, path.attribute, new Min(new PathExpression<>(path)));
+    public Selectable min(Selectable selectable) {
+        return new Min(selectable);
     }
 
-
-    /**
-     * Sum expression
-     *
-     * @param path attribute
-     * @param <R>  type
-     * @return min(attribute)
-     */
-    public <R> Path<R> sum(Path<R> path) {
-        return new PathExpression<>(path.head, path.attribute, new Sum(new PathExpression<>(path)));
-    }
 
     /**
      * Avg expression
      *
-     * @param path attribute
-     * @param <R>  type
+     * @param selectable attribute
      * @return avg(attribute)
      */
-    public <R> Path<R> avg(Path<R> path) {
-        return new PathExpression<>(path.head, path.attribute, new Avg(new PathExpression<>(path)));
+    public Selectable sum(Selectable selectable) {
+        return new Sum(selectable);
+    }
+
+
+    /**
+     * Avg expression
+     *
+     * @param selectable attribute
+     * @return avg(attribute)
+     */
+    public Selectable avg(Selectable selectable) {
+        return new Avg(selectable);
     }
 
     /**
      * Count expression
      *
-     * @param path attribute
-     * @param <R>  type
      * @return count(attribute)
      */
-    public <R> Path<R> count(Path<R> path) {
-        return new PathExpression<>(path.head, path.attribute, new Count(new PathExpression<>(path)));
+    public Selectable count(Selectable selectable) {
+        return new Count(selectable);
     }
 
     /**
      * distinct expression
      *
-     * @param path attribute
-     * @param <R>  type
      * @return distinct(attribute)
      */
-    public <R> Path<R> distinct(Path<R> path) {
-        return new PathExpression<>(path.head, path.attribute, new Distinct(new PathExpression<>(path)));
-    }
-
-    /**
-     * Count expression
-     *
-     * @param path root
-     * @param <R>  type
-     * @return count(attribute)
-     */
-    public <R> Path<R> count(Root<R> path) {
-        return new PathExpression<>(path, null, new Count());
+    public Selectable distinct(Selectable selectable) {
+        return new Distinct(selectable);
     }
 
     /**
@@ -344,12 +309,11 @@ public class CriteriaBuilder {
     /**
      * NOT expressions
      *
-     * @param expression  expression
      * @param expressions other expressions
      * @return combined expressions with OR operator
      */
-    public Expression not(Expression expression, Expression... expressions) {
-        Expression and = new IdentityExpression().and(expression, expressions);
+    public Expression not(Expression... expressions) {
+        Expression and = new IdentityExpression().and(expressions);
         return new Not(and);
     }
 

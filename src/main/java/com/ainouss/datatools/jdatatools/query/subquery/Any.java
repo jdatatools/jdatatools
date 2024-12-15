@@ -13,12 +13,7 @@ public class Any extends Expression {
     }
 
     @Override
-    protected String sql() {
-        return " any (" + subquery.buildSelectQuery() + ")";
-    }
-
-    @Override
     public String toString() {
-        return sql();
+        return " any (" + subquery.buildSelectQuery() + ")";
     }
 }

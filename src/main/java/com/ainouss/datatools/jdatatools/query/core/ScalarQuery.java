@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public class ScalarQuery<T> implements Selectable<T> {
+public class ScalarQuery<T> implements Selectable {
 
     private final CriteriaQuery<T> criteria;
 
@@ -10,7 +10,7 @@ public class ScalarQuery<T> implements Selectable<T> {
 
 
     @Override
-    public String toSql() {
+    public String toString() {
         return " (" + criteria.buildSelectQuery() + ")";
     }
 

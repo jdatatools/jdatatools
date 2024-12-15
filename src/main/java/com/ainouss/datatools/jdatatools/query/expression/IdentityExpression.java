@@ -11,7 +11,7 @@ public class IdentityExpression extends Expression {
     }
 
     @Override
-    protected String sql() {
+    public String toString() {
         return "";
     }
 }

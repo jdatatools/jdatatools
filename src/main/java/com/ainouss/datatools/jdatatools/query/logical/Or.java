@@ -1,4 +1,4 @@
-package com.ainouss.datatools.jdatatools.query.operator;
+package com.ainouss.datatools.jdatatools.query.logical;
 
 import com.ainouss.datatools.jdatatools.query.core.Expression;
 
@@ -37,14 +37,4 @@ public class Or extends Expression {
         this.or.add(expression);
     }
 
-    /**
-     * Returns an empty string since the rendering of the OR condition
-     * is handled by the parent {@code Expression} class.
-     *
-     * @return An empty string.
-     */
-    @Override
-    protected String sql() {
-        return "";
-    }
 }

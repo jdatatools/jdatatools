@@ -1,18 +1,21 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.AggregateFunction;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
  * Avg aggregate function
  */
-public class Avg extends Expression {
-    public Avg(Path<?> path) {
-        this.value = path;
+public class Avg extends AggregateFunction {
+
+
+    public Avg(Selectable selectable) {
+        super(selectable);
     }
 
     @Override
-    protected String sql() {
-        return "avg(" + value + ")";
+    public String toString() {
+        return "avg(" + selectable.toString() + ")";
     }
+
 }

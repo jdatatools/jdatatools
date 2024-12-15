@@ -1,18 +1,21 @@
 package com.ainouss.datatools.jdatatools.query.function;
 
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Path;
+import com.ainouss.datatools.jdatatools.query.core.AggregateFunction;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
- * Min aggregate function
+ * Avg aggregate function
  */
-public class Min extends Expression {
-    public Min(Path<?> path) {
-        this.value = path;
+public class Min extends AggregateFunction {
+
+
+    public Min(Selectable selectable) {
+        super(selectable);
     }
 
     @Override
-    protected String sql() {
-        return "min(" + value + ")";
+    public String toString() {
+        return "min(" + selectable.toString() + ")";
     }
+
 }

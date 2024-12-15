@@ -7,6 +7,8 @@ import com.ainouss.datatools.jdatatools.query.core.Expression;
  */
 public class Where extends Expression {
 
+    private  Expression expression;
+
     public Where() {
     }
 
@@ -14,11 +16,10 @@ public class Where extends Expression {
         this.expression = expression;
     }
 
-    @Override
-    protected String sql() {
+    public String sql() {
         if (expression == null) {
             return "";
         }
-        return " where ";
+        return expression.render();
     }
 }

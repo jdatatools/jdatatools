@@ -1,9 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.operator;
 
-import com.ainouss.datatools.jdatatools.query.core.Path;
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-
-import static org.springframework.util.ObjectUtils.isArray;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 /**
  * Represents the inequality operator (!=) in a query.
@@ -27,15 +25,12 @@ import static org.springframework.util.ObjectUtils.isArray;
  */
 public class Ne extends Expression {
 
-    /**
-     * Constructs a new {@code Ne} operator with the given path and value.
-     *
-     * @param path  The path representing the attribute to compare.
-     * @param value The value to compare against.
-     */
-    public Ne(Path<?> path, Object value) {
-        this.path = path;
-        this.value = value;
+    private final Selectable left;
+    private final Selectable right;
+
+    public Ne(Selectable left, Selectable right) {
+        this.left = left;
+        this.right = right;
     }
 
     /**
@@ -44,14 +39,7 @@ public class Ne extends Expression {
      * @return The SQL representation of the inequality operator.
      * @throws RuntimeException If the operator is used with null or array values.
      */
-    public String sql() {
-        if (value == null || isArray(value)) {
-            throw new RuntimeException("Not equal should be used with a single non null value");
-        }
-        var sql = " != ";
-        if (value instanceof Number || value instanceof Path<?>) {
-            return sql + value;
-        }
-        return sql + "'" + value + "'";
+    public String toString() {
+        return left + " != " + right;
     }
 }

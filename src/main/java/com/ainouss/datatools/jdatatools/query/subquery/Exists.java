@@ -13,12 +13,7 @@ public class Exists extends Expression {
     }
 
     @Override
-    protected String sql() {
-        return " exists (" + subquery.buildSelectQuery() + ")";
-    }
-
-    @Override
     public String toString() {
-        return sql();
+        return " exists (" + subquery.buildSelectQuery() + ")";
     }
 }
