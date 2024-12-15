@@ -5,6 +5,10 @@ import com.ainouss.datatools.jdatatools.query.expression.Where;
 import com.ainouss.datatools.jdatatools.query.join.Join;
 import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
 import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
+import com.ainouss.datatools.jdatatools.query.union.Except;
+import com.ainouss.datatools.jdatatools.query.union.Intersect;
+import com.ainouss.datatools.jdatatools.query.union.Union;
+import com.ainouss.datatools.jdatatools.query.union.UnionAll;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -32,6 +36,7 @@ public class CriteriaQuery<T> {
     private final List<Join<?, ?>> joins = new ArrayList<>();
     private final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
+    private final List<SetOperation> unions = new ArrayList<>();
     private Function<String, String> from = table -> table;
     private Integer limit;
     private Integer offset;
@@ -230,6 +235,26 @@ public class CriteriaQuery<T> {
         return this;
     }
 
+    public CriteriaQuery<T> union(CriteriaQuery<?> other) {
+        this.unions.add(new Union(other));
+        return this;
+    }
+
+    public CriteriaQuery<T> unionAll(CriteriaQuery<?> other) {
+        this.unions.add(new UnionAll(other));
+        return this;
+    }
+
+    public CriteriaQuery<T> intersect(CriteriaQuery<?> other) {
+        this.unions.add(new Intersect(other));
+        return this;
+    }
+
+    public CriteriaQuery<T> except(CriteriaQuery<?> other) {
+        this.unions.add(new Except(other));
+        return this;
+    }
+
     /**
      * Generates the select clause of the SQL query. Column names are aliased with
      * their corresponding Java field names.
@@ -341,10 +366,21 @@ public class CriteriaQuery<T> {
                 .append(having())
                 .append(" ")
                 .append(orderBy())
+                .append(" ")
+                .append(unions())
+                .append(" ")
                 .append(limitOffset())
                 .toString()
                 .trim()
                 .replaceAll("  +", " ");
+    }
+
+    private String unions() {
+        StringBuilder sb = new StringBuilder();
+        for (SetOperation union : unions) {
+            sb.append(" ").append(union.toSql());
+        }
+        return sb.toString();
     }
 
     private String having() {

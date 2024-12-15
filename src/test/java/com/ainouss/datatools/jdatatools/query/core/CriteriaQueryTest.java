@@ -591,4 +591,68 @@ class CriteriaQueryTest {
         sql = query.buildSelectQuery();
         assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES offset 150", sql);
     }
+
+
+    @Test
+    void testUnion() {
+        CriteriaQuery<Employee> query1 = cb.createQuery(Employee.class);
+        Root<Employee> emp1 = query1.from(Employee.class);
+        query1.where(cb.eq(emp1.get("departmentId"), 1));
+
+        CriteriaQuery<Employee> query2 = cb.createQuery(Employee.class);
+        Root<Employee> emp2 = query2.from(Employee.class);
+        query2.where(cb.eq(emp2.get("departmentId"), 2));
+
+        String unionSql = query1.union(query2).buildSelectQuery();
+        String expectedSql = "select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 1) union select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 2)";
+        assertEquals(expectedSql, unionSql);
+    }
+
+    @Test
+    void testUnionAll() {
+        CriteriaQuery<Employee> query1 = cb.createQuery(Employee.class);
+        Root<Employee> emp1 = query1.from(Employee.class);
+        query1.where(cb.eq(emp1.get("departmentId"), 1));
+
+        CriteriaQuery<Employee> query2 = cb.createQuery(Employee.class);
+        Root<Employee> emp2 = query2.from(Employee.class);
+        query2.where(cb.eq(emp2.get("departmentId"), 2));
+
+        String unionSql = query1.unionAll(query2).buildSelectQuery();
+        String expectedSql = "select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 1) union all select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 2)";
+        assertEquals(expectedSql, unionSql);
+    }
+
+    @Test
+    void testIntersect() {
+        CriteriaQuery<Employee> query1 = cb.createQuery(Employee.class);
+        Root<Employee> emp1 = query1.from(Employee.class);
+        query1.where(cb.eq(emp1.get("departmentId"), 1));
+
+        CriteriaQuery<Employee> query2 = cb.createQuery(Employee.class);
+        Root<Employee> emp2 = query2.from(Employee.class);
+        query2.where(cb.eq(emp2.get("departmentId"), 2));
+
+        String intersectSql = query1.intersect(query2).buildSelectQuery();
+        String expectedSql = "select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 1) intersect select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 2)";
+
+        assertEquals(expectedSql, intersectSql);
+    }
+
+
+    @Test
+    void testExcept() {
+        CriteriaQuery<Employee> query1 = cb.createQuery(Employee.class);
+        Root<Employee> emp1 = query1.from(Employee.class);
+        query1.where(cb.eq(emp1.get("departmentId"), 1));
+
+        CriteriaQuery<Employee> query2 = cb.createQuery(Employee.class);
+        Root<Employee> emp2 = query2.from(Employee.class);
+        query2.where(cb.eq(emp2.get("departmentId"), 2));
+
+        String exceptSql = query1.except(query2).buildSelectQuery();
+
+        String expectedSql = "select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 1) except select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = 2)";
+        assertEquals(expectedSql, exceptSql);
+    }
 }
