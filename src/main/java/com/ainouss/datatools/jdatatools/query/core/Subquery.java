@@ -11,7 +11,7 @@ public class Subquery implements From {
 
     @Override
     public String render() {
-        return " (" + cr.buildSelectQuery() + ") " + getAlias();
+        return " (" + cr.buildSelectQuery() + ") ";
     }
 
     @Override

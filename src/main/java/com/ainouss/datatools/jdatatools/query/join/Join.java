@@ -43,6 +43,7 @@ public class Join<X, Y> {
                 .append(" join ")
                 .append(target.render())
                 .append(" ")
+                .append(target.getAlias())
                 .append(getStatement())
                 .toString();
     }

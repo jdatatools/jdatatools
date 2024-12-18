@@ -526,7 +526,7 @@ class CriteriaQueryTest {
         Assertions.assertEquals("insert into EMPLOYEES (ENABLED,FIRST_NAME,ID,LAST_NAME,SALARY) values (:enabled,:firstName,:id,:lastName,:salary)", insert);
     }
 
-   // @Test()
+    // @Test()
     public void should_insert_with_table_name_mapper() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         //cr.from(s -> "tab_" + s);
@@ -844,6 +844,19 @@ class CriteriaQueryTest {
         assertEquals(expectedSql, sql);
     }
 
-// other tests methods
+    @Test
+    void testCorrelatedSubquery() {
+        CriteriaQuery<Department> query = cb.createQuery(Department.class);
+        Root<Department> dep = query.from(Department.class);
+
+        CriteriaQuery<Employee> subquery = cb.createQuery(Employee.class);  // Assuming you have a subquery method
+        Root<Employee> emp = subquery.from(Employee.class);
+        subquery.select(emp.get("salary")).where(cb.eq(emp.get("departmentId"), dep.get("id"))); // Correlating condition
+
+        query.select(dep).where(cb.gt(dep.get("budget"), new Subquery(subquery))); // Using the correlated subquery
+
+        String expectedSql = "select DEPARTMENTS.ID as id,DEPARTMENTS.LOCATION as location,DEPARTMENTS.NAME as name from DEPARTMENTS DEPARTMENTS where (DEPARTMENTS.budget > (select EMPLOYEES.SALARY from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = DEPARTMENTS.ID)) )";  // Verify correct correlation
+        assertEquals(expectedSql, query.buildSelectQuery());
+    }
 
 }

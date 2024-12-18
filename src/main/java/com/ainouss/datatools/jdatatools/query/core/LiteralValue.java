@@ -19,6 +19,12 @@ class LiteralValue implements Selectable {
             return "'" + DataUtils.escapeSql(strValue) + "'";
         } else if (value instanceof Number) {
             return value.toString();
+        } else if (value instanceof Subquery su) {
+            return su.render();
+        } else if (value instanceof CriteriaQuery<?> cr) {
+            return " (" + cr.buildSelectQuery() + ")";
+        } else if (value instanceof Expression ex) {
+            return ex.render();
         }
         return value.toString();
     }

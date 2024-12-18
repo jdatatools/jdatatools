@@ -129,7 +129,9 @@ public class CriteriaQuery<T> {
     }
 
     private String froms() {
-        return froms.stream().map(From::render).collect(Collectors.joining(","));
+        return froms.stream()
+                .map(from -> from.render() + " " + from.getAlias())
+                .collect(Collectors.joining(","));
     }
 
     /**

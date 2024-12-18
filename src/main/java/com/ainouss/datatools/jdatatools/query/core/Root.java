@@ -136,8 +136,6 @@ public class Root<T> implements Selectable, From {
     public String render() {
         return new StringBuilder(schema())
                 .append(EntityRegistry.roots.get(this))
-                .append(" ")
-                .append(getAlias())
                 .toString();
     }
 
