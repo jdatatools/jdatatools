@@ -46,8 +46,8 @@ public class Like extends Expression {
      *
      * @return The SQL representation of the LIKE operator.
      */
-    public String toString() {
-        String escaped = right.toString().replace("'", "");
-        return attribute + " like '%" + escaped + "%'";
+    public String toSql() {
+        String escaped = right.toSql().replace("'", "");
+        return attribute.toSql() + " like '%" + escaped + "%'";
     }
 }

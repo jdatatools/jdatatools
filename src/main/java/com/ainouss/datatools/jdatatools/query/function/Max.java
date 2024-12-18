@@ -14,8 +14,8 @@ public class Max extends AggregateFunction {
     }
 
     @Override
-    public String toString() {
-        return "max(" + selectable.toString() + ")";
+    public String toSql() {
+        return "max(" + selectable.toSql() + ")";
     }
 
 }

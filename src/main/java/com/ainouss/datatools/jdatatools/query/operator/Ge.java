@@ -43,7 +43,7 @@ public class Ge extends Expression {
      * @return The SQL representation of the operator.
      * @throws RuntimeException If the operator is used with null values.
      */
-    public String toString() {
-        return attribute + " >= " + right;
+    public String toSql() {
+        return attribute.toSql() + " >= " + right.toSql();
     }
 }

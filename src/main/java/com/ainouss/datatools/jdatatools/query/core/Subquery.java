@@ -1,27 +1,25 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public class Subquery<T> extends CriteriaQuery<T> implements From {
+public class Subquery implements From {
 
-    private final CriteriaQuery<?> parent;// TODO : overload alias
+    private final CriteriaQuery<?> cr;
 
-    public Subquery(CriteriaQuery<?> cr, Class<T> type) {
-        super(type);
-        this.parent = cr;
-        this.subquery = true;
+    public Subquery(CriteriaQuery<?> criteria) {
+        this.cr = criteria;
+        criteria.noAlias = true;
     }
 
     @Override
     public String render() {
-        return " (" + buildSelectQuery() + ") " + getAlias();
-    }
-
-    @Override
-    public Subquery<T> as(String tbl) {
-        return this;
+        return " (" + cr.buildSelectQuery() + ") " + getAlias();
     }
 
     @Override
     public String getAlias() {
-        return this.from().getAlias();
+        return this.cr.from().getAlias();
+    }
+
+    public CriteriaQuery<?> cr() {
+        return cr;
     }
 }

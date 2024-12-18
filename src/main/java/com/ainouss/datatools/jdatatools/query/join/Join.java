@@ -34,8 +34,7 @@ public class Join<X, Y> {
         return this;
     }
 
-    @Override
-    public String toString() {
+    public String toSql() {
         return render();
     }
 
@@ -50,7 +49,7 @@ public class Join<X, Y> {
 
     private String getStatement() {
         if (this.expression != null) {
-            return " on " + expression;
+            return " on " + expression.toSql();
         }
         if (this.subquery != null) {
             return " on (" + subquery.buildSelectQuery() + ")";

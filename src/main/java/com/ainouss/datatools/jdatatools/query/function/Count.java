@@ -15,11 +15,11 @@ public class Count extends AggregateFunction {
     }
 
     @Override
-    public String toString() {
+    public String toSql() {
         if (selectable == null || selectable instanceof Root<?>) {
             return "count(*)";
         }
-        return "count(" + selectable + ")";
+        return "count(" + selectable.toSql() + ")";
     }
 
 }

@@ -11,7 +11,7 @@ class LiteralValue implements Selectable {
     }
 
     @Override
-    public String toString() {
+    public String toSql() {
         if (value == null) {
             return "";
         }

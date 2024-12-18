@@ -9,9 +9,4 @@ public class IdentityExpression extends Expression {
 
     public IdentityExpression() {
     }
-
-    @Override
-    public String toString() {
-        return "";
-    }
 }

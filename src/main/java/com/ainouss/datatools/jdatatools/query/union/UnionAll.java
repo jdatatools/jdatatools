@@ -12,7 +12,7 @@ public class UnionAll implements SetOperation {
     }
 
     public String toSql() {
-        return "union all " + other.buildSelectQuery();
+        return "union all (" + other.buildSelectQuery() + ")";
     }
 
 }

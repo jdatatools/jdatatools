@@ -2,8 +2,8 @@ package com.ainouss.datatools.jdatatools.query.registery;
 
 import com.ainouss.datatools.jdatatools.query.core.CriteriaBuilder;
 import com.ainouss.datatools.jdatatools.query.core.Path;
-import com.ainouss.datatools.jdatatools.query.core.Selectable;
 import com.ainouss.datatools.jdatatools.query.core.Root;
+import com.ainouss.datatools.jdatatools.query.core.Selectable;
 import com.ainouss.datatools.jdatatools.util.QueryBuilder;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -11,9 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static com.ainouss.datatools.jdatatools.util.DataUtils.isNotBlank;
 
 /**
  * Creates a criteria builder and holds column names and table names
@@ -24,25 +25,19 @@ public class EntityRegistry {
     /**
      * columns from @Column annotation
      */
-    public static final LinkedHashMap<Path<?>, String> columns = new LinkedHashMap<>();
+    public static final LinkedHashMap<Path<?>, String> paths = new LinkedHashMap<>();
     /**
      * tables from @Table annotation
      */
-    public static final LinkedHashMap<Root<?>, String> tables = new LinkedHashMap<>();
+    public static final LinkedHashMap<Root<?>, String> roots = new LinkedHashMap<>();
+
+    private static final HashSet<Class<?>> registered = new HashSet<>();
+
 
     public EntityRegistry(EntityResolver resolver) {
         resolver
                 .resolve()
                 .forEach(this::register);
-    }
-
-    /**
-     * Entry criteria builder
-     *
-     * @return criteria builder
-     */
-    public CriteriaBuilder getCriteriaBuilder() {
-        return new CriteriaBuilder();
     }
 
     /**
@@ -69,10 +64,14 @@ public class EntityRegistry {
      * @param clazz input
      */
     public static void registerClass(Class<?> clazz) {
+        if (registered.contains(clazz)) {
+            return;
+        }
         Root<?> root = new Root<>(clazz);
-        tables.put(root, getTableName(clazz));
+        roots.put(root, getTableName(clazz));
         QueryBuilder.getSelectableFields(clazz)
-                .forEach(field -> columns.put(new Path<>(root, field.getName()), field.getAnnotation(Column.class).name()));
+                .forEach(field -> paths.put(new Path<>(root, field.getName()), field.getAnnotation(Column.class).name()));
+        registered.add(clazz);
     }
 
     private static String getTableName(Class<?> model) {
@@ -87,22 +86,6 @@ public class EntityRegistry {
         return annotation.name();
     }
 
-    /**
-     * Resolve path to a column name, all paths are known before the query execution
-     *
-     * @return column name
-     */
-    public static String resolve(Selectable selectable) {
-        if (selectable == null) {
-            return "";
-        }
-        String column = columns.get(new Path<>(selectable.root(), selectable.column()));
-        if (column == null) {
-            log.warn("Could not locate column for path {}, make sure to add a @Column annotation, the given attribute name will be used", selectable);
-            return selectable.column();
-        }
-        return column;
-    }
 
     /**
      * Resolve path to a column name, all paths are known before the query execution
@@ -113,25 +96,42 @@ public class EntityRegistry {
         if (selectable == null) {
             return "";
         }
-        return resolve(selectable.root()) + "." + resolve(selectable);
+        if (selectable instanceof Root<?> root) {
+            return resolveRoot(root);
+        }
+        if (selectable instanceof Path<?> path) {
+            return fullResolvePath(path);
+        }
+        return selectable.toSql();
+    }
+
+    public static String fullResolvePath(Path<?> path) {
+        String root = resolveRoot(path.root());
+        String col = resolvePath(path);
+        return root + "." + (isNotBlank(col) ? col : path.column());
+    }
+
+    public static String resolvePath(Path<?> path) {
+        String col = paths.get(path);
+        return (isNotBlank(col) ? col : path.column());
     }
 
     /**
-     * Resolve path to a column name, all paths are known before the query execution
+     * Resolve root to a column name, all paths are known before the query execution
      *
-     * @param path path
+     * @param root root
      * @return column name
      */
-    public static String resolve(Root<?> path) {
-        if (path == null) {
+    public static String resolveRoot(Root<?> root) {
+        if (root == null) {
             return "";
         }
-        if (isNotBlank(path.getAlias())) {
-            return path.getAlias();
+        if (isNotBlank(root.getAlias())) {
+            return root.getAlias();
         }
-        String table = tables.get(path);
+        String table = roots.get(root);
         if (table == null) {
-            throw new RuntimeException("Could not locate table for path, make sure to add @Column annotation" + path);
+            throw new RuntimeException("Could not locate table for root, make sure to add @Column annotation" + root);
         }
         return table;
     }

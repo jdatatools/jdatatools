@@ -12,7 +12,6 @@ import com.ainouss.datatools.jdatatools.query.union.UnionAll;
 
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.ainouss.datatools.jdatatools.query.registery.EntityRegistry.fullResolve;
@@ -30,18 +29,17 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class CriteriaQuery<T> {
 
     protected final Root<T> root;
+    protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     protected final List<From> froms = new ArrayList<>();
-    private Where where = new Where();
-    private final Expression having = new IdentityExpression();
-    private final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
-    private final List<Join<?, ?>> joins = new ArrayList<>();
-    private final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
-    private final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
-    private final List<SetOperation> unions = new ArrayList<>();
-    private Function<String, String> from = table -> table;
-    private Integer limit;
-    private Integer offset;
-    protected boolean subquery = false;
+    private final Where where = new Where();
+    protected final IdentityExpression having = new IdentityExpression();
+    protected final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
+    protected final List<Join<?, ?>> joins = new ArrayList<>();
+    protected final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
+    protected final List<SetOperation> unions = new ArrayList<>();
+    protected final Page page = new Page();
+    protected boolean noAlias = false;
+
 
     /**
      * Constructs a new {@code CriteriaQuery} instance.
@@ -58,6 +56,7 @@ public class CriteriaQuery<T> {
     }
 
     public CriteriaQuery<T> from(From from) {
+        this.froms.clear();
         this.froms.add(from);
         return this;
     }
@@ -84,7 +83,7 @@ public class CriteriaQuery<T> {
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public final CriteriaQuery<T> select(Root<?> selected) {
-        var select = EntityRegistry.columns.keySet()
+        var select = EntityRegistry.paths.keySet()
                 .stream()
                 .filter(path -> path.head.equals(selected))
                 .peek(path -> path.head.as(selected.getAlias()))
@@ -93,42 +92,6 @@ public class CriteriaQuery<T> {
         return this;
     }
 
-    /**
-     * Prefixes the table name with the given string. This is useful for reusing
-     * the table name already defined in the {@code @Table} annotation.
-     *
-     * @param prefix The prefix to be added to the table name.
-     * @return The root entity.
-     */
-    public Root<?> prefix(String prefix) {
-        if (prefix != null) {
-            this.from = str -> prefix + str;
-        }
-        return root;
-    }
-
-    /**
-     * Overrides the table name with the specified string.
-     *
-     * @param from The new table name.
-     * @return This {@code CriteriaQuery} instance for method chaining.
-     */
-    public CriteriaQuery<T> from(String from) {
-        this.from = str -> from;
-        return this;
-    }
-
-    /**
-     * Overrides the table name using the provided function. The function takes the
-     * original table name as input and returns the modified table name.
-     *
-     * @param from The function to apply to the table name.
-     * @return This {@code CriteriaQuery} instance for method chaining.
-     */
-    public CriteriaQuery<T> from(Function<String, String> from) {
-        this.from = from;
-        return this;
-    }
 
     /**
      * Overloads the root object with a new entity type.
@@ -176,7 +139,7 @@ public class CriteriaQuery<T> {
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> where(Expression expression) {
-        this.where = new Where(expression);
+        this.where.with(expression);
         return this;
     }
 
@@ -226,10 +189,6 @@ public class CriteriaQuery<T> {
         return this;
     }
 
-    public <U> Subquery<U> subquery(Class<U> type) {
-        return new Subquery<>(this,type);
-    }
-
     /**
      * Adds a group by clause to the query.
      *
@@ -242,12 +201,12 @@ public class CriteriaQuery<T> {
     }
 
     public CriteriaQuery<T> limit(Integer limit) {
-        this.limit = limit;
+        this.page.limit(limit);
         return this;
     }
 
     public CriteriaQuery<T> offset(Integer offset) {
-        this.offset = offset;
+        this.page.offset(offset);
         return this;
     }
 
@@ -282,15 +241,15 @@ public class CriteriaQuery<T> {
         String select = selections
                 .stream()
                 .sorted(Comparator.comparing(Selectable::column))
-                .map(this::attributeAlias)
+                .map(this::toSql)
                 .collect(Collectors.joining(","));
         return defaultIfEmpty(select, " * ");
 
     }
 
-    private String attributeAlias(Selectable attr) {
-        String str = attr.toString();
-        if (subquery) {
+    private String toSql(Selectable attr) {
+        String str = attr.toSql();
+        if (noAlias) {
             return str;
         }
         if (isNotBlank(attr.column())) {
@@ -320,7 +279,8 @@ public class CriteriaQuery<T> {
     private String insert() {
         return selections
                 .stream()
-                .map(EntityRegistry::resolve)
+                .map(selectable -> new Path<>(selectable.root(), selectable.column()))
+                .map(EntityRegistry::resolvePath)
                 .collect(Collectors.joining(","));
     }
 
@@ -358,10 +318,7 @@ public class CriteriaQuery<T> {
      * @return The source table name.
      */
     private String sourceTable(Root<?> root) {
-        String rootTable = EntityRegistry.tables.get(root);
-        if (this.from != null) {
-            rootTable = this.from.apply(rootTable);
-        }
+        String rootTable = EntityRegistry.roots.get(root);
         return root.schema() + rootTable;
     }
 
@@ -373,6 +330,13 @@ public class CriteriaQuery<T> {
      * @return The complete select query.
      */
     public String buildSelectQuery() {
+        if (unions.isEmpty() || orderBy.isEmpty() && page.isEmpty()) {
+            return buildSimpleSelectQuery();
+        }
+        return buildNestedSelectQuery();
+    }
+
+    private String buildSimpleSelectQuery() {
         return new StringBuilder().append("select ")
                 .append(select())
                 .append(" from ")
@@ -394,6 +358,23 @@ public class CriteriaQuery<T> {
                 .toString()
                 .trim()
                 .replaceAll("  +", " ");
+    }
+
+    private String buildNestedSelectQuery() {
+        this.noAlias = true;
+        LinkedHashMap<Path<?>, OrderDirection> order = new LinkedHashMap<>(this.orderBy);
+        LinkedHashSet<Selectable> selections1 = new LinkedHashSet<>(this.selections);
+        Page page1 = Page.from(this.page);
+        Subquery from = new Subquery(this);
+        var nq = new CriteriaQuery<>(this.root.getJavaType());
+        nq.from(from);
+        nq.orderBy.putAll(order);
+        nq.page.apply(page1);
+        nq.selections.addAll(selections1);
+        from.cr().orderBy.clear();
+        from.cr().page.clear();
+        //
+        return nq.buildSelectQuery();
     }
 
     private String unions() {
@@ -507,14 +488,7 @@ public class CriteriaQuery<T> {
     }
 
     private String limitOffset() {
-        StringBuilder sb = new StringBuilder();
-        if (limit != null) {
-            sb.append(" limit ").append(limit);
-        }
-        if (offset != null) {
-            sb.append(" offset ").append(offset);
-        }
-        return sb.toString();
+        return page.render();
     }
 
     /**

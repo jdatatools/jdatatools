@@ -14,8 +14,8 @@ public class Sum extends AggregateFunction {
     }
 
     @Override
-    public String toString() {
-        return "sum(" + selectable.toString() + ")";
+    public String toSql() {
+        return "sum(" + selectable.toSql() + ")";
     }
 
 }

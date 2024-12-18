@@ -30,7 +30,7 @@ public class Eq extends Expression {
      * Constructs a new {@code Eq} operator with the given path and value.
      *
      * @param attribute The path representing the attribute to compare.
-     * @param right  The value to compare against.
+     * @param right     The value to compare against.
      */
     public Eq(Selectable attribute, Selectable right) {
         this.attribute = attribute;
@@ -43,7 +43,7 @@ public class Eq extends Expression {
      * @return The SQL representation of the equality operator.
      * @throws RuntimeException If the operator is used with null or array values.
      */
-    public String toString() {
-        return attribute + " = " + right;
+    public String toSql() {
+        return attribute.toSql() + " = " + right.toSql();
     }
 }

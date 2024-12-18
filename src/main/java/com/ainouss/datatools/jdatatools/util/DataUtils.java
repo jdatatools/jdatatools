@@ -14,7 +14,7 @@ public final class DataUtils {
         if (s == null) {
             return false;
         }
-        return !isBlank(s);
+        return trimToNull(s) != null;
     }
 
     private static int skipSpaceTab(CharSequence s, int endIndex) {
@@ -37,6 +37,15 @@ public final class DataUtils {
         String trimmed = s.trim();
         return trimmed.isEmpty() ? null : trimmed;
     }
+
+    public static String trimToBlank(String s) {
+        String s1 = trimToNull(s);
+        if (s1 == null) {
+            return "";
+        }
+        return s1;
+    }
+
 
     public static String escapeSql(String str) {
         if (str == null) {

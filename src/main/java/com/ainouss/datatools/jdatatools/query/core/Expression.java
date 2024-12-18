@@ -63,7 +63,7 @@ public abstract class Expression {
                 .reduce((a, b) -> a + " and " + b)
                 .orElse("");
 
-        var builder = new StringBuilder(toString());
+        var builder = new StringBuilder(toSql());
 
         if (!this.not.isEmpty()) {
             builder.append(" NOT (")
@@ -86,9 +86,7 @@ public abstract class Expression {
 
         return builder.toString();
     }
-
-    @Override
-    public String toString() {
+    public String toSql(){
         return "";
     }
 }

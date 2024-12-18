@@ -35,51 +35,40 @@ public class CriteriaBuilder {
     }
 
 
-    public Expression like(Selectable attribute, Selectable exp) {
-        return new Like(attribute, exp);
-    }
-
     public Expression like(Selectable attribute, Object value) {
+        if (value instanceof Selectable selectable) {
+            return new Like(attribute, selectable);
+        }
         return new Like(attribute, new LiteralValue(value));
     }
 
-
-    public Expression endsWith(Selectable attribute, Selectable exp) {
-        return new EndsWith(attribute, exp);
-    }
-
     public Expression endsWith(Selectable attribute, Object exp) {
+        if (exp instanceof Selectable selectable) {
+            return new EndsWith(attribute, selectable);
+        }
         return new EndsWith(attribute, new LiteralValue(exp));
     }
 
-    public Expression startsWith(Selectable attribute, Selectable exp) {
-        return new StartsWith(attribute, exp);
-    }
-
     public Expression startsWith(Selectable attribute, Object exp) {
+        if (exp instanceof Selectable selectable) {
+            return new StartsWith(attribute, selectable);
+        }
         return new StartsWith(attribute, new LiteralValue(exp));
     }
 
-
-    public Expression eq(Selectable attribute, Selectable exp) {
-        return new Eq(attribute, exp);
+    public Expression eq(Selectable attribute, Object value) {
+        if (value instanceof Selectable selectable) {
+            return new Eq(attribute, selectable);
+        }
+        return new Eq(attribute, new LiteralValue(value));
     }
 
-    public Expression eq(Selectable attribute, Object exp) {
-        return new Eq(attribute, new LiteralValue(exp));
-    }
 
-    /**
-     * @param attribute attribute
-     * @param exp       exp
-     * @return ne expression
-     */
-    public Expression ne(Selectable attribute, Selectable exp) {
-        return new Ne(attribute, exp);
-    }
-
-    public Expression ne(Selectable attribute, Object exp) {
-        return new Ne(attribute, new LiteralValue(exp));
+    public Expression ne(Selectable attribute, Object value) {
+        if (value instanceof Selectable selectable) {
+            return new Ne(attribute, selectable);
+        }
+        return new Ne(attribute, new LiteralValue(value));
     }
 
     /**
@@ -92,75 +81,45 @@ public class CriteriaBuilder {
         return new PredicateExpression(predicate);
     }
 
-    /**
-     * Greater than expression
-     *
-     * @return greater than
-     */
-    public Expression gt(Selectable attribute, Selectable exp) {
-        return new Gt(attribute, exp);
-    }
-
-    public Expression gt(Selectable attribute, Object exp) {
-        return new Gt(attribute, new LiteralValue(exp));
+    public Expression gt(Selectable attribute, Object value) {
+        if (value instanceof Selectable selectable) {
+            return new Gt(attribute, selectable);
+        }
+        return new Gt(attribute, new LiteralValue(value));
     }
 
 
-    /**
-     * Lesser than a number
-     *
-     * @param attribute attribute
-     * @param exp       exp
-     * @return Lesser than a number
-     */
-    public Expression lt(Selectable attribute, Selectable exp) {
-        return new Lt(attribute, exp);
+    public Expression lt(Selectable attribute, Object value) {
+        if (value instanceof Selectable selectable) {
+            return new Lt(attribute, selectable);
+        }
+        return new Lt(attribute, new LiteralValue(value));
     }
 
-    public Expression lt(Selectable attribute, Object exp) {
-        return new Lt(attribute, new LiteralValue(exp));
+    public Expression le(Selectable attribute, Object value) {
+        if (value instanceof Selectable selectable) {
+            return new Le(attribute, selectable);
+        }
+        return new Le(attribute, new LiteralValue(value));
     }
 
-    /**
-     * Lesser than or equal a number
-     *
-     * @param attribute attribute
-     * @param exp       exp
-     * @return Lesser than a number
-     */
-    public Expression le(Selectable attribute, Selectable exp) {
-        return new Le(attribute, exp);
-    }
-
-    public Expression le(Selectable attribute, Object exp) {
-        return new Le(attribute, new LiteralValue(exp));
-    }
-
-    /**
-     * Lesser than or equal a number
-     *
-     * @param attribute attribute
-     * @param exp       exp
-     * @return Lesser than a number
-     */
-    public Expression ge(Selectable attribute, Selectable exp) {
-        return new Ge(attribute, exp);
-    }
-
-    public Expression ge(Selectable attribute, Object exp) {
-        return new Ge(attribute, new LiteralValue(exp));
+    public Expression ge(Selectable attribute, Object value) {
+        if (value instanceof Selectable selectable) {
+            return new Ge(attribute, selectable);
+        }
+        return new Ge(attribute, new LiteralValue(value));
     }
 
     public Expression in(Selectable attribute, Object... values) {
-        List<Selectable> list = Arrays.stream(values).map(LiteralValue::new)
-                .map(literalValue -> (Selectable) literalValue)
+        List<Selectable> list = Arrays.stream(values)
+                .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))
                 .toList();
         return new In(attribute, list);
     }
 
     public Expression inL(Selectable attribute, List<?> values) {
-        List<Selectable> list = values.stream().map(LiteralValue::new)
-                .map(literalValue -> (Selectable) literalValue)
+        List<Selectable> list = values.stream()
+                .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))
                 .toList();
         return new In(attribute, list);
     }
@@ -176,15 +135,10 @@ public class CriteriaBuilder {
         if (values == null || values.isEmpty()) {
             return new IdentityExpression();
         }
-        List<Selectable> list = values.stream().map(LiteralValue::new)
-                .map(literalValue -> (Selectable) literalValue)
+        List<Selectable> list = values.stream()
+                .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))
                 .toList();
         return new In(attribute, list);
-    }
-
-
-    public Expression between(Selectable attribute, Selectable exp1, Selectable exp2) {
-        return new Bt(attribute, exp1, exp2);
     }
 
     public Expression between(Selectable attribute, Object exp1, Object exp2) {

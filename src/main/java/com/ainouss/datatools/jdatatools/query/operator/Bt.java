@@ -41,7 +41,7 @@ public class Bt extends Expression {
     }
 
 
-    public String toString() {
-        return attribute + " between " + left + " and " + right;
+    public String toSql() {
+        return attribute.toSql() + " between " + left.toSql() + " and " + right.toSql();
     }
 }

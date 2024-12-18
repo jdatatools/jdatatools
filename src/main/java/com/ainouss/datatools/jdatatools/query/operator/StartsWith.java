@@ -17,9 +17,9 @@ public class StartsWith extends Expression {
     }
 
 
-    public String toString() {
-        String escaped = right.toString().replace("'", "");
-        return attribute + " like '" + escaped + "%'";
+    public String toSql() {
+        String escaped = right.toSql().replace("'", "");
+        return attribute.toSql() + " like '" + escaped + "%'";
     }
 
 }

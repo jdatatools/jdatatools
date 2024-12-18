@@ -14,8 +14,8 @@ public class Min extends AggregateFunction {
     }
 
     @Override
-    public String toString() {
-        return "min(" + selectable.toString() + ")";
+    public String toSql() {
+        return "min(" + selectable.toSql() + ")";
     }
 
 }

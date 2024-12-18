@@ -30,8 +30,8 @@ public class Root<T> implements Selectable, From {
 
     public Root(Class<T> from) {
         this.javaType = from;
-        this.alias = EntityRegistry.tables.get(this);
-        this.table = EntityRegistry.tables.get(this);
+        this.alias = EntityRegistry.roots.get(this);
+        this.table = EntityRegistry.roots.get(this);
     }
 
     /**
@@ -128,14 +128,14 @@ public class Root<T> implements Selectable, From {
     }
 
     @Override
-    public String toString() {
+    public String toSql() {
         return alias;
     }
 
     @Override
     public String render() {
         return new StringBuilder(schema())
-                .append(EntityRegistry.tables.get(this))
+                .append(EntityRegistry.roots.get(this))
                 .append(" ")
                 .append(getAlias())
                 .toString();

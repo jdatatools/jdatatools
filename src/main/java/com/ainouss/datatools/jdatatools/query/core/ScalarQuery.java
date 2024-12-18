@@ -10,7 +10,7 @@ public class ScalarQuery<T> implements Selectable {
 
 
     @Override
-    public String toString() {
+    public String toSql() {
         return " (" + criteria.buildSelectQuery() + ")";
     }
 

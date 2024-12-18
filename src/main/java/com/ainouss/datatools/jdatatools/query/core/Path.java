@@ -47,7 +47,7 @@ public class Path<T> implements Selectable {
     }
 
     @Override
-    public String toString() {
+    public String toSql() {
         return EntityRegistry.fullResolve(this);
     }
 

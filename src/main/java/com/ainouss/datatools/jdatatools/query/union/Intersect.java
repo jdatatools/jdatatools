@@ -12,7 +12,7 @@ public class Intersect implements SetOperation {
     }
 
     public String toSql() {
-        return "intersect " + other.buildSelectQuery();
+        return "intersect (" + other.buildSelectQuery() + ")";
     }
 
 }

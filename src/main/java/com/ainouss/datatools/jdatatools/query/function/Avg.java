@@ -14,8 +14,8 @@ public class Avg extends AggregateFunction {
     }
 
     @Override
-    public String toString() {
-        return "avg(" + selectable.toString() + ")";
+    public String toSql() {
+        return "avg(" + selectable.toSql() + ")";
     }
 
 }

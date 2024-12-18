@@ -77,10 +77,10 @@ public class In extends Expression {
      *
      * @return The SQL representation of the 'IN' operator.
      */
-    public String toString() {
+    public String toSql() {
         String values = args.stream()
-                .map(Object::toString)
+                .map(Selectable::toSql)
                 .collect(Collectors.joining(","));
-        return attribute + " in  (" + values + ")";
+        return attribute.toSql() + " in  (" + values + ")";
     }
 }

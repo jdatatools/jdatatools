@@ -12,7 +12,7 @@ public class Except implements SetOperation {
     }
 
     public String toSql() {
-        return "except " + other.buildSelectQuery();
+        return "except (" + other.buildSelectQuery() + ")";
     }
 
 }

@@ -12,7 +12,7 @@ public class Where extends Expression {
     public Where() {
     }
 
-    public Where(Expression expression) {
+    public void with(Expression expression) {
         this.expression = expression;
     }
 
