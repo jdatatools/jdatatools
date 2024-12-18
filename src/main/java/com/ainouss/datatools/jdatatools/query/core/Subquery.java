@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public class Subquery implements From {
+public class Subquery implements Source {
 
     private final CriteriaQuery<?> cr;
 
@@ -16,7 +16,7 @@ public class Subquery implements From {
 
     @Override
     public String getAlias() {
-        return this.cr.from().getAlias();
+        return this.cr.getRoot().getAlias();
     }
 
     public CriteriaQuery<?> cr() {

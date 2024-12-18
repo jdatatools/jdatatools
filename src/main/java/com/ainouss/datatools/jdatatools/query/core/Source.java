@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public interface From {
+public interface Source {
 
     String render();
 

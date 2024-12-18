@@ -18,7 +18,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @param <T> Java class
  */
 @Getter
-public class Root<T> implements Selectable, From {
+public class Root<T> implements Selectable, Source {
 
     private final Class<T> javaType;
 
@@ -51,7 +51,7 @@ public class Root<T> implements Selectable, From {
      * @param <U>  target classs
      * @return join expression
      */
-    public <U> JoinExpression<T, U> leftJoin(Root<U> root) {
+    public <U> JoinExpression<T, U> leftJoin(Source root) {
         Join<T, U> join = new Join<>(this, root, JoinType.LEFT);
         return new JoinExpression<>(join);
     }
@@ -63,7 +63,7 @@ public class Root<T> implements Selectable, From {
      * @param <U>  target classs
      * @return join expression
      */
-    public <U> JoinExpression<T, U> rightJoin(Root<U> root) {
+    public <U> JoinExpression<T, U> rightJoin(Source root) {
         Join<T, U> join = new Join<>(this, root, JoinType.RIGHT);
         return new JoinExpression<>(join);
     }
@@ -75,7 +75,7 @@ public class Root<T> implements Selectable, From {
      * @param <U>  target classs
      * @return join expression
      */
-    public <U> JoinExpression<T, U> innerJoin(Root<U> root) {
+    public <U> JoinExpression<T, U> innerJoin(Source root) {
         Join<T, U> join = new Join<>(this, root, JoinType.INNER);
         return new JoinExpression<>(join);
     }
@@ -88,7 +88,7 @@ public class Root<T> implements Selectable, From {
      * @return join expression
      */
 
-    public <U> JoinExpression<T, U> fullJoin(Root<U> root) {
+    public <U> JoinExpression<T, U> fullJoin(Source root) {
         Join<T, U> join = new Join<>(this, root, JoinType.FULL);
         return new JoinExpression<>(join);
     }
@@ -100,8 +100,9 @@ public class Root<T> implements Selectable, From {
      * @param <U>  target classs
      * @return join expression
      */
-    public <U> Join<T, U> join(From root) {
-        return new Join<>(this, root, JoinType.CROSS);
+    public <U> JoinExpression<T, U> join(Source root) {
+        Join<T, U> join = new Join<>(this, root, JoinType.CROSS);
+        return new JoinExpression<>(join);
     }
 
     /**

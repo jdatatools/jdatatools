@@ -9,6 +9,7 @@ import com.ainouss.datatools.jdatatools.query.union.Except;
 import com.ainouss.datatools.jdatatools.query.union.Intersect;
 import com.ainouss.datatools.jdatatools.query.union.Union;
 import com.ainouss.datatools.jdatatools.query.union.UnionAll;
+import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -28,9 +29,10 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class CriteriaQuery<T> {
 
+    @Getter
     protected final Root<T> root;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
-    protected final List<From> froms = new ArrayList<>();
+    protected final List<Source> froms = new ArrayList<>();
     private final Where where = new Where();
     protected final IdentityExpression having = new IdentityExpression();
     protected final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
@@ -55,7 +57,7 @@ public class CriteriaQuery<T> {
         this.froms.add(root);
     }
 
-    public CriteriaQuery<T> from(From from) {
+    public CriteriaQuery<T> from(Source from) {
         this.froms.clear();
         this.froms.add(from);
         return this;
@@ -119,14 +121,6 @@ public class CriteriaQuery<T> {
         return this;
     }
 
-    /**
-     * Returns the root entity of this query.
-     *
-     * @return The root entity.
-     */
-    public Root<T> from() {
-        return root;
-    }
 
     private String froms() {
         return froms.stream()
@@ -142,19 +136,6 @@ public class CriteriaQuery<T> {
      */
     public CriteriaQuery<T> where(Expression expression) {
         this.where.with(expression);
-        return this;
-    }
-
-    /**
-     * Joins a table to this query.
-     *
-     * @param join The join expression.
-     * @param <X>  The type of the starting entity in the join.
-     * @param <Y>  The type of the joined entity.
-     * @return This {@code CriteriaQuery} instance for method chaining.
-     */
-    public <X, Y> CriteriaQuery<T> join(Join<X, Y> join) {
-        this.joins.add(join);
         return this;
     }
 

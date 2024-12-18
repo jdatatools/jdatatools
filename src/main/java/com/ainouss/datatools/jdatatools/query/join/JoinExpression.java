@@ -1,6 +1,8 @@
 package com.ainouss.datatools.jdatatools.query.join;
 
+import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.datatools.jdatatools.query.core.Expression;
+import com.ainouss.datatools.jdatatools.query.core.Source;
 
 /**
  * Join expression, intermediate operation that returns a join through on function
@@ -9,7 +11,8 @@ import com.ainouss.datatools.jdatatools.query.core.Expression;
  * @param <T> source
  * @param <U> target
  */
-public class JoinExpression<T, U> {
+public class JoinExpression<T, U> implements Source {
+
     private final Join<T, U> join;
 
     public JoinExpression(Join<T, U> join) {
@@ -24,5 +27,19 @@ public class JoinExpression<T, U> {
             return join;
         }
         return join.on(expression);
+    }
+
+    public Join<T, U> on(CriteriaQuery<?> subquery) {
+        return join.on(subquery);
+    }
+
+    @Override
+    public String render() {
+        return join.toSql();
+    }
+
+    @Override
+    public String getAlias() {
+        return "";
     }
 }

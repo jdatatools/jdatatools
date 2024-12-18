@@ -21,7 +21,7 @@ public class All extends Expression implements Selectable {
 
     @Override
     public Root<?> root() {
-        return subquery.from();
+        return subquery.getRoot();
     }
 
     @Override

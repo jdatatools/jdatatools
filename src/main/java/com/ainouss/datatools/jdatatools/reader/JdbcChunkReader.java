@@ -132,7 +132,7 @@ public class JdbcChunkReader {
             template.setSelect(template.getCriteria().buildSelectQuery());
         }
         if (template.getClazz() == null) {
-            template.setClazz(template.getCriteria().from().getJavaType());
+            template.setClazz(template.getCriteria().getRoot().getJavaType());
         }
         return getChunk(template, 0, null);
     }

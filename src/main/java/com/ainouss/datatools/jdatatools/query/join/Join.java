@@ -2,14 +2,15 @@ package com.ainouss.datatools.jdatatools.query.join;
 
 import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.From;
+import com.ainouss.datatools.jdatatools.query.core.Root;
+import com.ainouss.datatools.jdatatools.query.core.Source;
 import lombok.Getter;
 
 @Getter
-public class Join<X, Y> {
+public class Join<X, Y> implements Source {
 
-    private final From target;
-    private final From source;
+    private final Source target;
+    private final Source source;
 
     private final JoinType joinType;
 
@@ -18,7 +19,7 @@ public class Join<X, Y> {
     private CriteriaQuery<?> subquery;
 
 
-    public Join(From source, From target, JoinType joinType) {
+    public Join(Source source, Source target, JoinType joinType) {
         this.source = source;
         this.target = target;
         this.joinType = joinType;
@@ -34,18 +35,31 @@ public class Join<X, Y> {
         return this;
     }
 
+    public Join<X, Y> rightJoin(Root<?> target) {
+        return new Join<>(this, target, JoinType.RIGHT);
+    }
+
     public String toSql() {
         return render();
     }
 
     public String render() {
-        return new StringBuilder(this.getJoinType().name().toLowerCase())
+        return new StringBuilder(source.render())
+                .append(" ")
+                .append(source.getAlias())
+                .append(" ")
+                .append(this.getJoinType().name().toLowerCase())
                 .append(" join ")
                 .append(target.render())
                 .append(" ")
                 .append(target.getAlias())
                 .append(getStatement())
                 .toString();
+    }
+
+    @Override
+    public String getAlias() {
+        return "";
     }
 
     private String getStatement() {
@@ -57,5 +71,4 @@ public class Join<X, Y> {
         }
         return "";
     }
-
 }

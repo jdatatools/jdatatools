@@ -144,17 +144,15 @@ class CriteriaQueryTest {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
         Root<EmployeeDetails> det = cr.from(EmployeeDetails.class).as("det");
-        Expression and = cb.and(
+        Expression where = cb.and(
                 cb.eq(det.get("id"), 0),
                 cb.gt(rt.get("id"), 1)
         );
-        cr.where(and)
-                .join(
-                        rt.leftJoin(det)
-                                .on(
-                                        cb.eq(rt.get("id"), det.get("id"))
-                                )
-                );
+        cr.from(rt.leftJoin(det)
+                        .on(
+                                cb.eq(rt.get("id"), det.get("id"))
+                        ))
+                .where(where);
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl left join EMPLOYEE_DETAILS det on tbl.ID = det.ID where ((det.ID = 0 and (tbl.ID > 1)))", select);
     }
@@ -173,13 +171,10 @@ class CriteriaQueryTest {
                 cb.eq(det.get("id"), 0),
                 cb.gt(rt.get("id"), 1)
         );
-        cr.where(and)
-                .join(
-                        rt.leftJoin(det)
-                                .on(
-                                        cb.eq(rt.get("id"), det.get("id"))
-                                )
-                );
+        cr.from(rt.leftJoin(det)
+                .on(
+                        cb.eq(rt.get("id"), det.get("id"))
+                )).where(and);
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from DB.EMPLOYEES tbl left join DB2.EMPLOYEE_DETAILS det on tbl.ID = det.ID where ((det.ID = 0 and (tbl.ID > 1)))", select);
     }
@@ -201,8 +196,8 @@ class CriteriaQueryTest {
                 .where(cb.eq(details.get("employeeId"), employee.get("id")));  // Correlate with outer query
 
 
-        employeeQuery.select(employee.get("lastName"), department.get("name"))  // Select names
-                .join(employee.join(department).on(subquery));
+        employeeQuery.select(employee.get("lastName"), department.get("name"))
+                .from(employee.join(department).on(subquery));// Select names
 
         String sql = employeeQuery.buildSelectQuery();
         assertEquals("select e.LAST_NAME as lastName,d.NAME as name from EMPLOYEES e cross join DEPARTMENTS d on (select EMPLOYEE_DETAILS.DEPARTMENT_ID as departmentId from EMPLOYEE_DETAILS EMPLOYEE_DETAILS where (EMPLOYEE_DETAILS.EMPLOYEE_ID = e.ID))", sql);
@@ -252,12 +247,10 @@ class CriteriaQueryTest {
         Root<EmployeeDetails> det = cr.from(EmployeeDetails.class).as("det");
 
         cr.select(rt.get("id"))
-                .join(
-                        rt.fullJoin(det)
-                                .on(
-                                        cb.eq(rt.get("id"), det.get("id"))
-                                )
-                );
+                .from(rt.fullJoin(det)
+                        .on(
+                                cb.eq(rt.get("id"), det.get("id"))
+                        ));
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ID as id from EMPLOYEES tbl full join EMPLOYEE_DETAILS det on tbl.ID = det.ID", select);
     }
@@ -268,13 +261,12 @@ class CriteriaQueryTest {
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
         Root<EmployeeDetails> det = cr.from(EmployeeDetails.class).as("det");
 
-        cr.select(rt.get("id"))
-                .join(
-                        rt.innerJoin(det)
-                                .on(
-                                        cb.eq(rt.get("id"), det.get("id"))
-                                )
-                );
+        cr
+                .from(rt.innerJoin(det)
+                        .on(
+                                cb.eq(rt.get("id"), det.get("id"))
+                        ))
+                .select(rt.get("id"));
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ID as id from EMPLOYEES tbl inner join EMPLOYEE_DETAILS det on tbl.ID = det.ID", select);
     }
@@ -285,10 +277,10 @@ class CriteriaQueryTest {
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
         Root<EmployeeDetails> det = cr.from(EmployeeDetails.class).as("det");
 
-        cr.select(rt.get("id"))
-                .join(
-                        rt.join(det)
-                );
+        cr
+                .select(rt.get("id"))
+                .from(rt.join(det));
+
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ID as id from EMPLOYEES tbl cross join EMPLOYEE_DETAILS det", select);
     }
@@ -300,17 +292,10 @@ class CriteriaQueryTest {
         Root<EmployeeDetails> det = cr.from(EmployeeDetails.class).as("det");
 
         cr.select(rt.get("id"))
-                .join(
-                        rt.leftJoin(det)
-                                .on(
-                                        cb.eq(rt.get("id"), det.get("id"))
-                                )
-                ).join(
-                        rt.rightJoin(det)
-                                .on(
-                                        cb.eq(rt.get("id"), det.get("id"))
-                                )
-                );
+                .from(
+                        rt.leftJoin(det).on(cb.eq(rt.get("id"), det.get("id")))
+                                .rightJoin(det).on(cb.eq(rt.get("id"), det.get("id"))
+                                ));
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ID as id from EMPLOYEES tbl left join EMPLOYEE_DETAILS det on tbl.ID = det.ID right join EMPLOYEE_DETAILS det on tbl.ID = det.ID", select);
     }
@@ -504,7 +489,7 @@ class CriteriaQueryTest {
     @Test
     public void should_generate_insert_one_field() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
-        var rt = cr.from();
+        var rt = cr.getRoot();
         cr.select(rt.get("id"));
         String insert = cr.buildInsertQuery();
         Assertions.assertEquals("insert into EMPLOYEES (ID) values (:id)", insert);
@@ -513,7 +498,7 @@ class CriteriaQueryTest {
     @Test
     public void should_generate_insert_multiple_fields() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
-        var rt = cr.from();
+        var rt = cr.getRoot();
         cr.select(rt.get("id"), rt.get("firstName"));
         String insert = cr.buildInsertQuery();
         Assertions.assertEquals("insert into EMPLOYEES (ID,FIRST_NAME) values (:id,:firstName)", insert);
@@ -545,9 +530,9 @@ class CriteriaQueryTest {
     @Test
     public void exists_subquery() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class).as("emp");
-        Root<Employee> root = query.from();
+        Root<Employee> root = query.getRoot();
         CriteriaQuery<EmployeeDetails> sub = cb.createQuery(EmployeeDetails.class).as("pro");
-        Root<EmployeeDetails> subRoot = sub.from();
+        Root<EmployeeDetails> subRoot = sub.getRoot();
         String sql = query.where(
                 cb.exists(sub.where(cb.eq(root.get("id"), subRoot.get("id"))))
         ).buildSelectQuery();
@@ -558,9 +543,9 @@ class CriteriaQueryTest {
     public void any_subquery() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class)
                 .as("tbl");
-        Root<Employee> root = query.from();
+        Root<Employee> root = query.getRoot();
         CriteriaQuery<Employee> emp = cb.createQuery(Employee.class);
-        Root<Employee> empRoot = emp.from();
+        Root<Employee> empRoot = emp.getRoot();
         //
         String sql = query.where(
                 cb.gt(
@@ -573,9 +558,9 @@ class CriteriaQueryTest {
     @Test
     public void all_subquery() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
-        Root<Employee> root = query.from();
+        Root<Employee> root = query.getRoot();
         CriteriaQuery<Employee> sub = cb.createQuery(Employee.class).as("sub");
-        Root<Employee> r = sub.from();
+        Root<Employee> r = sub.getRoot();
         String sql = query.where(
                 cb.ge(root.get("id"), cb.all(sub.select(r.get("id"))))
         ).buildSelectQuery();
@@ -585,9 +570,9 @@ class CriteriaQueryTest {
     @Test
     public void scalar_select() {
         CriteriaQuery<Department> dep = cb.createQuery(Department.class);
-        Root<Department> root = dep.from();
+        Root<Department> root = dep.getRoot();
         CriteriaQuery<Employee> emp = cb.createQuery(Employee.class);
-        Root<Employee> empRoot = emp.from();
+        Root<Employee> empRoot = emp.getRoot();
         String sql = dep.select(root.get("name"), cb.scalar(emp.select(cb.max(empRoot.get("salary"))))).buildSelectQuery();
         assertEquals("select DEPARTMENTS.NAME as name, (select max(EMPLOYEES.SALARY) as salary from EMPLOYEES EMPLOYEES) as salary from DEPARTMENTS DEPARTMENTS", sql);
     }
@@ -686,16 +671,17 @@ class CriteriaQueryTest {
         CriteriaQuery<Department> query = cb.createQuery(Department.class);
         Root<Department> depRoot = query.from(Department.class).as("d");
         //
-        CriteriaQuery<?> subquery = cb.createQuery(Employee.class); //
-        Root<Employee> emp = subquery.from(Employee.class).as("e");
-        subquery.select(emp)
+        CriteriaQuery<?> query1 = cb.createQuery(Employee.class); //
+        Root<Employee> emp = query1.from(Employee.class).as("e");
+        query1.select(emp)
                 .where(cb.gt(emp.get("salary"), 1000));
 
-        subquery.as("e"); //overload alias
+        query1.as("e"); //overload alias
+        Subquery subquery = new Subquery(query1);
         query.select(depRoot.get("name"), emp.get("firstName"))
-                .join(depRoot.join(new Subquery(subquery)).on(cb.eq(depRoot.get("id"), emp.get("id"))));
+                .from(depRoot.rightJoin(subquery).on(cb.eq(depRoot.get("id"), emp.get("id"))));
         String sql = query.buildSelectQuery(); // Build the query from the outer query
-        assertEquals("select e.FIRST_NAME as firstName,d.NAME as name from DEPARTMENTS d cross join (select e.ENABLED,e.FIRST_NAME,e.ID,e.LAST_NAME,e.SALARY from EMPLOYEES e where (e.SALARY > 1000)) e on d.ID = e.ID", sql);
+        assertEquals("select e.FIRST_NAME as firstName,d.NAME as name from DEPARTMENTS d right join (select e.ENABLED,e.FIRST_NAME,e.ID,e.LAST_NAME,e.SALARY from EMPLOYEES e where (e.SALARY > 1000)) e on d.ID = e.ID", sql);
     }
 
     @Test

@@ -21,6 +21,6 @@ public class ScalarQuery<T> implements Selectable {
 
     @Override
     public Root<T> root() {
-        return criteria.from();
+        return criteria.getRoot();
     }
 }
