@@ -42,4 +42,9 @@ public class JoinExpression<T, U> implements Source {
     public String getAlias() {
         return "";
     }
+
+    @Override
+    public void setAlias(String alias) {
+
+    }
 }

@@ -71,4 +71,9 @@ public class Join<X, Y> implements Source {
         }
         return "";
     }
+
+    @Override
+    public void setAlias(String alias) {
+
+    }
 }

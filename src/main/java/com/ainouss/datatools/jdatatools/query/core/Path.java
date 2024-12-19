@@ -17,11 +17,18 @@ public class Path<T> implements Selectable {
 
     protected final String attribute;
 
-    protected String alias;
+    private String alias;
+
 
     public Path(Root<T> head, String attribute) {
         this.head = head;
         this.attribute = attribute;
+        this.alias = attribute;
+    }
+    public Path(Class<T> head, String attribute) {
+        this.attribute = attribute;
+        this.head = new Root<>(head);
+        this.alias = attribute;
     }
 
     public final Path<T> as(String alias) {
@@ -52,12 +59,12 @@ public class Path<T> implements Selectable {
     }
 
     @Override
-    public String column() {
-        return attribute;
+    public String getAlias() {
+        return alias;
     }
 
     @Override
-    public Root<T> root() {
-        return head;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 }

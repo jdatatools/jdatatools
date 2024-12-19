@@ -22,4 +22,5 @@ public class Count extends AggregateFunction {
         return "count(" + selectable.toSql() + ")";
     }
 
+
 }

@@ -6,4 +6,6 @@ public interface Source {
 
     String getAlias();
 
+    void setAlias(String alias);
+
 }

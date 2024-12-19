@@ -3,7 +3,7 @@ package com.ainouss.datatools.jdatatools.util;
 
 public final class DataUtils {
 
-    public static boolean isBlank(String s) {
+    public static <T extends CharSequence> boolean isBlank(T s) {
         if (s == null) {
             return true;
         }
@@ -29,7 +29,9 @@ public final class DataUtils {
         }
         return endIndex;
     }
-
+    public static <T extends CharSequence> T defaultIfEmpty(T str, T defaultStr) {
+        return isBlank(str) ? defaultStr : str;
+    }
     public static String trimToNull(String s) {
         if (s == null) {
             return null;

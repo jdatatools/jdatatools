@@ -1,12 +1,18 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.util.DataUtils;
+
 public class Subquery implements Source {
 
     private final CriteriaQuery<?> cr;
+    private String alias;
 
     public Subquery(CriteriaQuery<?> criteria) {
         this.cr = criteria;
-        criteria.noAlias = true;
+    }
+
+    public CriteriaQuery<?> cr() {
+        return cr;
     }
 
     @Override
@@ -16,10 +22,12 @@ public class Subquery implements Source {
 
     @Override
     public String getAlias() {
-        return this.cr.getRoot().getAlias();
+        return DataUtils.trimToBlank(alias);
     }
 
-    public CriteriaQuery<?> cr() {
-        return cr;
+
+    @Override
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 }

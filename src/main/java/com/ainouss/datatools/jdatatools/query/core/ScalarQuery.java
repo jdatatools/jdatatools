@@ -3,9 +3,11 @@ package com.ainouss.datatools.jdatatools.query.core;
 public class ScalarQuery<T> implements Selectable {
 
     private final CriteriaQuery<T> criteria;
+    private String alias;
 
     public ScalarQuery(CriteriaQuery<T> criteria) {
         this.criteria = criteria;
+        this.alias = criteria.getSelect().stream().findAny().map(Selectable::getAlias).orElse("");
     }
 
 
@@ -15,12 +17,12 @@ public class ScalarQuery<T> implements Selectable {
     }
 
     @Override
-    public String column() {
-        return criteria.getSelect().stream().findFirst().map(Selectable::column).orElse(null);
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     @Override
-    public Root<T> root() {
-        return criteria.getRoot();
+    public String getAlias() {
+        return alias;
     }
 }

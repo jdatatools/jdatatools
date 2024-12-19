@@ -153,14 +153,13 @@ public class Root<T> implements Selectable, Source {
         return Objects.hash(javaType);
     }
 
-
     @Override
-    public String column() {
-        return "";
+    public String getAlias() {
+        return alias;
     }
 
     @Override
-    public Root<T> root() {
-        return this;
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 }

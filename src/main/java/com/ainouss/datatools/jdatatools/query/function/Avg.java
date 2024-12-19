@@ -8,7 +8,6 @@ import com.ainouss.datatools.jdatatools.query.core.Selectable;
  */
 public class Avg extends AggregateFunction {
 
-
     public Avg(Selectable selectable) {
         super(selectable);
     }

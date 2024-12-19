@@ -20,7 +20,7 @@ class LiteralValue implements Selectable {
         } else if (value instanceof Number) {
             return value.toString();
         } else if (value instanceof Subquery su) {
-            return su.render();
+            return su.render() + " " + su.getAlias();
         } else if (value instanceof CriteriaQuery<?> cr) {
             return " (" + cr.buildSelectQuery() + ")";
         } else if (value instanceof Expression ex) {
@@ -30,12 +30,12 @@ class LiteralValue implements Selectable {
     }
 
     @Override
-    public String column() {
-        return "";
+    public void setAlias(String alias) {
+
     }
 
     @Override
-    public Root<?> root() {
-        return null;
+    public String getAlias() {
+        return "";
     }
 }

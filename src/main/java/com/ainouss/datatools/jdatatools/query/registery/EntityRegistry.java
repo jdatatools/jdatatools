@@ -106,14 +106,14 @@ public class EntityRegistry {
     }
 
     public static String fullResolvePath(Path<?> path) {
-        String root = resolveRoot(path.root());
+        String root = resolveRoot(path.getHead());
         String col = resolvePath(path);
-        return root + "." + (isNotBlank(col) ? col : path.column());
+        return root + "." + (isNotBlank(col) ? col : path.getAttribute());
     }
 
     public static String resolvePath(Path<?> path) {
         String col = paths.get(path);
-        return (isNotBlank(col) ? col : path.column());
+        return (isNotBlank(col) ? col : path.getAttribute());
     }
 
     /**

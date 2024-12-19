@@ -3,7 +3,6 @@ package com.ainouss.datatools.jdatatools.query.subquery;
 
 import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Root;
 import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 public class All extends Expression implements Selectable {
@@ -15,17 +14,17 @@ public class All extends Expression implements Selectable {
     }
 
     @Override
-    public String column() {
-        return "";
-    }
-
-    @Override
-    public Root<?> root() {
-        return subquery.getRoot();
-    }
-
-    @Override
     public String toSql() {
         return " all (" + subquery.buildSelectQuery() + ")";
+    }
+
+    @Override
+    public void setAlias(String alias) {
+        //
+    }
+
+    @Override
+    public String getAlias() {
+        return "";
     }
 }

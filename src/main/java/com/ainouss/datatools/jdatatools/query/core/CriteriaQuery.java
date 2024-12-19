@@ -9,16 +9,15 @@ import com.ainouss.datatools.jdatatools.query.union.Except;
 import com.ainouss.datatools.jdatatools.query.union.Intersect;
 import com.ainouss.datatools.jdatatools.query.union.Union;
 import com.ainouss.datatools.jdatatools.query.union.UnionAll;
-import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.ainouss.datatools.jdatatools.query.registery.EntityRegistry.fullResolve;
-import static com.ainouss.datatools.jdatatools.util.QueryBuilder.getSelectableFields;
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static com.ainouss.datatools.jdatatools.util.DataUtils.defaultIfEmpty;
+import static com.ainouss.datatools.jdatatools.util.DataUtils.isNotBlank;
+
 
 /**
  * Criteria query builder. This class provides a fluent API for constructing SQL queries
@@ -29,18 +28,17 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 public class CriteriaQuery<T> {
 
-    @Getter
-    protected final Root<T> root;
+    protected Class<T> resultType;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
-    protected final List<Source> froms = new ArrayList<>();
+    protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
     private final Where where = new Where();
     protected final IdentityExpression having = new IdentityExpression();
-    protected final LinkedHashMap<Path<?>, OrderDirection> orderBy = new LinkedHashMap<>();
+    protected final LinkedHashMap<Selectable, OrderDirection> orderBy = new LinkedHashMap<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
     protected final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     protected final List<SetOperation> unions = new ArrayList<>();
     protected final Page page = new Page();
-    protected boolean noAlias = false;
+    private boolean alias = true;
 
 
     /**
@@ -53,13 +51,19 @@ public class CriteriaQuery<T> {
      */
     CriteriaQuery(Class<T> javaType) {
         EntityRegistry.registerClass(javaType);
-        this.root = new Root<>(javaType);
-        this.froms.add(root);
+        this.resultType = javaType;
     }
 
-    public CriteriaQuery<T> from(Source from) {
+    public CriteriaQuery<T> from(Source source, Source... sources) {
+        if (source == null && sources == null) {
+            throw new RuntimeException("no source specified");
+        }
         this.froms.clear();
-        this.froms.add(from);
+        this.froms.add(source);
+        if (sources != null) {
+            this.froms.addAll(Arrays.asList(sources));
+        }
+
         return this;
     }
 
@@ -104,10 +108,9 @@ public class CriteriaQuery<T> {
      */
     public <R> Root<R> from(Class<R> from) {
         EntityRegistry.registerClass(from);
-        if (from.equals(root.getJavaType())) {
-            return (Root<R>) root;
-        }
-        return new Root<>(from);
+        Root<R> root = new Root<>(from);
+        this.froms.add(root);
+        return root;
     }
 
     /**
@@ -117,7 +120,7 @@ public class CriteriaQuery<T> {
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> from(Root<?> from) {
-        EntityRegistry.registerClass(from.getJavaType());
+        this.froms.add(from);
         return this;
     }
 
@@ -125,6 +128,12 @@ public class CriteriaQuery<T> {
     private String froms() {
         return froms.stream()
                 .map(from -> from.render() + " " + from.getAlias())
+                .collect(Collectors.joining(","));
+    }
+
+    private String into() {
+        return froms.stream()
+                .map(Source::render)
                 .collect(Collectors.joining(","));
     }
 
@@ -146,7 +155,7 @@ public class CriteriaQuery<T> {
      * @param order The order direction (ascending or descending).
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public CriteriaQuery<T> orderBy(Path<?> path, OrderDirection order) {
+    public CriteriaQuery<T> orderBy(Selectable path, OrderDirection order) {
         this.orderBy.put(path, order);
         return this;
     }
@@ -220,10 +229,9 @@ public class CriteriaQuery<T> {
      * @return The select clause of the SQL query.
      */
     private String select() {
-        checkSelection();
         String select = selections
                 .stream()
-                .sorted(Comparator.comparing(Selectable::column))
+                .sorted()
                 .map(this::toSql)
                 .collect(Collectors.joining(","));
         return defaultIfEmpty(select, " * ");
@@ -232,11 +240,11 @@ public class CriteriaQuery<T> {
 
     private String toSql(Selectable attr) {
         String str = attr.toSql();
-        if (noAlias) {
+        if (!alias) {
             return str;
         }
-        if (isNotBlank(attr.column())) {
-            return str + " as " + attr.column();
+        if (isNotBlank(attr.getAlias())) {
+            return str + " as " + attr.getAlias();
         }
         return str;
     }
@@ -262,7 +270,12 @@ public class CriteriaQuery<T> {
     private String insert() {
         return selections
                 .stream()
-                .map(selectable -> new Path<>(selectable.root(), selectable.column()))
+                .map(selectable -> {
+                    if (selectable instanceof Path<?> path) {
+                        return path;
+                    }
+                    throw new RuntimeException("not a path");
+                })
                 .map(EntityRegistry::resolvePath)
                 .collect(Collectors.joining(","));
     }
@@ -275,7 +288,13 @@ public class CriteriaQuery<T> {
     private String values() {
         return selections
                 .stream()
-                .map(path -> new StringBuilder(":").append(path.column()))
+                .map(selectable -> {
+                    if (selectable instanceof Path<?> path) {
+                        return path;
+                    }
+                    throw new RuntimeException("not a path");
+                })
+                .map(path -> new StringBuilder(":").append(path.getAttribute()))
                 .collect(Collectors.joining(","));
     }
 
@@ -344,18 +363,18 @@ public class CriteriaQuery<T> {
     }
 
     private String buildNestedSelectQuery() {
-        this.noAlias = true;
-        LinkedHashMap<Path<?>, OrderDirection> order = new LinkedHashMap<>(this.orderBy);
-        LinkedHashSet<Selectable> selections1 = new LinkedHashSet<>(this.selections);
         Page page1 = Page.from(this.page);
-        Subquery from = new Subquery(this);
-        var nq = new CriteriaQuery<>(this.root.getJavaType());
-        nq.from(from);
-        nq.orderBy.putAll(order);
+        Subquery subquery = new Subquery(this);
+        subquery.setAlias("nested_query");
+        var nq = new CriteriaQuery<>(this.resultType);
+        nq.from(subquery);
+        this.orderBy.forEach((path, orderDirection) -> {
+            Selectable p = new StaticPath("nested_query.".concat(path.getAlias()));
+            nq.orderBy(p, orderDirection);
+        });
         nq.page.apply(page1);
-        nq.selections.addAll(selections1);
-        from.cr().orderBy.clear();
-        from.cr().page.clear();
+        subquery.cr().orderBy.clear();
+        subquery.cr().page.clear();
         //
         return nq.buildSelectQuery();
     }
@@ -385,9 +404,8 @@ public class CriteriaQuery<T> {
     public String buildCountQuery() {
         return new StringBuilder().append("select count(*)")
                 .append(" from ")
-                .append(sourceTable(root))
+                .append(froms())
                 .append(" ")
-                .append(alias(root))
                 .append(" ")
                 .append(joins())
                 .append(" ")
@@ -411,6 +429,11 @@ public class CriteriaQuery<T> {
                 .collect(Collectors.joining(" "));
     }
 
+    public CriteriaQuery<T> withAlias(boolean withAlias) {
+        this.alias = true;
+        return this;
+    }
+
     /**
      * Builds a delete query based on the criteria defined in this query builder.
      * The query deletes all rows matching the where clause.
@@ -419,9 +442,7 @@ public class CriteriaQuery<T> {
      */
     public String buildDeleteQuery() {
         return new StringBuilder().append("delete from ")
-                .append(sourceTable(root))
-                .append(" ")
-                .append(alias(root))
+                .append(froms())
                 .append(" ")
                 .append(where())
                 .append(" ")
@@ -438,9 +459,8 @@ public class CriteriaQuery<T> {
      * @return The parameterized insert query.
      */
     public String buildInsertQuery() {
-        checkSelection();
         return new StringBuilder().append("insert into ")
-                .append(sourceTable(root))
+                .append(into())
                 .append(" (")
                 .append(insert())
                 .append(")")
@@ -494,15 +514,11 @@ public class CriteriaQuery<T> {
      * @return The list of selected fields.
      */
     public List<Field> getFields() {
-        List<Field> selectableFields = getSelectableFields(root.getJavaType());
-        if (this.selections.isEmpty()) {
-            return selectableFields;
-        }
         return this.selections
                 .stream()
                 .map(select -> {
                     try {
-                        return select.root().getJavaType().getDeclaredField(select.column());
+                        return this.getResultType().getDeclaredField(select.getAlias());
                     } catch (NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
@@ -511,22 +527,11 @@ public class CriteriaQuery<T> {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Ensures that at least one column is selected in the query. If no selection
-     * is explicitly defined, all columns from the root entity are selected.
-     */
-    private void checkSelection() {
-        if (this.selections.isEmpty()) {
-            select(root);
-        }
-    }
-
-    public CriteriaQuery<T> as(String tbl) {
-        this.root.as(tbl);
-        return this;
-    }
-
     public LinkedHashSet<Selectable> getSelect() {
         return selections;
+    }
+
+    public Class<T> getResultType() {
+        return resultType;
     }
 }
