@@ -3,6 +3,11 @@ package com.ainouss.datatools.jdatatools.query.join;
 import com.ainouss.datatools.jdatatools.query.core.*;
 import lombok.Getter;
 
+/**
+ * Represents a join between two sources.
+ * @param <X> the type of the source.
+ * @param <Y> the type of the target.
+ */
 @Getter
 public class Join<X, Y> extends NoAlias implements Source {
 
@@ -12,6 +17,12 @@ public class Join<X, Y> extends NoAlias implements Source {
     private Expression expression;
     private CriteriaQuery<?> subquery;
 
+    /**
+     * Creates a join.
+     * @param source the join source.
+     * @param target the join target.
+     * @param joinType the type of the join.
+     */
     public Join(Source source, Source target, JoinType joinType) {
         this.source = source;
         this.target = target;
@@ -28,10 +39,18 @@ public class Join<X, Y> extends NoAlias implements Source {
         return this;
     }
 
+    /**
+     * Creates a right join with the given target.
+     * @param target the join target.
+     * @return a new Join object.
+     */
     public Join<X, Y> rightJoin(Root<?> target) {
         return new Join<>(this, target, JoinType.RIGHT);
     }
 
+    /**
+     * Generates the SQL for this join.
+     */
     public String toSql() {
         return new StringBuilder(source.render())
                 .append(" ")

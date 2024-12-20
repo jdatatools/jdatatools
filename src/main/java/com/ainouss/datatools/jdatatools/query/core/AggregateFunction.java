@@ -9,9 +9,4 @@ public abstract class AggregateFunction extends Alias implements Aggregable {
     public AggregateFunction(Selectable selectable) {
         this.selectable = selectable;
     }
-
-    @Override
-    public Selectable getColumn() {
-        return selectable;
-    }
 }
