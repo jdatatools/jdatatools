@@ -1,9 +1,18 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public interface Alias {
+import com.ainouss.datatools.jdatatools.util.DataUtils;
 
-    void setAlias(String alias);
+public abstract class Alias implements WithAlias {
 
-    String getAlias();
+    protected String alias;
 
+    @Override
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    @Override
+    public String getAlias() {
+        return DataUtils.trimToBlank(alias);
+    }
 }

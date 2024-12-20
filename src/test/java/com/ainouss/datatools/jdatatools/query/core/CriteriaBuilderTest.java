@@ -314,5 +314,22 @@ class CriteriaBuilderTest {
         assertEquals("case when tbl.SALARY = 100 then 'slave' when tbl.SALARY = 200 then 'employee' else 'rich' end", sql);
     }
 
+    @Test
+    void nested_case() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class);
+        String sql = cb.choice()
+                .when(cb.gt(emp.get("age"), 60))
+                .then("Retired")
+                .otherwise(
+                        cb.choice(emp.get("departmentId"))  // Inner Simple CASE
+                                .when(1)
+                                .then("Sales")
+                                .when(2, "Marketing")
+                                .otherwise("Other")
+
+                ).end().as("status").toSql();
+        assertEquals("case when EMPLOYEES.age > 60 then 'Retired' else case EMPLOYEES.departmentId when 1 then 'Sales' when 2 then 'Marketing' else 'Other' end end", sql);
+    }
 
 }

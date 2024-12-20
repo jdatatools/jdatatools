@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public interface Selectable extends Fragment, Alias, Comparable<Selectable> {
+public interface Selectable extends Fragment, WithAlias, Comparable<Selectable> {
 
     default Selectable as(String alias) {
         setAlias(alias);

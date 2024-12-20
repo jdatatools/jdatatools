@@ -18,11 +18,9 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @param <T> Java class
  */
 @Getter
-public class Root<T> implements Selectable, Source {
+public class Root<T> extends Alias implements Selectable, Source {
 
     private final Class<T> javaType;
-
-    private String alias;
 
     private final String table;
 
@@ -151,15 +149,5 @@ public class Root<T> implements Selectable, Source {
     @Override
     public int hashCode() {
         return Objects.hash(javaType);
-    }
-
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
-    @Override
-    public void setAlias(String alias) {
-        this.alias = alias;
     }
 }

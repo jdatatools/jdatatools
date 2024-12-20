@@ -1,8 +1,10 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public interface Source {
+public interface Source extends Fragment, WithAlias {
 
-    String render();
+    default String render() {
+        return toSql();
+    }
 
     String getAlias();
 

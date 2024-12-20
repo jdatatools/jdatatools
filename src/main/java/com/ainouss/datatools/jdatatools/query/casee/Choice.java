@@ -1,18 +1,17 @@
 package com.ainouss.datatools.jdatatools.query.casee;
 
+import com.ainouss.datatools.jdatatools.query.core.Alias;
 import com.ainouss.datatools.jdatatools.query.core.Fragment;
 import com.ainouss.datatools.jdatatools.query.core.Selectable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Choice implements Selectable {
+public abstract class Choice extends Alias implements Selectable {
 
     protected Fragment attribute;
     protected final List<WhenThen> whenThens = new ArrayList<>();
     protected Fragment otherwise;
-    protected String alias = "";
-
 
     @Override
     public String toSql() {
@@ -34,13 +33,7 @@ public abstract class Choice implements Selectable {
         return sql.toString();
     }
 
-    @Override
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    @Override
-    public String getAlias() {
-        return alias;
+    public Selectable end() {
+        return this;
     }
 }

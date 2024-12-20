@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public class StaticPath implements Selectable {
+public class StaticPath extends Alias implements Selectable {
 
     private final String path;
     public String alias;
@@ -12,15 +12,5 @@ public class StaticPath implements Selectable {
     @Override
     public String toSql() {
         return path;
-    }
-
-    @Override
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    @Override
-    public String getAlias() {
-        return alias;
     }
 }

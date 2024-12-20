@@ -18,6 +18,13 @@ public class SimpleCase extends Choice {
         return new SimpleWhen(this, whenThen);
     }
 
+    public SimpleCase when(Object when, Object obj) {
+        WhenThen whenThen = new WhenThen(new SelectableExpression(new LiteralValue(when)));
+        whenThen.setThen(new LiteralValue(obj));
+        whenThens.add(whenThen);
+        return this;
+    }
+
     public SimpleCase otherwise(Object obj) {
         this.otherwise = new LiteralValue(obj);
         return this;

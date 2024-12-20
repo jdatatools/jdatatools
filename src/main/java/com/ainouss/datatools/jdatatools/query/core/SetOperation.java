@@ -1,5 +1,4 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public interface SetOperation {
-    String toSql();
+public interface SetOperation extends Fragment {
 }

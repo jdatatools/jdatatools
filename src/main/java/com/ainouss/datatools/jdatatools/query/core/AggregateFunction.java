@@ -1,6 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public abstract class AggregateFunction implements Aggregable {
+public abstract class AggregateFunction extends Alias implements Aggregable {
 
     protected final Selectable selectable;
     protected String alias;
@@ -14,15 +14,4 @@ public abstract class AggregateFunction implements Aggregable {
     public Selectable getColumn() {
         return selectable;
     }
-
-    @Override
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
 }

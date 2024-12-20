@@ -479,7 +479,7 @@ class CriteriaQueryTest {
                 .groupBy(id)
                 .orderBy(id);
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ID as id,count(tbl.FIRST_NAME) from EMPLOYEES tbl where (tbl.ID > 3) group by tbl.ID order by tbl.ID ASC", select);
+        Assertions.assertEquals("select count(tbl.FIRST_NAME),tbl.ID as id from EMPLOYEES tbl where (tbl.ID > 3) group by tbl.ID order by tbl.ID ASC", select);
     }
 
     @Test
@@ -977,5 +977,24 @@ class CriteriaQueryTest {
                 ).from(emp)
                 .buildSelectQuery();
         assertEquals("select tbl.FIRST_NAME as firstName,case when tbl.SALARY = 100 then 'slave' when tbl.SALARY = 200 then 'employee' else 'rich' end as status from EMPLOYEES tbl", sql);
+    }
+
+    @Test
+    void nested_case() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class);
+        Selectable outerCase = cb.choice()
+                .when(cb.gt(emp.get("age"), 60))
+                .then("Retired")
+                .otherwise(
+                        cb.choice(emp.get("departmentId"))  // Inner Simple CASE
+                                .when(1)
+                                .then("Sales")
+                                .when(2, "Marketing")
+                                .otherwise("Other")
+
+                ).end().as("status");
+        String sql = query.select(outerCase).buildSelectQuery();
+        assertEquals("select case when EMPLOYEES.age > 60 then 'Retired' else case EMPLOYEES.departmentId when 1 then 'Sales' when 2 then 'Marketing' else 'Other' end end as status from EMPLOYEES EMPLOYEES", sql);
     }
 }

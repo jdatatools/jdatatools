@@ -1,23 +1,16 @@
 package com.ainouss.datatools.jdatatools.query.join;
 
-import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Root;
-import com.ainouss.datatools.jdatatools.query.core.Source;
+import com.ainouss.datatools.jdatatools.query.core.*;
 import lombok.Getter;
 
 @Getter
-public class Join<X, Y> implements Source {
+public class Join<X, Y> extends NoAlias implements Source {
 
     private final Source target;
     private final Source source;
-
     private final JoinType joinType;
-
     private Expression expression;
-
     private CriteriaQuery<?> subquery;
-
 
     public Join(Source source, Source target, JoinType joinType) {
         this.source = source;
@@ -40,10 +33,6 @@ public class Join<X, Y> implements Source {
     }
 
     public String toSql() {
-        return render();
-    }
-
-    public String render() {
         return new StringBuilder(source.render())
                 .append(" ")
                 .append(source.getAlias())
@@ -57,11 +46,6 @@ public class Join<X, Y> implements Source {
                 .toString();
     }
 
-    @Override
-    public String getAlias() {
-        return "";
-    }
-
     private String getStatement() {
         if (this.expression != null) {
             return " on " + expression.toSql();
@@ -70,10 +54,5 @@ public class Join<X, Y> implements Source {
             return " on (" + subquery.buildSelectQuery() + ")";
         }
         return "";
-    }
-
-    @Override
-    public void setAlias(String alias) {
-
     }
 }

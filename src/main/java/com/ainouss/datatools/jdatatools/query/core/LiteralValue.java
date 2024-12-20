@@ -2,7 +2,7 @@ package com.ainouss.datatools.jdatatools.query.core;
 
 import com.ainouss.datatools.jdatatools.util.DataUtils;
 
-public class LiteralValue implements Selectable {
+public class LiteralValue extends Alias implements Selectable {
 
     private final Object value;
 
@@ -19,23 +19,9 @@ public class LiteralValue implements Selectable {
             return "'" + DataUtils.escapeSql(strValue) + "'";
         } else if (value instanceof Number) {
             return value.toString();
-        } else if (value instanceof Subquery su) {
-            return su.render() + " " + su.getAlias();
-        } else if (value instanceof CriteriaQuery<?> cr) {
-            return " (" + cr.buildSelectQuery() + ")";
-        } else if (value instanceof Expression ex) {
-            return ex.render();
+        } else if (value instanceof Fragment fr) {
+            return fr.toSql();
         }
         return value.toString();
-    }
-
-    @Override
-    public void setAlias(String alias) {
-
-    }
-
-    @Override
-    public String getAlias() {
-        return "";
     }
 }
