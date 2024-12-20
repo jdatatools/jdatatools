@@ -123,6 +123,9 @@ public class CriteriaBuilder {
     }
 
     public Expression inL(Selectable attribute, List<?> values) {
+        if (values == null || values.isEmpty()) {
+            throw new IllegalArgumentException("values must not be null or empty");
+        }
         List<Selectable> list = values.stream()
                 .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))
                 .toList();
