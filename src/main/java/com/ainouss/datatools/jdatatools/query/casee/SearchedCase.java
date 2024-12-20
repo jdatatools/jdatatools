@@ -15,6 +15,13 @@ public class SearchedCase extends Choice {
         return new SearchedWhen(this, whenThen);
     }
 
+    public SearchedCase whenThen(Expression expression, Object then) {
+        WhenThen whenThen = new WhenThen(expression);
+        whenThen.setThen(new LiteralValue(then));
+        whenThens.add(whenThen);
+        return this;
+    }
+
     public SearchedCase otherwise(Object obj) {
         this.otherwise = new LiteralValue(obj);
         return this;

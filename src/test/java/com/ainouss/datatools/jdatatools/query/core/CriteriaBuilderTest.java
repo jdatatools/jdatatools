@@ -57,7 +57,6 @@ class CriteriaBuilderTest {
     }
 
 
-
     @Test
     void gt() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
@@ -289,9 +288,8 @@ class CriteriaBuilderTest {
                 .then("Retired")
                 .otherwise(
                         cb.choice(emp.get("departmentId"))  // Inner Simple CASE
-                                .when(1)
-                                .then("Sales")
-                                .when(2, "Marketing")
+                                .whenThen(1, "Sales")
+                                .whenThen(2, "Marketing")
                                 .otherwise("Other")
 
                 ).end().as("status").toSql();

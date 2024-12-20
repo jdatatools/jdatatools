@@ -971,7 +971,7 @@ class CriteriaQueryTest {
                         cb.choice(emp.get("departmentId"))  // Inner Simple CASE
                                 .when(1)
                                 .then("Sales")
-                                .when(2, "Marketing")
+                                .whenThen(2, "Marketing")
                                 .otherwise("Other")
 
                 ).end().as("status");
