@@ -281,7 +281,7 @@ class CriteriaBuilderTest {
     }
 
     @Test
-    void case_expression_with_attribute() {
+    void simple_case() {
         CriteriaBuilder cb = new CriteriaBuilder();
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> emp = query.from(Employee.class).as("tbl");
@@ -295,6 +295,23 @@ class CriteriaBuilderTest {
                         .as("status")
                         .toSql();
         assertEquals("case tbl.SALARY when 100 then 'slave' when 200 then 'employee' else 'rich' end", sql);
+    }
+
+    @Test
+    void searched_case() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class).as("tbl");
+        String sql =
+                cb.choice()
+                        .when(cb.eq(emp.get("salary"), 100))
+                        .then("slave")
+                        .when(cb.eq(emp.get("salary"), 200))
+                        .then("employee")
+                        .otherwise("rich")
+                        .as("status")
+                        .toSql();
+        assertEquals("case when tbl.SALARY = 100 then 'slave' when tbl.SALARY = 200 then 'employee' else 'rich' end", sql);
     }
 
 

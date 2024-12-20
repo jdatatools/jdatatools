@@ -1,12 +1,11 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-public interface Selectable extends Comparable<Selectable> {
+public interface Selectable extends Fragment, Alias, Comparable<Selectable> {
 
-    String toSql();
-
-    void setAlias(String alias);
-
-    String getAlias();
+    default Selectable as(String alias) {
+        setAlias(alias);
+        return this;
+    }
 
     @Override
     default int compareTo(Selectable o) {
@@ -15,10 +14,5 @@ public interface Selectable extends Comparable<Selectable> {
             return 0;
         }
         return alias.compareTo(o.getAlias());
-    }
-
-    default Selectable as(String alias) {
-        setAlias(alias);
-        return this;
     }
 }

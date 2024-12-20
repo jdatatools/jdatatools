@@ -1,6 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.casee.CaseExpression;
+import com.ainouss.datatools.jdatatools.query.casee.SearchedCase;
+import com.ainouss.datatools.jdatatools.query.casee.SimpleCase;
 import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
 import com.ainouss.datatools.jdatatools.query.expression.PredicateExpression;
 import com.ainouss.datatools.jdatatools.query.function.*;
@@ -286,7 +287,7 @@ public class CriteriaBuilder {
      * ANY subquery
      *
      * @param subquery subquery
-     * @return ANY expression
+     * @return 'ANY' expression
      */
     public Expression any(CriteriaQuery<?> subquery) {
         return new Any(subquery);
@@ -296,15 +297,19 @@ public class CriteriaBuilder {
      * ALL subquery
      *
      * @param subquery subquery
-     * @return ALL expression
+     * @return 'ALL' expression
      */
     public Expression all(CriteriaQuery<?> subquery) {
         return new All(subquery);
     }
 
 
-    public CaseExpression choice(Selectable attribute) {
-        return new CaseExpression(attribute); // Factory method for searched CASE
+    public SimpleCase choice(Selectable attribute) {
+        return new SimpleCase(attribute);
+    }
+
+    public SearchedCase choice() {
+        return new SearchedCase();
     }
 
 

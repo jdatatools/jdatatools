@@ -1,27 +1,18 @@
 package com.ainouss.datatools.jdatatools.query.casee;
 
-
-import com.ainouss.datatools.jdatatools.query.core.LiteralValue;
+import com.ainouss.datatools.jdatatools.query.core.Fragment;
 import com.ainouss.datatools.jdatatools.query.core.Selectable;
-import com.ainouss.datatools.jdatatools.query.expression.SelectableExpression;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CaseExpression implements Selectable {
+public abstract class Choice implements Selectable {
 
-    private Selectable attribute;
-    private final List<WhenThen> whenThens = new ArrayList<>();
-    private Selectable otherwise;
-    private String alias = "";
+    protected Fragment attribute;
+    protected final List<WhenThen> whenThens = new ArrayList<>();
+    protected Fragment otherwise;
+    protected String alias = "";
 
-    public CaseExpression() {
-    }
-
-
-    public CaseExpression(Selectable attribute) {
-        this.attribute = attribute;
-    }
 
     @Override
     public String toSql() {
@@ -51,17 +42,5 @@ public class CaseExpression implements Selectable {
     @Override
     public String getAlias() {
         return alias;
-    }
-
-    public When when(Object val) {
-        SelectableExpression when = new SelectableExpression(new LiteralValue(val));
-        WhenThen whenThen = new WhenThen(when);
-        whenThens.add(whenThen);
-        return new When(this, whenThen);
-    }
-
-    public CaseExpression otherwise(Object obj) {
-        this.otherwise = new LiteralValue(obj);
-        return this;
     }
 }
