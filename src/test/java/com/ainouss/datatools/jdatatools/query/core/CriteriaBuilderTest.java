@@ -280,5 +280,22 @@ class CriteriaBuilderTest {
         assertEquals("sum(tbl.SALARY) > 1000", sql);
     }
 
+    @Test
+    void case_expression_with_attribute() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class).as("tbl");
+        String sql =
+                cb.choice(emp.get("salary"))
+                        .when(100)
+                        .then("slave")
+                        .when(200)
+                        .then("employee")
+                        .otherwise("rich")
+                        .as("status")
+                        .toSql();
+        assertEquals("case tbl.SALARY when 100 then 'slave' when 200 then 'employee' else 'rich' end", sql);
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.casee.CaseExpression;
 import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
 import com.ainouss.datatools.jdatatools.query.expression.PredicateExpression;
 import com.ainouss.datatools.jdatatools.query.function.*;
@@ -299,6 +300,11 @@ public class CriteriaBuilder {
      */
     public Expression all(CriteriaQuery<?> subquery) {
         return new All(subquery);
+    }
+
+
+    public CaseExpression choice(Selectable attribute) {
+        return new CaseExpression(attribute); // Factory method for searched CASE
     }
 
 

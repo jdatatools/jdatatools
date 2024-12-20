@@ -2,7 +2,7 @@ package com.ainouss.datatools.jdatatools.query.core;
 
 import com.ainouss.datatools.jdatatools.util.DataUtils;
 
-class LiteralValue implements Selectable {
+public class LiteralValue implements Selectable {
 
     private final Object value;
 

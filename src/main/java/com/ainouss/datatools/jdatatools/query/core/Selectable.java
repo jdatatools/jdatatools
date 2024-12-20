@@ -16,4 +16,9 @@ public interface Selectable extends Comparable<Selectable> {
         }
         return alias.compareTo(o.getAlias());
     }
+
+    default Selectable as(String alias) {
+        setAlias(alias);
+        return this;
+    }
 }

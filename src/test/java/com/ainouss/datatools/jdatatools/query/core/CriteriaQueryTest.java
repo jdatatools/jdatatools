@@ -938,4 +938,26 @@ class CriteriaQueryTest {
         assertEquals(expectedSql, query.buildSelectQuery());
     }
 
+    @Test
+    void case_expression_with_attribute() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class).as("tbl");
+        String sql = query
+                .select(
+                        emp.get("firstName"),
+                        cb.choice(emp.get("salary"))
+                                .when(100)
+                                .then("slave")
+                                .when(200)
+                                .then("employee")
+                                .otherwise("rich")
+                                .as("status")
+                ).from(emp)
+                .buildSelectQuery();
+
+        assertEquals("select tbl.FIRST_NAME as firstName,case tbl.SALARY when 100 then 'slave' when 200 then 'employee' else 'rich' end as status from EMPLOYEES tbl", sql);
+    }
+
+
 }
