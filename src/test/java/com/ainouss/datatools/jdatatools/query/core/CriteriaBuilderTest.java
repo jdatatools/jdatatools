@@ -56,41 +56,7 @@ class CriteriaBuilderTest {
         assertEquals("EMPLOYEES.LAST_NAME = 'john'", sql);
     }
 
-    @Test
-    void when__true_predicate() {
-        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
-        Employee employee = new Employee();
-        employee.setSalary(66);
-        Root<Employee> root = query.from(Employee.class);
-        String sql = cb.when(employee.getSalary() > 65)
-                .then(
-                        cb.like(root.get("lastName"), "senior")
-                )
-                .otherwise(
-                        cb.like(root.get("lastName"), "junior")
-                ).end()
-                .toSql();
 
-        assertEquals("EMPLOYEES.LAST_NAME like '%senior%'", sql);
-    }
-
-    @Test
-    void when__otherwise_predicate() {
-        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
-        Employee employee = new Employee();
-        employee.setSalary(25);
-        Root<Employee> root = query.from(Employee.class);
-        String sql = cb.when(employee.getSalary() > 65)
-                .then(
-                        cb.like(root.get("lastName"), "senior")
-                )
-                .otherwise(
-                        cb.like(root.get("lastName"), "junior")
-                ).end()
-                .toSql();
-
-        assertEquals("EMPLOYEES.LAST_NAME like '%junior%'", sql);
-    }
 
     @Test
     void gt() {

@@ -383,25 +383,6 @@ class CriteriaQueryTest {
     }
 
     @Test
-    public void should__when_then_otherwise() {
-        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
-        Root<Employee> rt = cr.from(Employee.class).as("tbl");
-        Expression and = cb.when(true)
-                .then(
-                        cb.eq(rt.get("id"), 1)
-                ).otherwise(
-                        cb.eq(rt.get("id"), 2)
-                )
-                .end()
-                .and(cb.eq(rt.get("id"), 3));
-        cr
-                .select(rt)
-                .where(and);
-        String select = cr.buildDeleteQuery();
-        Assertions.assertEquals("delete from EMPLOYEES tbl where (tbl.ID = 1 and (tbl.ID = 3))", select);
-    }
-
-    @Test
     public void should__select_ends_with_str() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");

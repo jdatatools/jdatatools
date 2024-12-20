@@ -3,7 +3,6 @@ package com.ainouss.datatools.jdatatools.query.core;
 import com.ainouss.datatools.jdatatools.query.casee.SearchedCase;
 import com.ainouss.datatools.jdatatools.query.casee.SimpleCase;
 import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
-import com.ainouss.datatools.jdatatools.query.expression.PredicateExpression;
 import com.ainouss.datatools.jdatatools.query.function.*;
 import com.ainouss.datatools.jdatatools.query.logical.And;
 import com.ainouss.datatools.jdatatools.query.logical.Not;
@@ -71,16 +70,6 @@ public class CriteriaBuilder {
             return new Ne(attribute, selectable);
         }
         return new Ne(attribute, new LiteralValue(value));
-    }
-
-    /**
-     * When expression, depends
-     *
-     * @param predicate condition
-     * @return conditional expression
-     */
-    public PredicateExpression when(boolean predicate) {
-        return new PredicateExpression(predicate);
     }
 
     public Expression gt(Selectable attribute, Object value) {
