@@ -9,7 +9,7 @@ import com.ainouss.datatools.jdatatools.query.core.*;
  * @param <T> source
  * @param <U> target
  */
-public class JoinExpression<T, U> extends Alias implements Source {
+public class JoinExpression<T, U> extends Alias {
 
     private final Join<T, U> join;
 
@@ -32,18 +32,5 @@ public class JoinExpression<T, U> extends Alias implements Source {
         return join.on(subquery);
     }
 
-    @Override
-    public String toSql() {
-        return join.toSql();
-    }
 
-    @Override
-    public Selectable get(String attr) {
-        return new Path<>(attr, attr);
-    }
-
-    @Override
-    public String getName() {
-        return getAlias();
-    }
 }

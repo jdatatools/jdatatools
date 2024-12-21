@@ -272,10 +272,12 @@ class CriteriaQueryTest {
         Root<EmployeeDetails> det = cr.from(EmployeeDetails.class).as("det");
 
         cr
-                .from(rt.innerJoin(det)
-                        .on(
-                                cb.eq(rt.get("id"), det.get("id"))
-                        ))
+                .from(
+                        rt.innerJoin(det)
+                                .on(
+                                        cb.eq(rt.get("id"), det.get("id"))
+                                )
+                )
                 .select(rt.get("id"));
         String select = cr.buildSelectQuery();
         Assertions.assertEquals("select tbl.ID as id from EMPLOYEES tbl inner join EMPLOYEE_DETAILS det on tbl.ID = det.ID", select);

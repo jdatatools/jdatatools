@@ -10,7 +10,7 @@ import lombok.Getter;
  * @param <Y> the type of the target.
  */
 @Getter
-public class Join<X, Y> extends Alias implements Source {
+public class Join<X, Y> extends Alias implements Source, Joinable<Y> {
 
     private final Source target;
     private final Source source;
@@ -20,8 +20,9 @@ public class Join<X, Y> extends Alias implements Source {
 
     /**
      * Creates a join.
-     * @param source the join source.
-     * @param target the join target.
+     *
+     * @param source   the join source.
+     * @param target   the join target.
      * @param joinType the type of the join.
      */
     public Join(Source source, Source target, JoinType joinType) {
@@ -38,16 +39,6 @@ public class Join<X, Y> extends Alias implements Source {
     public Join<X, Y> on(CriteriaQuery<?> subquery) {
         this.subquery = subquery;
         return this;
-    }
-
-    /**
-     * Creates a right join with the given target.
-     *
-     * @param target the join target.
-     * @return a new Join object.
-     */
-    public Join<X, Y> rightJoin(Root<?> target) {
-        return new Join<>(this, target, JoinType.RIGHT);
     }
 
     /**
@@ -80,5 +71,10 @@ public class Join<X, Y> extends Alias implements Source {
     @Override
     public Selectable get(String attr) {
         return new Path<>(alias, attr);
+    }
+
+    @Override
+    public Source getSelf() {
+        return this;
     }
 }

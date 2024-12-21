@@ -1,9 +1,5 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
-import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
-import com.ainouss.datatools.jdatatools.query.join.Join;
-import com.ainouss.datatools.jdatatools.query.join.JoinExpression;
-import com.ainouss.datatools.jdatatools.query.join.JoinType;
 import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import lombok.Getter;
 
@@ -19,7 +15,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  * @param <T> Java class
  */
 @Getter
-public class Root<T> extends Alias implements Selectable, Source {
+public class Root<T> extends Alias implements Selectable, Source, Joinable<T> {
 
     private final Class<T> javaType;
 
@@ -49,66 +45,6 @@ public class Root<T> extends Alias implements Selectable, Source {
         return new Path<>(this, attribute);
     }
 
-    /**
-     * Left join expression
-     *
-     * @param root target
-     * @param <U>  target classs
-     * @return join expression
-     */
-    public <U> JoinExpression<T, U> leftJoin(Source root) {
-        Join<T, U> join = new Join<>(this, root, JoinType.LEFT);
-        return new JoinExpression<>(join);
-    }
-
-    /**
-     * Right join expression
-     *
-     * @param root target
-     * @param <U>  target classs
-     * @return join expression
-     */
-    public <U> JoinExpression<T, U> rightJoin(Source root) {
-        Join<T, U> join = new Join<>(this, root, JoinType.RIGHT);
-        return new JoinExpression<>(join);
-    }
-
-    /**
-     * Inner join expression
-     *
-     * @param root target
-     * @param <U>  target classs
-     * @return join expression
-     */
-    public <U> JoinExpression<T, U> innerJoin(Source root) {
-        Join<T, U> join = new Join<>(this, root, JoinType.INNER);
-        return new JoinExpression<>(join);
-    }
-
-    /**
-     * Full join expression
-     *
-     * @param root target
-     * @param <U>  target classs
-     * @return join expression
-     */
-
-    public <U> JoinExpression<T, U> fullJoin(Source root) {
-        Join<T, U> join = new Join<>(this, root, JoinType.FULL);
-        return new JoinExpression<>(join);
-    }
-
-    /**
-     * Cross join expression, does not have on clause, thus returns a join directly
-     *
-     * @param root target
-     * @param <U>  target classs
-     * @return join expression
-     */
-    public <U> Join<T, U> join(Source root) {
-        Join<T, U> join = new Join<>(this, root, JoinType.CROSS);
-        return new JoinExpression<>(join).on(new IdentityExpression());
-    }
 
     /**
      * SQL table alias
@@ -157,4 +93,10 @@ public class Root<T> extends Alias implements Selectable, Source {
     public int hashCode() {
         return Objects.hash(javaType);
     }
+
+    @Override
+    public Source getSelf() {
+        return this;
+    }
+
 }
