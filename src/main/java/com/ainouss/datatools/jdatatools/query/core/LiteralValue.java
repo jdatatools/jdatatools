@@ -13,7 +13,7 @@ public class LiteralValue extends Alias implements Selectable {
     @Override
     public String toSql() {
         if (value == null) {
-            return "";
+            return null;
         }
         if (value instanceof String strValue) {
             return "'" + DataUtils.escapeSql(strValue) + "'";

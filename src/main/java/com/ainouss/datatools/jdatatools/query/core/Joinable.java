@@ -66,7 +66,6 @@ public interface Joinable<T> extends Fragment{
      * @return join expression
      */
     default <U> Join<T, U> join(Source root) {
-        Join<T, U> join = new Join<>(getSelf(), root, JoinType.CROSS);
-        return new JoinExpression<>(join).on(new IdentityExpression());
+        return new Join<>(getSelf(), root, JoinType.CROSS);
     }
 }

@@ -77,11 +77,13 @@ public class CriteriaQuery<T> {
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public final CriteriaQuery<T> select(Selectable... selectables) {
-        if (selectables != null) {
-            var list = Arrays.stream(selectables)
-                    .toList();
-            selections.addAll(list);
+        if (selectables == null) {
+            return this;
         }
+        selections.clear();
+        var list = Arrays.stream(selectables)
+                .toList();
+        selections.addAll(list);
         return this;
     }
 

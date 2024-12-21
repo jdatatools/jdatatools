@@ -60,7 +60,7 @@ public class Join<X, Y> extends Alias implements Source, Joinable<Y> {
 
     private String getStatement() {
         if (this.expression != null) {
-            return " on " + expression.toSql();
+            return " on " + expression.render();
         }
         if (this.subquery != null) {
             return " on (" + subquery.buildSelectQuery() + ")";

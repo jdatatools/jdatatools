@@ -11,6 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
+import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -1018,4 +1019,68 @@ class CriteriaQueryTest {
                 .buildSelectQuery();
         assertEquals("with my_query as (select EMPLOYEES.LAST_NAME as lastName,sum(EMPLOYEES.SALARY) as salary from EMPLOYEES EMPLOYEES group by EMPLOYEES.LAST_NAME) select my_query.lastName as lastName,my_query.salary as salary from my_query my_query", sql);
     }
+
+
+    @Test
+    void testJoinWithComplexSubqueryCondition() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class).as("e");
+        Root<Department> dept = query.from(Department.class).as("d");
+
+        CriteriaQuery<Employee> subquery1 = cb.createQuery(Employee.class);
+        Root<Employee> sqEmp1 = subquery1.from(Employee.class).as("sqe1");
+        subquery1.select(sqEmp1.get("departmentId"))
+                .where(cb.gt(sqEmp1.get("salary"), 50000));
+
+        CriteriaQuery<Department> subquery2 = cb.createQuery(Department.class);
+        Root<Department> sqDept = subquery2.from(Department.class).as("sqd");
+        subquery2.select(sqDept.get("id"))
+                .where(cb.like(sqDept.get("name"), "%Engineering%"));
+
+
+        query.select(emp)
+                .from(emp.innerJoin(dept)
+                        .on(
+                                cb.and(
+                                        cb.in(dept.get("id"), new Subquery(subquery1)),  // Subquery in IN clause
+                                        cb.not(cb.in(dept.get("id"), new Subquery(subquery2))) // Subquery in NOT IN clause, combined with NOT
+                                )
+                        ));
+
+
+        String expectedSql = "select e.ENABLED as enabled,e.FIRST_NAME as firstName,e.ID as id,e.LAST_NAME as lastName,e.SALARY as salary from EMPLOYEES e inner join DEPARTMENTS d on (d.ID in ( (select sqe1.departmentId as departmentId from EMPLOYEES sqe1 where (sqe1.SALARY > 50000)) ) and ( NOT (d.ID in ( (select sqd.ID as id from DEPARTMENTS sqd where (sqd.NAME like '%%Engineering%%')) ))))";
+        assertEquals(expectedSql, query.buildSelectQuery());
+
+    }
+
+    @Test
+    void testCaseWithNullHandling() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class).as("tbl");
+
+        // Test NULL handling in WHEN clauses
+        Selectable caseExpression = cb.choice(emp.get("departmentId"))
+                .when(null).then("Unknown Department")       // WHEN departmentId IS NULL
+                .when(1).then("Sales")
+                .otherwise("Other").as("departmentName");
+
+        String sql = query.select(caseExpression).buildSelectQuery();
+        String expectedSql = "select case tbl.departmentId when null then 'Unknown Department' when 1 then 'Sales' else 'Other' end as departmentName from EMPLOYEES tbl";
+        assertEquals(expectedSql, sql);
+
+
+        // Test NULL handling with IS NULL predicate in WHEN clause (Searched CASE)
+        caseExpression = cb.choice()
+                .when(cb.isNull(emp.get("departmentId"))).then("No Department Assigned")
+                .when(cb.eq(emp.get("departmentId"), 1)).then("Sales")
+                .otherwise("Other");
+        sql = query.select(caseExpression).buildSelectQuery();
+        expectedSql = "select case when tbl.departmentId is null then 'No Department Assigned' when tbl.departmentId = 1 then 'Sales' else 'Other' end from EMPLOYEES tbl";
+
+        assertEquals(expectedSql, sql);
+
+    }
+
 }
