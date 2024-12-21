@@ -30,6 +30,12 @@ public class Path<T> extends Alias implements Selectable {
         this.alias = attribute;
     }
 
+    public Path(String name, String attr) {
+        this.head = new Root<>(name);
+        this.attribute = attr;
+        this.alias = attr;
+    }
+
     public final Path<?> get(String id) {
         return new Path<>(this.head, id);
     }
@@ -46,6 +52,7 @@ public class Path<T> extends Alias implements Selectable {
     public int hashCode() {
         return Objects.hash(head, attribute);
     }
+
 
     @Override
     public String toSql() {

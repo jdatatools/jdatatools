@@ -5,11 +5,12 @@ import lombok.Getter;
 
 /**
  * Represents a join between two sources.
+ *
  * @param <X> the type of the source.
  * @param <Y> the type of the target.
  */
 @Getter
-public class Join<X, Y> extends NoAlias implements Source {
+public class Join<X, Y> extends Alias implements Source {
 
     private final Source target;
     private final Source source;
@@ -41,6 +42,7 @@ public class Join<X, Y> extends NoAlias implements Source {
 
     /**
      * Creates a right join with the given target.
+     *
      * @param target the join target.
      * @return a new Join object.
      */
@@ -52,13 +54,13 @@ public class Join<X, Y> extends NoAlias implements Source {
      * Generates the SQL for this join.
      */
     public String toSql() {
-        return new StringBuilder(source.render())
+        return new StringBuilder(source.getName())
                 .append(" ")
                 .append(source.getAlias())
                 .append(" ")
                 .append(this.getJoinType().name().toLowerCase())
                 .append(" join ")
-                .append(target.render())
+                .append(target.getName())
                 .append(" ")
                 .append(target.getAlias())
                 .append(getStatement())
@@ -73,5 +75,10 @@ public class Join<X, Y> extends NoAlias implements Source {
             return " on (" + subquery.buildSelectQuery() + ")";
         }
         return "";
+    }
+
+    @Override
+    public Selectable get(String attr) {
+        return new Path<>(alias, attr);
     }
 }

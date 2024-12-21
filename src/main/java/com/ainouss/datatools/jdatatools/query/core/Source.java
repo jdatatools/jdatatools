@@ -2,7 +2,9 @@ package com.ainouss.datatools.jdatatools.query.core;
 
 public interface Source extends Fragment, WithAlias {
 
-    default String render() {
+    Selectable get(String attr);
+
+    default String getName() {
         return toSql();
     }
 

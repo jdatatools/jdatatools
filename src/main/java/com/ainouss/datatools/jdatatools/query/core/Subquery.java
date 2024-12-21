@@ -17,4 +17,8 @@ public class Subquery extends Alias implements Source, Fragment {
         return " (" + cr.buildSelectQuery() + ") ";
     }
 
+    @Override
+    public Selectable get(String attr) {
+        return new Path<>(alias, attr);
+    }
 }

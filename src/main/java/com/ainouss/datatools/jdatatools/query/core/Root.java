@@ -1,5 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.expression.IdentityExpression;
 import com.ainouss.datatools.jdatatools.query.join.Join;
 import com.ainouss.datatools.jdatatools.query.join.JoinExpression;
 import com.ainouss.datatools.jdatatools.query.join.JoinType;
@@ -30,6 +31,12 @@ public class Root<T> extends Alias implements Selectable, Source {
         this.javaType = from;
         this.alias = EntityRegistry.roots.get(this);
         this.table = EntityRegistry.roots.get(this);
+    }
+
+    public Root(String name) {
+        this.javaType = null;
+        this.alias = name;
+        this.table = name;
     }
 
     /**
@@ -98,9 +105,9 @@ public class Root<T> extends Alias implements Selectable, Source {
      * @param <U>  target classs
      * @return join expression
      */
-    public <U> JoinExpression<T, U> join(Source root) {
+    public <U> Join<T, U> join(Source root) {
         Join<T, U> join = new Join<>(this, root, JoinType.CROSS);
-        return new JoinExpression<>(join);
+        return new JoinExpression<>(join).on(new IdentityExpression());
     }
 
     /**
@@ -132,7 +139,7 @@ public class Root<T> extends Alias implements Selectable, Source {
     }
 
     @Override
-    public String render() {
+    public String getName() {
         return new StringBuilder(schema())
                 .append(EntityRegistry.roots.get(this))
                 .toString();

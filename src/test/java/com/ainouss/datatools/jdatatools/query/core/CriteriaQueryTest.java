@@ -949,8 +949,7 @@ class CriteriaQueryTest {
                 .select(
                         emp.get("firstName"),
                         cb.choice()
-                                .when(cb.eq(emp.get("salary"), 100))
-                                .then("slave")
+                                .whenThen(cb.eq(emp.get("salary"), 100), "slave")
                                 .when(cb.eq(emp.get("salary"), 200))
                                 .then("employee")
                                 .otherwise("rich")
@@ -977,5 +976,44 @@ class CriteriaQueryTest {
                 ).end().as("status");
         String sql = query.select(outerCase).buildSelectQuery();
         assertEquals("select case when EMPLOYEES.age > 60 then 'Retired' else case EMPLOYEES.departmentId when 1 then 'Sales' when 2 then 'Marketing' else 'Other' end end as status from EMPLOYEES EMPLOYEES", sql);
+    }
+
+    @Test
+    void simple_cte() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        Root<Employee> root = cr.from(Employee.class);
+        Cte<?> cte = cb.with("my_query").as(
+                cr.select()
+                        .from(root)
+        );
+        String sql = cte
+                .select(cte.get("firstName"))
+                .from(cte)
+                .buildSelectQuery();
+        assertEquals("with my_query as (select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES) select my_query.firstName as firstName from my_query my_query", sql);
+    }
+
+    /**
+     * with my_query as (select sum(EMPLOYEES.salary) as salary, EMPLOYEES.last_name as lastName
+     * from EMPLOYEES EMPLOYEES
+     * group by last_name)
+     * select my_query.salary as salary, my_query.lastName as lastName
+     * from my_query my_query
+     */
+
+    @Test
+    void complex_cte() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        Root<Employee> root = cr.from(Employee.class);
+        Cte<?> cte = cb.with("my_query").as(
+                cr.select(cb.sum(root.get("salary")).as("salary"), root.get("lastName"))
+                        .from(root)
+                        .groupBy(root.get("lastName"))
+        );
+        String sql = cte
+                .select(cte.get("lastName"), cte.get("salary"))
+                .from(cte)
+                .buildSelectQuery();
+        assertEquals("with my_query as (select EMPLOYEES.LAST_NAME as lastName,sum(EMPLOYEES.SALARY) as salary from EMPLOYEES EMPLOYEES group by EMPLOYEES.LAST_NAME) select my_query.lastName as lastName,my_query.salary as salary from my_query my_query", sql);
     }
 }

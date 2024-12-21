@@ -1,9 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.join;
 
-import com.ainouss.datatools.jdatatools.query.core.Alias;
-import com.ainouss.datatools.jdatatools.query.core.CriteriaQuery;
-import com.ainouss.datatools.jdatatools.query.core.Expression;
-import com.ainouss.datatools.jdatatools.query.core.Source;
+import com.ainouss.datatools.jdatatools.query.core.*;
 
 /**
  * Join expression, intermediate operation that returns a join through on function
@@ -38,5 +35,15 @@ public class JoinExpression<T, U> extends Alias implements Source {
     @Override
     public String toSql() {
         return join.toSql();
+    }
+
+    @Override
+    public Selectable get(String attr) {
+        return new Path<>(attr, attr);
+    }
+
+    @Override
+    public String getName() {
+        return getAlias();
     }
 }

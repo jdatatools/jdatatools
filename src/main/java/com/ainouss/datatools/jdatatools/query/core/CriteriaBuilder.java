@@ -307,5 +307,9 @@ public class CriteriaBuilder {
         return new SearchedCase();
     }
 
+    public <T> Cte<T> with(String name) {
+        return new Cte<>(name);
+    }
+
 
 }

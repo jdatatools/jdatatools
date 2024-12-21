@@ -54,6 +54,9 @@ public class CriteriaQuery<T> {
         this.resultType = javaType;
     }
 
+    protected CriteriaQuery() {
+    }
+
     public CriteriaQuery<T> from(Source source, Source... sources) {
         if (source == null && sources == null) {
             throw new RuntimeException("no source specified");
@@ -88,7 +91,7 @@ public class CriteriaQuery<T> {
      * @param selected The root entity from which to select all columns.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public final CriteriaQuery<T> select(Root<?> selected) {
+    public final CriteriaQuery<T> select(Source selected) {
         var select = EntityRegistry.paths.keySet()
                 .stream()
                 .filter(path -> path.head.equals(selected))
@@ -127,13 +130,13 @@ public class CriteriaQuery<T> {
 
     private String froms() {
         return froms.stream()
-                .map(from -> from.render() + " " + from.getAlias())
+                .map(from -> from.getName() + " " + from.getAlias())
                 .collect(Collectors.joining(","));
     }
 
     private String into() {
         return froms.stream()
-                .map(Source::render)
+                .map(Source::getName)
                 .collect(Collectors.joining(","));
     }
 
@@ -332,10 +335,17 @@ public class CriteriaQuery<T> {
      * @return The complete select query.
      */
     public String buildSelectQuery() {
+        checkSelection();
         if (unions.isEmpty() || orderBy.isEmpty() && page.isEmpty()) {
             return buildSimpleSelectQuery();
         }
         return buildNestedSelectQuery();
+    }
+
+    protected void checkSelection() {
+        if (selections.isEmpty()) {
+            froms.forEach(this::select);
+        }
     }
 
     private String buildSimpleSelectQuery() {
@@ -369,7 +379,7 @@ public class CriteriaQuery<T> {
         var nq = new CriteriaQuery<>(this.resultType);
         nq.from(subquery);
         this.orderBy.forEach((path, orderDirection) -> {
-            Selectable p = new StaticPath("nested_query.".concat(path.getAlias()));
+            Selectable p = new Path<>("nested_query", path.getAlias());
             nq.orderBy(p, orderDirection);
         });
         nq.page.apply(page1);
@@ -425,7 +435,7 @@ public class CriteriaQuery<T> {
      */
     private String joins() {
         return this.joins.stream()
-                .map(Join::render)
+                .map(Join::toSql)
                 .collect(Collectors.joining(" "));
     }
 

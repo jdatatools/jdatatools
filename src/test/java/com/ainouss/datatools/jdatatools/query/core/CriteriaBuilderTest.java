@@ -1,6 +1,7 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
 import com.ainouss.datatools.jdatatools.query.model.Employee;
+import com.ainouss.datatools.jdatatools.query.model.EmployeeDetails;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -296,4 +297,27 @@ class CriteriaBuilderTest {
         assertEquals("case when EMPLOYEES.age > 60 then 'Retired' else case EMPLOYEES.departmentId when 1 then 'Sales' when 2 then 'Marketing' else 'Other' end end", sql);
     }
 
+    @Test
+    void with_cte() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        Root<Employee> root = cr.from(Employee.class);
+        String sql = cb.with("my_query").as(
+                cr.select()
+                        .from(root)
+        ).toSql();
+        assertEquals("with my_query as (select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES)", sql);
+    }
+
+    @Test
+    public void test_joins() {
+        CriteriaQuery<Employee> q1 = cb.createQuery(Employee.class);
+        Root<Employee> emp = q1.from(Employee.class).as("emp");
+
+        CriteriaQuery<EmployeeDetails> q2 = cb.createQuery(EmployeeDetails.class);
+        Root<EmployeeDetails> det = q2.from(EmployeeDetails.class).as("det");
+
+        String sql = emp.leftJoin(det).on(cb.eq(emp.get("id"), det.get("id")))
+                .rightJoin(det).on(cb.eq(emp.get("id"), det.get("id"))).toSql();
+        assertEquals("EMPLOYEES emp left join EMPLOYEE_DETAILS det on emp.ID = det.ID  right join EMPLOYEE_DETAILS det on emp.ID = det.ID", sql);
+    }
 }
