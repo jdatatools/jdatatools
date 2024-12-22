@@ -5,7 +5,7 @@ import com.ainouss.datatools.jdatatools.query.core.LiteralValue;
 import com.ainouss.datatools.jdatatools.query.core.Selectable;
 import com.ainouss.datatools.jdatatools.query.expression.SelectableExpression;
 
-public class SimpleCase extends Choice {
+public class SimpleCase extends Case {
 
     public SimpleCase(Selectable attribute) {
         this.attribute = attribute;

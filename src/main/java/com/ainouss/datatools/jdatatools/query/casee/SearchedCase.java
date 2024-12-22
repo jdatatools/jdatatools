@@ -4,7 +4,7 @@ package com.ainouss.datatools.jdatatools.query.casee;
 import com.ainouss.datatools.jdatatools.query.core.Expression;
 import com.ainouss.datatools.jdatatools.query.core.LiteralValue;
 
-public class SearchedCase extends Choice {
+public class SearchedCase extends Case {
 
     public SearchedCase() {
     }

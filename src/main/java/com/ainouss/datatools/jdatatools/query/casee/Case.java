@@ -7,7 +7,7 @@ import com.ainouss.datatools.jdatatools.query.core.Selectable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Choice extends Alias implements Selectable {
+public abstract class Case extends Alias implements Selectable {
 
     protected Fragment attribute;
     protected final List<WhenThen> whenThens = new ArrayList<>();
