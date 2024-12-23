@@ -1121,4 +1121,44 @@ class CriteriaQueryTest {
         assertEquals("update EMPLOYEES tbl set ENABLED = :enabled, FIRST_NAME = :firstName, ID = :id, LAST_NAME = :lastName, SALARY = :salary", sql);
     }
 
+    @Test
+    void sum_over() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+        query.select(
+                        cb.sum(root.get("salary"))
+                                .over()
+                                .partitionBy(root.get("departmentId"))
+                                .as("sum")
+                )
+                .from(root);
+        String sql = query.buildSelectQuery();
+        assertEquals("select sum(EMPLOYEES.SALARY) over (partition by EMPLOYEES.departmentId) as sum from EMPLOYEES EMPLOYEES", sql);
+    }
+
+    @Test
+    void rank() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+        query.select(
+                        cb.rank()
+                                .over()
+                                .partitionBy(root.get("departmentId"))
+                                .orderBy(root.get("salary").asc())
+                                .as("ranking")
+                )
+                .from(root);
+        String sql = query.buildSelectQuery();
+        assertEquals("select rank() over (partition by EMPLOYEES.departmentId order by EMPLOYEES.SALARY ASC) as ranking from EMPLOYEES EMPLOYEES", sql);
+    }
+
+    @Test
+    void row_number() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+        String sql = cb.rowNumber().over().partitionBy(root.get("departmentId")).orderBy(root.get("salary").asc()).toSql();
+        assertEquals("row_number() over (partition by EMPLOYEES.departmentId order by EMPLOYEES.SALARY ASC)", sql);
+    }
+
+
 }
