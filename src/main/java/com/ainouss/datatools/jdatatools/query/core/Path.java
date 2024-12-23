@@ -1,5 +1,6 @@
 package com.ainouss.datatools.jdatatools.query.core;
 
+import com.ainouss.datatools.jdatatools.query.order.OrderDirection;
 import com.ainouss.datatools.jdatatools.query.registery.EntityRegistry;
 import lombok.Getter;
 
@@ -38,6 +39,13 @@ public class Path<T> extends Alias implements Selectable {
 
     public final Path<?> get(String id) {
         return new Path<>(this.head, id);
+    }
+
+    public final Order asc() {
+        return new Order(this, OrderDirection.ASC);
+    }
+    public final Order desc() {
+        return new Order(this, OrderDirection.ASC);
     }
 
     @Override

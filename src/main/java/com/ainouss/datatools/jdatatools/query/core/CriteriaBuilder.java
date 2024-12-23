@@ -203,7 +203,7 @@ public class CriteriaBuilder {
      *
      * @return min(attribute)
      */
-    public Selectable min(Selectable selectable) {
+    public Aggregable min(Selectable selectable) {
         return new Min(selectable);
     }
 
@@ -214,8 +214,16 @@ public class CriteriaBuilder {
      * @param selectable attribute
      * @return avg(attribute)
      */
-    public Selectable sum(Selectable selectable) {
+    public Aggregable sum(Selectable selectable) {
         return new Sum(selectable);
+    }
+
+    public Aggregable rank() {
+        return new Rank();
+    }
+
+    public Aggregable rowNumber() {
+        return new RowNumber();
     }
 
 
@@ -225,7 +233,7 @@ public class CriteriaBuilder {
      * @param selectable attribute
      * @return avg(attribute)
      */
-    public Selectable avg(Selectable selectable) {
+    public Aggregable avg(Selectable selectable) {
         return new Avg(selectable);
     }
 
@@ -234,7 +242,7 @@ public class CriteriaBuilder {
      *
      * @return count(attribute)
      */
-    public Selectable count(Selectable selectable) {
+    public Aggregable count(Selectable selectable) {
         return new Count(selectable);
     }
 

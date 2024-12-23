@@ -132,6 +132,34 @@ class CriteriaQueryTest {
     }
 
     @Test
+    public void should__order_by_asc() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        Root<Employee> rt = cr.from(Employee.class).as("tbl");
+        var query = cr.select(
+                rt.get("id"),
+                rt.get("firstName")
+        ).orderBy(
+                rt.get("id").asc()
+        );
+        String select = query.buildSelectQuery();
+        Assertions.assertEquals("select tbl.FIRST_NAME as firstName,tbl.ID as id from EMPLOYEES tbl order by tbl.ID ASC", select);
+    }
+
+    @Test
+    public void should__order_by_des() {
+        CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
+        Root<Employee> rt = cr.from(Employee.class).as("tbl");
+        var query = cr.select(
+                rt.get("id"),
+                rt.get("firstName")
+        ).orderBy(
+                rt.get("id").desc()
+        );
+        String select = query.buildSelectQuery();
+        Assertions.assertEquals("select tbl.FIRST_NAME as firstName,tbl.ID as id from EMPLOYEES tbl order by tbl.ID ASC", select);
+    }
+
+    @Test
     public void should__eq_with_expression() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");

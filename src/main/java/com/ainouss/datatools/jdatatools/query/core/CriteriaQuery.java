@@ -33,7 +33,7 @@ public class CriteriaQuery<T> {
     protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
     private final Where where = new Where();
     protected final IdentityExpression having = new IdentityExpression();
-    protected final LinkedHashMap<Selectable, OrderDirection> orderBy = new LinkedHashMap<>();
+    protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
     protected final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
     protected final List<SetOperation> unions = new ArrayList<>();
@@ -161,7 +161,7 @@ public class CriteriaQuery<T> {
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> orderBy(Selectable path, OrderDirection order) {
-        this.orderBy.put(path, order);
+        this.orderBy.add(new Order(path, order));
         return this;
     }
 
@@ -182,7 +182,15 @@ public class CriteriaQuery<T> {
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
     public CriteriaQuery<T> orderBy(Path<?> path) {
-        this.orderBy.put(path, OrderDirection.ASC);
+        this.orderBy.add(new Order(path));
+        return this;
+    }
+
+    public CriteriaQuery<T> orderBy(Order... orders) {
+        if (orders == null) {
+            return this;
+        }
+        this.orderBy.addAll(Arrays.asList(orders));
         return this;
     }
 
@@ -404,9 +412,9 @@ public class CriteriaQuery<T> {
         subquery.setAlias("nested_query");
         var nq = new CriteriaQuery<>(this.resultType);
         nq.from(subquery);
-        this.orderBy.forEach((path, orderDirection) -> {
-            Selectable p = new Path<>("nested_query", path.getAlias());
-            nq.orderBy(p, orderDirection);
+        this.orderBy.forEach((order) -> {
+            Selectable p = new Path<>("nested_query", order.getColumn().getAlias());
+            nq.orderBy(p, order.getDirection());
         });
         nq.page.apply(page1);
         subquery.cr().orderBy.clear();
@@ -510,11 +518,11 @@ public class CriteriaQuery<T> {
      * @return The order by clause of the SQL query.
      */
     private String orderBy() {
-        String orderBy = this.orderBy.entrySet()
+        String orderBy = this.orderBy
                 .stream()
-                .map(orderEntry -> new StringBuilder(fullResolve(orderEntry.getKey()))
+                .map(order -> new StringBuilder(fullResolve(order.getColumn()))
                         .append(" ")
-                        .append(orderEntry.getValue())
+                        .append(order.getDirection())
                 )
                 .map(StringBuilder::toString)
                 .collect(Collectors.joining(","));

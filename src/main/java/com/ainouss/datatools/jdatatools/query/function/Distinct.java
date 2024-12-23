@@ -14,7 +14,7 @@ public class Distinct extends AggregateFunction {
     }
 
     @Override
-    public String toSql() {
+    public String sql() {
         return "distinct " + selectable.toSql();
     }
 

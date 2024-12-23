@@ -15,7 +15,7 @@ public class Count extends AggregateFunction {
     }
 
     @Override
-    public String toSql() {
+    public String sql() {
         if (selectable == null || selectable instanceof Root<?>) {
             return "count(*)";
         }

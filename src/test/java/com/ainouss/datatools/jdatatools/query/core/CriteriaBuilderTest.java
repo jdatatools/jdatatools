@@ -229,6 +229,30 @@ class CriteriaBuilderTest {
     }
 
     @Test
+    void sum_over() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+        String sql = cb.sum(root.get("salary")).over().partitionBy(root.get("departmentId")).toSql();
+        assertEquals("sum(EMPLOYEES.SALARY) over (partition by EMPLOYEES.departmentId)", sql);
+    }
+
+    @Test
+    void rank() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+        String sql = cb.rank().over().partitionBy(root.get("departmentId")).orderBy(root.get("salary").asc()).toSql();
+        assertEquals("rank() over (partition by EMPLOYEES.departmentId order by EMPLOYEES.SALARY ASC)", sql);
+    }
+
+    @Test
+    void row_number() {
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> root = query.from(Employee.class);
+        String sql = cb.rowNumber().over().partitionBy(root.get("departmentId")).orderBy(root.get("salary").asc()).toSql();
+        assertEquals("row_number() over (partition by EMPLOYEES.departmentId order by EMPLOYEES.SALARY ASC)", sql);
+    }
+
+    @Test
     void ne() {
         CriteriaBuilder cb = new CriteriaBuilder();
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
