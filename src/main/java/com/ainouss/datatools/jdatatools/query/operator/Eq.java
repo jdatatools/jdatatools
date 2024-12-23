@@ -43,7 +43,7 @@ public class Eq extends Expression {
      * @return The SQL representation of the equality operator.
      * @throws RuntimeException If the operator is used with null or array values.
      */
-    public String toSql() {
+    public String sql() {
         return attribute.toSql() + " = " + right.toSql();
     }
 }

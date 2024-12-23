@@ -16,7 +16,7 @@ public class EndsWith extends Expression {
         this.right = right;
     }
 
-    public String toSql() {
+    public String sql() {
         String escaped = right.toSql().replace("'", "");
         return attribute.toSql() + " like '%" + escaped + "'";
     }

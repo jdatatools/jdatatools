@@ -14,7 +14,7 @@ public class Exists extends Expression implements Selectable {
     }
 
     @Override
-    public String toSql() {
+    public String sql() {
         return " exists (" + subquery.buildSelectQuery() + ")";
     }
 

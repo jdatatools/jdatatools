@@ -20,6 +20,6 @@ public class Where extends Expression {
         if (expression == null) {
             return "";
         }
-        return expression.render();
+        return expression.toSql();
     }
 }

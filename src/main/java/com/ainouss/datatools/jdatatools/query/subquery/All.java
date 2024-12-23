@@ -14,7 +14,7 @@ public class All extends Expression implements Selectable {
     }
 
     @Override
-    public String toSql() {
+    public String sql() {
         return " all (" + subquery.buildSelectQuery() + ")";
     }
 

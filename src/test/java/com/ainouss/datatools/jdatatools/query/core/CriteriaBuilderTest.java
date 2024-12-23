@@ -29,7 +29,7 @@ class CriteriaBuilderTest {
     void like() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.like(root.get("lastName"), "some lastName").render();
+        String sql = cb.like(root.get("lastName"), "some lastName").toSql();
         assertEquals("EMPLOYEES.LAST_NAME like '%some lastName%'", sql);
     }
 
@@ -37,7 +37,7 @@ class CriteriaBuilderTest {
     void endsWith() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.endsWith(root.get("lastName"), "doe").render();
+        String sql = cb.endsWith(root.get("lastName"), "doe").toSql();
         assertEquals("EMPLOYEES.LAST_NAME like '%doe'", sql);
     }
 
@@ -45,7 +45,7 @@ class CriteriaBuilderTest {
     void startsWith() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.startsWith(root.get("lastName"), "john").render();
+        String sql = cb.startsWith(root.get("lastName"), "john").toSql();
         assertEquals("EMPLOYEES.LAST_NAME like 'john%'", sql);
     }
 
@@ -53,7 +53,7 @@ class CriteriaBuilderTest {
     void eq() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.eq(root.get("lastName"), "john").render();
+        String sql = cb.eq(root.get("lastName"), "john").toSql();
         assertEquals("EMPLOYEES.LAST_NAME = 'john'", sql);
     }
 
@@ -64,7 +64,7 @@ class CriteriaBuilderTest {
         Employee employee = new Employee();
         employee.setSalary(25);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.gt(root.get("salary"), employee.getSalary()).toSql();
+        String sql = cb.gt(root.get("salary"), employee.getSalary()).sql();
         assertEquals("EMPLOYEES.SALARY > 25", sql);
     }
 
@@ -74,7 +74,7 @@ class CriteriaBuilderTest {
         Employee employee = new Employee();
         employee.setSalary(25);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.lt(root.get("salary"), employee.getSalary()).toSql();
+        String sql = cb.lt(root.get("salary"), employee.getSalary()).sql();
         assertEquals("EMPLOYEES.SALARY < 25", sql);
     }
 
@@ -84,7 +84,7 @@ class CriteriaBuilderTest {
         Employee employee = new Employee();
         employee.setSalary(25);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.le(root.get("salary"), employee.getSalary()).toSql();
+        String sql = cb.le(root.get("salary"), employee.getSalary()).sql();
         assertEquals("EMPLOYEES.SALARY <= 25", sql);
     }
 
@@ -94,7 +94,7 @@ class CriteriaBuilderTest {
         Employee employee = new Employee();
         employee.setSalary(25);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.ge(root.get("salary"), employee.getSalary()).toSql();
+        String sql = cb.ge(root.get("salary"), employee.getSalary()).sql();
         assertEquals("EMPLOYEES.SALARY >= 25", sql);
     }
 
@@ -102,7 +102,7 @@ class CriteriaBuilderTest {
     void inL() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.inL(root.get("lastName"), List.of("john", "jane")).toSql();
+        String sql = cb.inL(root.get("lastName"), List.of("john", "jane")).sql();
         assertEquals("EMPLOYEES.LAST_NAME in  ('john','jane')", sql);
     }
 
@@ -110,7 +110,7 @@ class CriteriaBuilderTest {
     void in() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.in(root.get("lastName"), "john", "jane").toSql();
+        String sql = cb.in(root.get("lastName"), "john", "jane").sql();
         assertEquals("EMPLOYEES.LAST_NAME in  ('john','jane')", sql);
     }
 
@@ -118,7 +118,7 @@ class CriteriaBuilderTest {
     void inn() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.inn(root.get("lastName"), List.of()).toSql();
+        String sql = cb.inn(root.get("lastName"), List.of()).sql();
         assertEquals("", sql);
     }
 
@@ -126,7 +126,7 @@ class CriteriaBuilderTest {
     void between() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.between(root.get("salary"), 10, 20).toSql();
+        String sql = cb.between(root.get("salary"), 10, 20).sql();
         assertEquals("EMPLOYEES.SALARY between 10 and 20", sql);
     }
 
@@ -134,7 +134,7 @@ class CriteriaBuilderTest {
     void isNotNull() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.isNotNull(root.get("lastName")).toSql();
+        String sql = cb.isNotNull(root.get("lastName")).sql();
         assertEquals("EMPLOYEES.LAST_NAME is not null ", sql);
     }
 
@@ -142,7 +142,7 @@ class CriteriaBuilderTest {
     void isNull() {
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.isNull(root.get("lastName")).toSql();
+        String sql = cb.isNull(root.get("lastName")).sql();
         assertEquals("EMPLOYEES.LAST_NAME is null ", sql);
     }
 
@@ -153,7 +153,7 @@ class CriteriaBuilderTest {
         String sql = cb.and(
                 cb.eq(root.get("firstName"), "John"),
                 cb.eq(root.get("lastName"), "doe")
-        ).render();
+        ).toSql();
         assertEquals("(EMPLOYEES.FIRST_NAME = 'John' and (EMPLOYEES.LAST_NAME = 'doe'))", sql);
     }
 
@@ -164,7 +164,7 @@ class CriteriaBuilderTest {
         String sql = cb.or(
                 cb.eq(root.get("firstName"), "John"),
                 cb.eq(root.get("lastName"), "doe")
-        ).render();
+        ).toSql();
         assertEquals("(EMPLOYEES.FIRST_NAME = 'John' or (EMPLOYEES.LAST_NAME = 'doe'))", sql);
     }
 
@@ -175,7 +175,7 @@ class CriteriaBuilderTest {
         String sql = cb.not(
                 cb.eq(root.get("firstName"), "John"),
                 cb.eq(root.get("lastName"), "doe")
-        ).render();
+        ).toSql();
         assertEquals(" NOT ((EMPLOYEES.FIRST_NAME = 'John' and EMPLOYEES.LAST_NAME = 'doe'))", sql);
     }
 
@@ -233,7 +233,7 @@ class CriteriaBuilderTest {
         CriteriaBuilder cb = new CriteriaBuilder();
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> root = query.from(Employee.class);
-        String sql = cb.ne(root.get("name"), "John Doe").toSql();
+        String sql = cb.ne(root.get("name"), "John Doe").sql();
         assertEquals("EMPLOYEES.name != 'John Doe'", sql);
     }
 
@@ -242,7 +242,7 @@ class CriteriaBuilderTest {
         CriteriaBuilder cb = new CriteriaBuilder();
         CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
         Root<Employee> emp = query.from(Employee.class).as("tbl");
-        String sql = cb.gt(cb.sum(emp.get("salary")), 1000L).toSql();
+        String sql = cb.gt(cb.sum(emp.get("salary")), 1000L).sql();
         assertEquals("sum(tbl.SALARY) > 1000", sql);
     }
 

@@ -15,7 +15,7 @@ public class SelectableExpression extends Expression {
     }
 
     @Override
-    public String toSql() {
+    public String sql() {
         return selectable.toSql();
     }
 }

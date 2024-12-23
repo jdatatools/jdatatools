@@ -15,7 +15,7 @@ public class IsNull extends Expression {
         this.attribute = attribute;
     }
 
-    public String toSql() {
+    public String sql() {
         return attribute.toSql() + " is null ";
     }
 }

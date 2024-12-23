@@ -77,7 +77,7 @@ public class In extends Expression {
      *
      * @return The SQL representation of the 'IN' operator.
      */
-    public String toSql() {
+    public String sql() {
         String values = args.stream()
                 .map(Selectable::toSql)
                 .collect(Collectors.joining(","));

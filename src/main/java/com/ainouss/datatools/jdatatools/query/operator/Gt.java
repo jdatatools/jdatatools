@@ -42,7 +42,7 @@ public class Gt extends Expression {
     /**
      * Generates the SQL representation of the greater than operator.
      */
-    public String toSql() {
+    public String sql() {
         return attribute.toSql() + " > " + right.toSql();
     }
 }

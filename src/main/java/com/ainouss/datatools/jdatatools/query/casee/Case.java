@@ -21,7 +21,7 @@ public abstract class Case extends Alias implements Selectable {
         }
 
         for (WhenThen whenThen : whenThens) {
-            sql.append("when ").append(whenThen.getWhen().toSql())
+            sql.append("when ").append(whenThen.getWhen().sql())
                     .append(" then ").append(whenThen.getThen().toSql()).append(" ");
         }
 

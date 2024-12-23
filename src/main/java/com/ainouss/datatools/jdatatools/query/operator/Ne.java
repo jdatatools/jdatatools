@@ -39,7 +39,7 @@ public class Ne extends Expression {
      * @return The SQL representation of the inequality operator.
      * @throws RuntimeException If the operator is used with null or array values.
      */
-    public String toSql() {
+    public String sql() {
         return left.toSql() + " != " + right.toSql();
     }
 }

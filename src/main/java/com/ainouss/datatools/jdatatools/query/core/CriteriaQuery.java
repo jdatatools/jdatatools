@@ -400,7 +400,7 @@ public class CriteriaQuery<T> {
     }
 
     private String having() {
-        String toString = this.having.render();
+        String toString = this.having.toSql();
         if (toString.isEmpty()) {
             return "";
         }

@@ -11,7 +11,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * (and, or, not)
  * An expression can have an SQL string
  */
-public abstract class Expression {
+public abstract class Expression implements Fragment {
 
     protected List<Expression> and = new ArrayList<>();
     protected List<Expression> or = new ArrayList<>();
@@ -46,24 +46,24 @@ public abstract class Expression {
      * @return sql fragment
      */
 
-    public String render() {
+    public String toSql() {
 
         String ands = this.and.stream()
-                .map(Expression::render)
+                .map(Expression::toSql)
                 .reduce((a, b) -> a + " and " + b)
                 .orElse("");
 
         String ors = this.or.stream()
-                .map(Expression::render)
+                .map(Expression::toSql)
                 .reduce((a, b) -> a + " or " + b)
                 .orElse("");
 
         String nots = this.not.stream()
-                .map(Expression::render)
+                .map(Expression::toSql)
                 .reduce((a, b) -> a + " and " + b)
                 .orElse("");
 
-        var builder = new StringBuilder(toSql());
+        var builder = new StringBuilder(sql());
 
         if (!this.not.isEmpty()) {
             builder.append(" NOT (")
@@ -86,7 +86,8 @@ public abstract class Expression {
 
         return builder.toString();
     }
-    public String toSql(){
+
+    public String sql() {
         return "";
     }
 }
