@@ -11,7 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 
-import static org.assertj.core.api.Fail.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
@@ -1067,8 +1066,7 @@ class CriteriaQueryTest {
                 .otherwise("Other").as("departmentName");
 
         String sql = query.select(caseExpression).buildSelectQuery();
-        String expectedSql = "select case tbl.departmentId when null then 'Unknown Department' when 1 then 'Sales' else 'Other' end as departmentName from EMPLOYEES tbl";
-        assertEquals(expectedSql, sql);
+        assertEquals("select case tbl.departmentId when null then 'Unknown Department' when 1 then 'Sales' else 'Other' end as departmentName from EMPLOYEES tbl", sql);
 
 
         // Test NULL handling with IS NULL predicate in WHEN clause (Searched CASE)
@@ -1077,10 +1075,22 @@ class CriteriaQueryTest {
                 .when(cb.eq(emp.get("departmentId"), 1)).then("Sales")
                 .otherwise("Other");
         sql = query.select(caseExpression).buildSelectQuery();
-        expectedSql = "select case when tbl.departmentId is null then 'No Department Assigned' when tbl.departmentId = 1 then 'Sales' else 'Other' end from EMPLOYEES tbl";
 
-        assertEquals(expectedSql, sql);
+        assertEquals("select case when tbl.departmentId is null then 'No Department Assigned' when tbl.departmentId = 1 then 'Sales' else 'Other' end from EMPLOYEES tbl", sql);
 
+    }
+
+    @Test
+    void should_generate_named_update_query() {
+        CriteriaBuilder cb = new CriteriaBuilder();
+        CriteriaQuery<Employee> query = cb.createQuery(Employee.class);
+        Root<Employee> emp = query.from(Employee.class).as("tbl");
+        String sql = query
+                .select(emp)
+                .from(emp)
+                .where(cb.eq(emp.get("id"), 1))
+                .buildNamedUpdateQuery();
+        assertEquals("update EMPLOYEES tbl set ENABLED = :enabled, FIRST_NAME = :firstName, ID = :id, LAST_NAME = :lastName, SALARY = :salary", sql);
     }
 
 }

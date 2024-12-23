@@ -243,6 +243,21 @@ public class CriteriaQuery<T> {
 
     }
 
+    private String update() {
+        return this.selections
+                .stream()
+                .sorted()
+                .map(selectable -> {
+                    if (selectable instanceof Path<?> path) {
+                        return path;
+                    }
+                    throw new RuntimeException("not a path");
+                })
+                .map(path -> EntityRegistry.paths.get(path) + " = :" + path.getAttribute())
+                .collect(Collectors.joining(", "));
+
+    }
+
     private String toSql(Selectable attr) {
         String str = attr.toSql();
         if (!alias) {
@@ -344,6 +359,15 @@ public class CriteriaQuery<T> {
         return buildNestedSelectQuery();
     }
 
+    public String buildNamedUpdateQuery() {
+        checkSelection();
+        return new StringBuilder().append("update ")
+                .append(froms())
+                .append(" set ")
+                .append(update())
+                .toString();
+    }
+
     protected void checkSelection() {
         if (selections.isEmpty()) {
             froms.forEach(this::select);
@@ -439,11 +463,6 @@ public class CriteriaQuery<T> {
         return this.joins.stream()
                 .map(Join::toSql)
                 .collect(Collectors.joining(" "));
-    }
-
-    public CriteriaQuery<T> withAlias(boolean withAlias) {
-        this.alias = true;
-        return this;
     }
 
     /**
