@@ -66,7 +66,7 @@ public abstract class Expression implements Fragment {
         var builder = new StringBuilder(sql());
 
         if (!this.not.isEmpty()) {
-            builder.append(" NOT (")
+            builder.append(" not (")
                     .append(nots)
                     .append(")");
         }
