@@ -1,7 +1,6 @@
-package com.ainouss.jdatatools.query.union;
+package com.ainouss.jdatatools.query.setoperation;
 
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
-import com.ainouss.jdatatools.query.core.SetOperation;
 
 public class UnionAll implements SetOperation {
 

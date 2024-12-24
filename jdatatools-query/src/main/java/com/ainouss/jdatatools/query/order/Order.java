@@ -1,6 +1,7 @@
-package com.ainouss.jdatatools.query.core;
+package com.ainouss.jdatatools.query.order;
 
-import com.ainouss.jdatatools.query.order.OrderDirection;
+import com.ainouss.jdatatools.query.core.Fragment;
+import com.ainouss.jdatatools.query.core.Selectable;
 import lombok.Getter;
 
 @Getter

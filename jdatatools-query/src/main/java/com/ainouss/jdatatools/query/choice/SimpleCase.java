@@ -3,7 +3,7 @@ package com.ainouss.jdatatools.query.choice;
 
 import com.ainouss.jdatatools.query.core.LiteralValue;
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.expression.SelectableExpression;
+import com.ainouss.jdatatools.query.core.SelectableExpression;
 
 public class SimpleCase extends Case {
 

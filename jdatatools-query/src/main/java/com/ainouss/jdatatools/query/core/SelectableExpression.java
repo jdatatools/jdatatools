@@ -1,7 +1,4 @@
-package com.ainouss.jdatatools.query.expression;
-
-import com.ainouss.jdatatools.query.core.Expression;
-import com.ainouss.jdatatools.query.core.Selectable;
+package com.ainouss.jdatatools.query.core;
 
 /**
  * Identity expression, renders an empty SQL

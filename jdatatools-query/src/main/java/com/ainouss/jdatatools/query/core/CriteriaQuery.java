@@ -1,14 +1,10 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.expression.IdentityExpression;
-import com.ainouss.jdatatools.query.expression.Where;
 import com.ainouss.jdatatools.query.join.Join;
+import com.ainouss.jdatatools.query.order.Order;
 import com.ainouss.jdatatools.query.order.OrderDirection;
 import com.ainouss.jdatatools.query.registery.EntityRegistry;
-import com.ainouss.jdatatools.query.union.Except;
-import com.ainouss.jdatatools.query.union.Intersect;
-import com.ainouss.jdatatools.query.union.Union;
-import com.ainouss.jdatatools.query.union.UnionAll;
+import com.ainouss.jdatatools.query.setoperation.*;
 
 import java.lang.reflect.Field;
 import java.util.*;

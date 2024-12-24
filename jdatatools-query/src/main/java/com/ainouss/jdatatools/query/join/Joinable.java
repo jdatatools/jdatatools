@@ -1,10 +1,9 @@
-package com.ainouss.jdatatools.query.core;
+package com.ainouss.jdatatools.query.join;
 
-import com.ainouss.jdatatools.query.join.Join;
-import com.ainouss.jdatatools.query.join.JoinExpression;
-import com.ainouss.jdatatools.query.join.JoinType;
+import com.ainouss.jdatatools.query.core.Fragment;
+import com.ainouss.jdatatools.query.core.Source;
 
-public interface Joinable<T> extends Fragment{
+public interface Joinable<T> extends Fragment {
 
     Source getSelf();
 

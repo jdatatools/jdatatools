@@ -1,6 +1,4 @@
-package com.ainouss.jdatatools.query.expression;
-
-import com.ainouss.jdatatools.query.core.Expression;
+package com.ainouss.jdatatools.query.core;
 
 /**
  * Where expression, entry point to where conditions

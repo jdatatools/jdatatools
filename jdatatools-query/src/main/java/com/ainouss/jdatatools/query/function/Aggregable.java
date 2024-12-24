@@ -1,4 +1,7 @@
-package com.ainouss.jdatatools.query.core;
+package com.ainouss.jdatatools.query.function;
+
+import com.ainouss.jdatatools.query.core.Selectable;
+import com.ainouss.jdatatools.query.order.Order;
 
 public interface Aggregable extends Selectable {
 
