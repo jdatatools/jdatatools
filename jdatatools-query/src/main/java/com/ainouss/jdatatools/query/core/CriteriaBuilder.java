@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.casee.SearchedCase;
-import com.ainouss.jdatatools.query.casee.SimpleCase;
+import com.ainouss.jdatatools.query.choice.SearchedCase;
+import com.ainouss.jdatatools.query.choice.SimpleCase;
 import com.ainouss.jdatatools.query.expression.IdentityExpression;
 import com.ainouss.jdatatools.query.function.*;
 import com.ainouss.jdatatools.query.logical.And;

@@ -1,4 +1,4 @@
-package com.ainouss.jdatatools.query.casee;
+package com.ainouss.jdatatools.query.choice;
 
 import com.ainouss.jdatatools.query.core.LiteralValue;
 import com.ainouss.jdatatools.query.core.Selectable;
