@@ -3,14 +3,14 @@ package com.ainouss.jdatatools.query.core;
 /**
  * Where expression, entry point to where conditions
  */
-public class Where extends Expression {
+public class Where extends AbstractExpression {
 
-    private  Expression expression;
+    private AbstractExpression expression;
 
     public Where() {
     }
 
-    public void with(Expression expression) {
+    public void with(AbstractExpression expression) {
         this.expression = expression;
     }
 

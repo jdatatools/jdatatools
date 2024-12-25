@@ -15,7 +15,7 @@ public class Join<X, Y> extends Alias implements Source, Joinable<Y> {
     private final Source target;
     private final Source source;
     private final JoinType joinType;
-    private Expression expression;
+    private AbstractExpression expression;
     private CriteriaQuery<?> subquery;
 
     /**
@@ -31,7 +31,7 @@ public class Join<X, Y> extends Alias implements Source, Joinable<Y> {
         this.joinType = joinType;
     }
 
-    public Join<X, Y> on(Expression on) {
+    public Join<X, Y> on(AbstractExpression on) {
         this.expression = on;
         return this;
     }

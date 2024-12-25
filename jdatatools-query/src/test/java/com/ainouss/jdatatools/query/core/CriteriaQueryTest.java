@@ -178,7 +178,7 @@ class CriteriaQueryTest {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
         Root<EmployeeDetails> det = cr.from(EmployeeDetails.class).as("det");
-        Expression where = cb.and(
+        AbstractExpression where = cb.and(
                 cb.eq(det.get("id"), 0),
                 cb.gt(rt.get("id"), 1)
         );
@@ -203,7 +203,7 @@ class CriteriaQueryTest {
                 .schema("DB2")
                 .as("det");
 
-        Expression and = cb.and(
+        AbstractExpression and = cb.and(
                 cb.eq(det.get("id"), 0),
                 cb.gt(rt.get("id"), 1)
         );
@@ -344,7 +344,7 @@ class CriteriaQueryTest {
     public void should__not_operation() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
-        Expression not = cb.not(
+        AbstractExpression not = cb.not(
                 cb.eq(
                                 rt.get("id"), 3
                         )
@@ -397,7 +397,7 @@ class CriteriaQueryTest {
     public void should__delete_query() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
-        Expression and = cb.and(
+        AbstractExpression and = cb.and(
                 cb.gt(rt.get("id"), 0),
                 cb.lt(rt.get("id"), 30),
                 cb.gt(rt.get("id"), 10),

@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -23,7 +23,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE name != 'John Doe'
  * </pre>
  */
-public class Ne extends Expression {
+public class Ne extends AbstractExpression {
 
     private final Selectable left;
     private final Selectable right;

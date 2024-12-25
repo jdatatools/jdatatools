@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -21,7 +21,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE salary >= 30
  * </pre>
  */
-public class Ge extends Expression {
+public class Ge extends AbstractExpression {
 
     private final Selectable attribute;
     private final Selectable right;

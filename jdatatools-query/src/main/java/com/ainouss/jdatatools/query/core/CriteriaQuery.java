@@ -144,7 +144,7 @@ public class CriteriaQuery<T> {
      * @param expression The expression for the where clause.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public CriteriaQuery<T> where(Expression expression) {
+    public CriteriaQuery<T> where(AbstractExpression expression) {
         this.where.with(expression);
         return this;
     }
@@ -166,7 +166,7 @@ public class CriteriaQuery<T> {
      *
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public CriteriaQuery<T> having(Expression expression) {
+    public CriteriaQuery<T> having(AbstractExpression expression) {
         this.having.and(expression);
         return this;
     }

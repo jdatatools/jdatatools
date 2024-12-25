@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -21,7 +21,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE name = 'John Doe'
  * </pre>
  */
-public class Eq extends Expression {
+public class Eq extends AbstractExpression {
 
     private final Selectable attribute;
     private final Selectable right;

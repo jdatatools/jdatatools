@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.logical;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 
 /**
  * Represents the logical NOT operator in a query.
@@ -23,14 +23,14 @@ import com.ainouss.jdatatools.query.core.Expression;
  *  WHERE NOT active = true
  * </pre>
  */
-public class Not extends Expression {
+public class Not extends AbstractExpression {
 
     /**
      * Constructs a new {@code Not} operator with the given expression.
      *
      * @param expression The expression to be negated.
      */
-    public Not(Expression expression) {
+    public Not(AbstractExpression expression) {
         this.not.add(expression);
     }
 }

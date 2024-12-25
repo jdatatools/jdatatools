@@ -1,12 +1,12 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
  * Starts with operator
  */
-public class EndsWith extends Expression {
+public class EndsWith extends AbstractExpression {
 
     private final Selectable attribute;
     private final Selectable right;

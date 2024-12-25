@@ -35,28 +35,28 @@ public class CriteriaBuilder {
     }
 
 
-    public Expression like(Selectable attribute, Object value) {
+    public AbstractExpression like(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
             return new Like(attribute, selectable);
         }
         return new Like(attribute, new LiteralValue(value));
     }
 
-    public Expression endsWith(Selectable attribute, Object exp) {
+    public AbstractExpression endsWith(Selectable attribute, Object exp) {
         if (exp instanceof Selectable selectable) {
             return new EndsWith(attribute, selectable);
         }
         return new EndsWith(attribute, new LiteralValue(exp));
     }
 
-    public Expression startsWith(Selectable attribute, Object exp) {
+    public AbstractExpression startsWith(Selectable attribute, Object exp) {
         if (exp instanceof Selectable selectable) {
             return new StartsWith(attribute, selectable);
         }
         return new StartsWith(attribute, new LiteralValue(exp));
     }
 
-    public Expression eq(Selectable attribute, Object value) {
+    public AbstractExpression eq(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
             return new Eq(attribute, selectable);
         }
@@ -64,14 +64,14 @@ public class CriteriaBuilder {
     }
 
 
-    public Expression ne(Selectable attribute, Object value) {
+    public AbstractExpression ne(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
             return new Ne(attribute, selectable);
         }
         return new Ne(attribute, new LiteralValue(value));
     }
 
-    public Expression gt(Selectable attribute, Object value) {
+    public AbstractExpression gt(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
             return new Gt(attribute, selectable);
         }
@@ -79,28 +79,28 @@ public class CriteriaBuilder {
     }
 
 
-    public Expression lt(Selectable attribute, Object value) {
+    public AbstractExpression lt(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
             return new Lt(attribute, selectable);
         }
         return new Lt(attribute, new LiteralValue(value));
     }
 
-    public Expression le(Selectable attribute, Object value) {
+    public AbstractExpression le(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
             return new Le(attribute, selectable);
         }
         return new Le(attribute, new LiteralValue(value));
     }
 
-    public Expression ge(Selectable attribute, Object value) {
+    public AbstractExpression ge(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
             return new Ge(attribute, selectable);
         }
         return new Ge(attribute, new LiteralValue(value));
     }
 
-    public Expression in(Selectable attribute, Object... values) {
+    public AbstractExpression in(Selectable attribute, Object... values) {
         if (values == null || values.length == 0) {
             throw new IllegalArgumentException("values must not be null or empty");
         }
@@ -110,7 +110,7 @@ public class CriteriaBuilder {
         return new In(attribute, list);
     }
 
-    public Expression inL(Selectable attribute, List<?> values) {
+    public AbstractExpression inL(Selectable attribute, List<?> values) {
         if (values == null || values.isEmpty()) {
             throw new IllegalArgumentException("values must not be null or empty");
         }
@@ -127,7 +127,7 @@ public class CriteriaBuilder {
      * @param values nullable in values
      * @return expression
      */
-    public Expression inn(Selectable attribute, List<?> values) {
+    public AbstractExpression inn(Selectable attribute, List<?> values) {
         if (values == null || values.isEmpty()) {
             return new IdentityExpression();
         }
@@ -137,7 +137,7 @@ public class CriteriaBuilder {
         return new In(attribute, list);
     }
 
-    public Expression between(Selectable attribute, Object exp1, Object exp2) {
+    public AbstractExpression between(Selectable attribute, Object exp1, Object exp2) {
         return new Bt(attribute, new LiteralValue(exp1), new LiteralValue(exp2));
     }
 
@@ -147,7 +147,7 @@ public class CriteriaBuilder {
      * @param path path
      * @return is not null
      */
-    public Expression isNotNull(Path<?> path) {
+    public AbstractExpression isNotNull(Path<?> path) {
         return new IsNotNull(path);
     }
 
@@ -158,7 +158,7 @@ public class CriteriaBuilder {
      * @return is null
      */
 
-    public Expression isNull(Path<?> path) {
+    public AbstractExpression isNull(Path<?> path) {
         return new IsNull(path);
     }
 
@@ -169,7 +169,7 @@ public class CriteriaBuilder {
      * @param expressions other expressions
      * @return combined expressions with AND operator
      */
-    public Expression and(Expression expression, Expression... expressions) {
+    public AbstractExpression and(AbstractExpression expression, AbstractExpression... expressions) {
         And and = new And(expression);
         expression.and.addAll(Arrays.asList(expressions));
         return and;
@@ -182,7 +182,7 @@ public class CriteriaBuilder {
      * @param expressions other expressions
      * @return combined expressions with OR operator
      */
-    public Expression or(Expression expression, Expression... expressions) {
+    public AbstractExpression or(AbstractExpression expression, AbstractExpression... expressions) {
         Or or = new Or(expression);
         expression.or.addAll(Arrays.asList(expressions));
         return or;
@@ -260,7 +260,7 @@ public class CriteriaBuilder {
      * @param expression expression to be negated
      * @return negated expression
      */
-    public Expression not(Expression expression) {
+    public AbstractExpression not(AbstractExpression expression) {
         return new Not(expression);
     }
 
@@ -270,8 +270,8 @@ public class CriteriaBuilder {
      * @param expressions other expressions
      * @return combined expressions with OR operator
      */
-    public Expression not(Expression... expressions) {
-        Expression and = new IdentityExpression().and(expressions);
+    public AbstractExpression not(AbstractExpression... expressions) {
+        AbstractExpression and = new IdentityExpression().and(expressions);
         return new Not(and);
     }
 
@@ -281,7 +281,7 @@ public class CriteriaBuilder {
      * @param subquery subquery
      * @return EXISTS expression
      */
-    public Expression exists(CriteriaQuery<?> subquery) {
+    public AbstractExpression exists(CriteriaQuery<?> subquery) {
         return new Exists(subquery);
     }
 
@@ -291,7 +291,7 @@ public class CriteriaBuilder {
      * @param subquery subquery
      * @return 'ANY' expression
      */
-    public Expression any(CriteriaQuery<?> subquery) {
+    public AbstractExpression any(CriteriaQuery<?> subquery) {
         return new Any(subquery);
     }
 
@@ -301,7 +301,7 @@ public class CriteriaBuilder {
      * @param subquery subquery
      * @return 'ALL' expression
      */
-    public Expression all(CriteriaQuery<?> subquery) {
+    public AbstractExpression all(CriteriaQuery<?> subquery) {
         return new All(subquery);
     }
 

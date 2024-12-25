@@ -2,10 +2,10 @@ package com.ainouss.jdatatools.query.subquery;
 
 
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
-public class Exists extends Expression implements Selectable {
+public class Exists extends AbstractExpression implements Selectable {
 
     private final CriteriaQuery<?> subquery; // Subquery is now a local variable
 

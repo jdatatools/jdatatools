@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  * </pre>
  * This would generate an empty SQL WHERE clause.
  */
-public class In extends Expression {
+public class In extends AbstractExpression {
 
     private final Selectable attribute;
     private final List<Selectable> args = new ArrayList<>();

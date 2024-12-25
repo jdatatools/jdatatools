@@ -1,12 +1,12 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
  * Is not null expression
  */
-public class IsNotNull extends Expression {
+public class IsNotNull extends AbstractExpression {
 
     private final Selectable attribute;
 

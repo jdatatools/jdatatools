@@ -3,7 +3,7 @@ package com.ainouss.jdatatools.query.core;
 /**
  * Identity expression, renders an empty SQL
  */
-public class SelectableExpression extends Expression {
+public class SelectableExpression extends AbstractExpression {
 
     private final Selectable selectable;
 

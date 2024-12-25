@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -24,7 +24,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE name LIKE '%John%'
  * </pre>
  */
-public class Like extends Expression {
+public class Like extends AbstractExpression {
 
     private final Selectable attribute;
     private final Selectable right;

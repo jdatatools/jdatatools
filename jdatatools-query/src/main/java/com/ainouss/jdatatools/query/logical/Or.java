@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.logical;
 
-import com.ainouss.jdatatools.query.core.Expression;
+import com.ainouss.jdatatools.query.core.AbstractExpression;
 
 /**
  * Represents the logical OR operator in a query.
@@ -26,14 +26,14 @@ import com.ainouss.jdatatools.query.core.Expression;
  *  WHERE city = 'New York' OR city = 'Los Angeles'
  * </pre>
  */
-public class Or extends Expression {
+public class Or extends AbstractExpression {
 
     /**
      * Constructs a new {@code Or} operator with the given expression.
      *
      * @param expression The expression to add to the OR condition.
      */
-    public Or(Expression expression) {
+    public Or(AbstractExpression expression) {
         this.or.add(expression);
     }
 
