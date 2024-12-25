@@ -31,9 +31,9 @@ public class CriteriaQuery<T> {
     protected final DefaultExpression having = new DefaultExpression();
     protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
-    protected final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
+    protected final LinkedHashSet<Expression> groupBy = new LinkedHashSet<>();
     protected final List<SetOperation> unions = new ArrayList<>();
-    protected final Page page = new Page();
+    protected final Pagination pagination = new Pagination();
     private boolean alias = true;
 
 
@@ -193,21 +193,21 @@ public class CriteriaQuery<T> {
     /**
      * Adds a group by clause to the query.
      *
-     * @param path The path representing the attribute to group by.
+     * @param expression The path representing the attribute to group by.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public CriteriaQuery<T> groupBy(Path<?> path) {
-        this.groupBy.add(path);
+    public CriteriaQuery<T> groupBy(Expression expression) {
+        this.groupBy.add(expression);
         return this;
     }
 
     public CriteriaQuery<T> limit(Integer limit) {
-        this.page.limit(limit);
+        this.pagination.setLimit(limit);
         return this;
     }
 
     public CriteriaQuery<T> offset(Integer offset) {
-        this.page.offset(offset);
+        this.pagination.setOffset(offset);
         return this;
     }
 
@@ -357,7 +357,7 @@ public class CriteriaQuery<T> {
      */
     public String buildSelectQuery() {
         checkSelection();
-        if (unions.isEmpty() || orderBy.isEmpty() && page.isEmpty()) {
+        if (unions.isEmpty() || orderBy.isEmpty() && pagination.isVoid()) {
             return buildSimpleSelectQuery();
         }
         return buildNestedSelectQuery();
@@ -403,7 +403,7 @@ public class CriteriaQuery<T> {
     }
 
     private String buildNestedSelectQuery() {
-        Page page1 = Page.from(this.page);
+        Pagination pagination1 = Pagination.from(this.pagination);
         Subquery subquery = new Subquery(this);
         subquery.setAlias("nested_query");
         var nq = new CriteriaQuery<>(this.resultType);
@@ -412,9 +412,9 @@ public class CriteriaQuery<T> {
             Selectable p = new Path<>("nested_query", order.getColumn().getAlias());
             nq.orderBy(p, order.getDirection());
         });
-        nq.page.apply(page1);
+        nq.pagination.apply(pagination1);
         subquery.cr().orderBy.clear();
-        subquery.cr().page.clear();
+        subquery.cr().pagination.clear();
         //
         return nq.buildSelectQuery();
     }
@@ -526,7 +526,7 @@ public class CriteriaQuery<T> {
     }
 
     private String limitOffset() {
-        return page.render();
+        return pagination.render();
     }
 
     /**

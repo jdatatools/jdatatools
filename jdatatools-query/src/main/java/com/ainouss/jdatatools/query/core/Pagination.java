@@ -3,43 +3,34 @@ package com.ainouss.jdatatools.query.core;
 import lombok.Data;
 
 @Data
-public class Page {
+public class Pagination {
 
     private Integer limit;
     private Integer offset;
 
-    public Page() {
+    public Pagination() {
     }
 
-    public Page(Integer limit, Integer offset) {
+    public Pagination(Integer limit, Integer offset) {
         this.limit = limit;
         this.offset = offset;
     }
 
-    public static Page from(Page page) {
-        return new Page(page.getLimit(), page.offset);
-    }
-    public  Page apply(Page page) {
-        this.limit = page.getLimit();
-        this.offset = page.getOffset();
-        return this;
-    }
-    public Page limit(Integer limit) {
-        this.limit = limit;
-        return this;
+    public static Pagination from(Pagination pagination) {
+        return new Pagination(pagination.getLimit(), pagination.getOffset());
     }
 
-    public Page offset(Integer offset) {
-        this.offset = offset;
-        return this;
+    public void apply(Pagination pagination) {
+        this.limit = pagination.getLimit();
+        this.offset = pagination.getOffset();
     }
 
-    public boolean isEmpty() {
+    public boolean isVoid() {
         return limit == null && offset == null;
     }
 
     public String render() {
-        if (this.isEmpty()) {
+        if (this.isVoid()) {
             return "";
         }
         StringBuilder sb = new StringBuilder();

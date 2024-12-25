@@ -129,7 +129,7 @@ public class CriteriaBuilder {
      */
     public Expression inn(Selectable attribute, List<?> values) {
         if (values == null || values.isEmpty()) {
-            return new IdentityExpression();
+            return new EmptyExpression();
         }
         List<Selectable> list = values.stream()
                 .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))

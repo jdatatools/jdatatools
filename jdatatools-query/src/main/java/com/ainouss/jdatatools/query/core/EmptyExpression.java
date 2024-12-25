@@ -3,9 +3,9 @@ package com.ainouss.jdatatools.query.core;
 /**
  * Identity expression, renders an empty SQL
  */
-public class IdentityExpression implements Expression {
+public class EmptyExpression implements Expression {
 
-    public IdentityExpression() {
+    public EmptyExpression() {
     }
 
     @Override

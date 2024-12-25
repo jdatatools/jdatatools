@@ -1,9 +1,6 @@
 package com.ainouss.jdatatools.query.registery;
 
-import com.ainouss.jdatatools.query.core.CriteriaBuilder;
-import com.ainouss.jdatatools.query.core.Path;
-import com.ainouss.jdatatools.query.core.Root;
-import com.ainouss.jdatatools.query.core.Selectable;
+import com.ainouss.jdatatools.query.core.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 import lombok.extern.slf4j.Slf4j;
@@ -93,7 +90,7 @@ public class EntityRegistry {
      *
      * @return column name
      */
-    public static String fullResolve(Selectable selectable) {
+    public static String fullResolve(Expression selectable) {
         if (selectable == null) {
             return "";
         }

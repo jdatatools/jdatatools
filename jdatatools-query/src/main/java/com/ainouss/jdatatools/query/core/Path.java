@@ -26,12 +26,6 @@ public class Path<T> extends Alias implements Selectable {
         this.alias = attribute;
     }
 
-    public Path(Class<T> head, String attribute) {
-        this.attribute = attribute;
-        this.head = new Root<>(head);
-        this.alias = attribute;
-    }
-
     public Path(String name, String attr) {
         this.head = new Root<>(name);
         this.attribute = attr;
