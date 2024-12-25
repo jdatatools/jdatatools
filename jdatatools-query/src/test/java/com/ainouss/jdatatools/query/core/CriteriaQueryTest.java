@@ -358,7 +358,7 @@ class CriteriaQueryTest {
                 .select(rt)
                 .where(not);
         String select = criteria.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where (not (tbl.ID = 3 and not (tbl.ID = 4)))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where (not ((tbl.ID = 3 and not ((tbl.ID = 4)))))", select);
     }
 
     @Test
@@ -1076,7 +1076,7 @@ class CriteriaQueryTest {
                         ));
 
 
-        String expectedSql = "select e.ENABLED as enabled,e.FIRST_NAME as firstName,e.ID as id,e.LAST_NAME as lastName,e.SALARY as salary from EMPLOYEES e inner join DEPARTMENTS d on (d.ID in ( (select sqe1.departmentId as departmentId from EMPLOYEES sqe1 where (sqe1.SALARY > 50000)) ) and not (d.ID in ( (select sqd.ID as id from DEPARTMENTS sqd where (sqd.NAME like '%%Engineering%%')) )))";
+        String expectedSql = "select e.ENABLED as enabled,e.FIRST_NAME as firstName,e.ID as id,e.LAST_NAME as lastName,e.SALARY as salary from EMPLOYEES e inner join DEPARTMENTS d on (d.ID in ( (select sqe1.departmentId as departmentId from EMPLOYEES sqe1 where (sqe1.SALARY > 50000)) ) and not ((d.ID in ( (select sqd.ID as id from DEPARTMENTS sqd where (sqd.NAME like '%%Engineering%%')) ))))";
         assertEquals(expectedSql, query.buildSelectQuery());
 
     }

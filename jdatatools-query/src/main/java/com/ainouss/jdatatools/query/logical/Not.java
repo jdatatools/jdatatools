@@ -42,9 +42,6 @@ public class Not implements Expression {
         if (sql == null) {
             return "not null";
         }
-        if (sql.startsWith("(")) {
-            return "not " + sql;
-        }
         return "not (" + sql + ")";
     }
 }
