@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.core;
 
-public class Subquery extends Alias implements Source, Fragment {
+public class Subquery extends Alias implements Source {
 
     private final CriteriaQuery<?> cr;
 

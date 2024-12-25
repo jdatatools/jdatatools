@@ -27,8 +27,8 @@ public class CriteriaQuery<T> {
     protected Class<T> resultType;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
-    private final DefaultExpression where = new DefaultExpression();
-    protected final DefaultExpression having = new DefaultExpression();
+    private final SimpleExpression where = new SimpleExpression();
+    protected final SimpleExpression having = new SimpleExpression();
     protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
     protected final LinkedHashSet<Expression> groupBy = new LinkedHashSet<>();

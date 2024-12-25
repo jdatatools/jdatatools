@@ -3,11 +3,11 @@ package com.ainouss.jdatatools.query.core;
 /**
  * Where expression, entry point to where conditions
  */
-public class DefaultExpression implements Expression {
+public class SimpleExpression implements Expression {
 
     private Expression expression;
 
-    public DefaultExpression() {
+    public SimpleExpression() {
     }
 
     public void with(Expression expression) {
