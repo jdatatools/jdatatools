@@ -1,6 +1,5 @@
 package com.ainouss.jdatatools.query.logical;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Expression;
 
 /**

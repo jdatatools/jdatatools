@@ -3,6 +3,7 @@ package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.choice.SearchedCase;
 import com.ainouss.jdatatools.query.choice.SimpleCase;
 import com.ainouss.jdatatools.query.function.*;
+import com.ainouss.jdatatools.query.logical.AbstractExpression;
 import com.ainouss.jdatatools.query.logical.And;
 import com.ainouss.jdatatools.query.logical.Not;
 import com.ainouss.jdatatools.query.logical.Or;
@@ -171,7 +172,7 @@ public class CriteriaBuilder {
      */
     public AbstractExpression and(Expression expression, Expression... expressions) {
         And and = new And(expression);
-        and.and.addAll(Arrays.asList(expressions));
+        and.and(expressions);
         return and;
     }
 
@@ -184,7 +185,7 @@ public class CriteriaBuilder {
      */
     public AbstractExpression or(Expression expression, Expression... expressions) {
         Or or = new Or(expression);
-        or.or.addAll(Arrays.asList(expressions));
+        or.or(expressions);
         return or;
     }
 
@@ -194,8 +195,9 @@ public class CriteriaBuilder {
      * @param expressions other expressions
      * @return combined expressions with OR operator
      */
-    public AbstractExpression not(Expression... expressions) {
-        return new Not(expressions);
+    public Expression not(Expression expression, Expression... expressions) {
+        Expression and = new And(expression).and(expressions);
+        return new Not(and);
     }
 
     /**
@@ -263,7 +265,6 @@ public class CriteriaBuilder {
     public Selectable distinct(Selectable selectable) {
         return new Distinct(selectable);
     }
-
 
 
     /**

@@ -176,7 +176,7 @@ class CriteriaBuilderTest {
                 cb.eq(root.get("firstName"), "John"),
                 cb.eq(root.get("lastName"), "doe")
         ).toSql();
-        assertEquals(" not (EMPLOYEES.FIRST_NAME = 'John' and EMPLOYEES.LAST_NAME = 'doe')", sql);
+        assertEquals("not (EMPLOYEES.FIRST_NAME = 'John' and EMPLOYEES.LAST_NAME = 'doe')", sql);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.ainouss.jdatatools.query.core;
 
+import com.ainouss.jdatatools.query.logical.AbstractExpression;
 import com.ainouss.jdatatools.query.model.Department;
 import com.ainouss.jdatatools.query.model.Employee;
 import com.ainouss.jdatatools.query.model.EmployeeDetails;
@@ -357,7 +358,7 @@ class CriteriaQueryTest {
                 .select(rt)
                 .where(not);
         String select = criteria.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where ( not (tbl.ID = 3 and not (tbl.ID = 4)))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where (not (tbl.ID = 3 and not (tbl.ID = 4)))", select);
     }
 
     @Test
@@ -642,7 +643,7 @@ class CriteriaQueryTest {
         assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES limit 50", sql);
 
 
-        query.limit(null).offset(150); //Just offset
+        query.limit(null).offset(150); //Offset
         sql = query.buildSelectQuery();
         assertEquals("select EMPLOYEES.ENABLED as enabled,EMPLOYEES.FIRST_NAME as firstName,EMPLOYEES.ID as id,EMPLOYEES.LAST_NAME as lastName,EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES offset 150", sql);
     }

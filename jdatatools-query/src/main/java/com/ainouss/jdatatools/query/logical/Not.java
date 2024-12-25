@@ -1,9 +1,6 @@
 package com.ainouss.jdatatools.query.logical;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Expression;
-
-import java.util.Arrays;
 
 /**
  * Represents the logical NOT operator in a query.
@@ -26,14 +23,28 @@ import java.util.Arrays;
  *  WHERE NOT active = true
  * </pre>
  */
-public class Not extends AbstractExpression {
+public class Not implements Expression {
+
+    private final Expression expression;
 
     /**
      * Constructs a new {@code Not} operator with the given expression.
      *
      * @param expression The expression to be negated.
      */
-    public Not(Expression[] expression) {
-        this.not.addAll(Arrays.asList(expression));
+    public Not(Expression expression) {
+        this.expression = expression;
+    }
+
+    @Override
+    public String toSql() {
+        String sql = expression.toSql();
+        if (sql == null) {
+            return "not null";
+        }
+        if (sql.startsWith("(")) {
+            return "not " + sql;
+        }
+        return "not (" + sql + ")";
     }
 }
