@@ -21,7 +21,7 @@ public class JoinExpression<T, U> extends Alias {
     /**
      * On condition, not applicable to a cartesian product
      */
-    public Join<T, U> on(AbstractExpression expression) {
+    public Join<T, U> on(Expression expression) {
         if (join.getJoinType() == JoinType.CROSS) {
             return join;
         }

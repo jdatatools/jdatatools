@@ -1,6 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 
 /**
  * Represents the logical AND operator in a query.
@@ -33,7 +34,7 @@ public class And extends AbstractExpression {
      *
      * @param expression The expression to add to the AND condition.
      */
-    public And(AbstractExpression expression) {
+    public And(Expression expression) {
         this.and.add(expression);
     }
 }

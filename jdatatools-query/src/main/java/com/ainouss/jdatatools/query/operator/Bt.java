@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -21,7 +21,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE salary BETWEEN 20 AND 40
  * </pre>
  */
-public class Bt extends AbstractExpression {
+public class Bt implements Expression {
 
     private final Selectable attribute;
     private final Selectable left;
@@ -31,8 +31,8 @@ public class Bt extends AbstractExpression {
      * Constructs a new {@code Bt} operator with the given path and range values.
      *
      * @param selectable The path representing the attribute to compare.
-     * @param left     The lower bound of the range.
-     * @param right     The upper bound of the range.
+     * @param left       The lower bound of the range.
+     * @param right      The upper bound of the range.
      */
     public Bt(Selectable selectable, Selectable left, Selectable right) {
         this.attribute = selectable;
@@ -41,7 +41,7 @@ public class Bt extends AbstractExpression {
     }
 
 
-    public String sql() {
+    public String toSql() {
         return attribute.toSql() + " between " + left.toSql() + " and " + right.toSql();
     }
 }

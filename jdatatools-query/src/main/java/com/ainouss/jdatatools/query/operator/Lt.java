@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -23,7 +23,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE salary < 30
  * </pre>
  */
-public class Lt extends AbstractExpression {
+public class Lt implements Expression {
 
     private final Selectable attribute;
     private final Selectable right;
@@ -45,7 +45,7 @@ public class Lt extends AbstractExpression {
      * @return The SQL representation of the operator.
      * @throws RuntimeException If the operator is used with null values.
      */
-    public String sql() {
+    public String toSql() {
         return attribute.toSql() + " < " + right.toSql();
     }
 }

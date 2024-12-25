@@ -1,12 +1,12 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
  * A field with a NULL value is a field with no value.
  */
-public class IsNull extends AbstractExpression {
+public class IsNull implements Expression {
 
     private final Selectable attribute;
 
@@ -14,7 +14,7 @@ public class IsNull extends AbstractExpression {
         this.attribute = attribute;
     }
 
-    public String sql() {
+    public String toSql() {
         return attribute.toSql() + " is null ";
     }
 }

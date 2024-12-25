@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -23,7 +23,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE name != 'John Doe'
  * </pre>
  */
-public class Ne extends AbstractExpression {
+public class Ne implements Expression {
 
     private final Selectable left;
     private final Selectable right;
@@ -39,7 +39,7 @@ public class Ne extends AbstractExpression {
      * @return The SQL representation of the inequality operator.
      * @throws RuntimeException If the operator is used with null or array values.
      */
-    public String sql() {
+    public String toSql() {
         return left.toSql() + " != " + right.toSql();
     }
 }

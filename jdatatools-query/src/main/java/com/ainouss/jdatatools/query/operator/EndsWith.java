@@ -1,12 +1,12 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
  * Starts with operator
  */
-public class EndsWith extends AbstractExpression {
+public class EndsWith implements Expression {
 
     private final Selectable attribute;
     private final Selectable right;
@@ -16,7 +16,7 @@ public class EndsWith extends AbstractExpression {
         this.right = right;
     }
 
-    public String sql() {
+    public String toSql() {
         String escaped = right.toSql().replace("'", "");
         return attribute.toSql() + " like '%" + escaped + "'";
     }

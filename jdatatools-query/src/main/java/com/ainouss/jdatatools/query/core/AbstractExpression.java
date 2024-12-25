@@ -11,11 +11,11 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  * (and, or, not)
  * An expression can have an SQL string
  */
-public abstract class AbstractExpression implements Fragment {
+public abstract class AbstractExpression implements Fragment, Expression {
 
-    protected List<AbstractExpression> and = new ArrayList<>();
-    protected List<AbstractExpression> or = new ArrayList<>();
-    protected List<AbstractExpression> not = new ArrayList<>();
+    protected List<Expression> and = new ArrayList<>();
+    protected List<Expression> or = new ArrayList<>();
+    protected List<Expression> not = new ArrayList<>();
 
     /**
      * Adds to its ands
@@ -23,7 +23,7 @@ public abstract class AbstractExpression implements Fragment {
      * @param expressions other expressions
      * @return this
      */
-    public AbstractExpression and(AbstractExpression... expressions) {
+    public AbstractExpression and(Expression... expressions) {
         and.addAll(Arrays.asList(expressions));
         return this;
     }
@@ -35,7 +35,7 @@ public abstract class AbstractExpression implements Fragment {
      * @param expressions other expressions
      * @return this
      */
-    public AbstractExpression or(AbstractExpression... expressions) {
+    public AbstractExpression or(Expression... expressions) {
         or.addAll(Arrays.asList(expressions));
         return this;
     }
@@ -49,17 +49,17 @@ public abstract class AbstractExpression implements Fragment {
     public String toSql() {
 
         String ands = this.and.stream()
-                .map(AbstractExpression::toSql)
+                .map(Expression::toSql)
                 .reduce((a, b) -> a + " and " + b)
                 .orElse("");
 
         String ors = this.or.stream()
-                .map(AbstractExpression::toSql)
+                .map(Expression::toSql)
                 .reduce((a, b) -> a + " or " + b)
                 .orElse("");
 
         String nots = this.not.stream()
-                .map(AbstractExpression::toSql)
+                .map(Expression::toSql)
                 .reduce((a, b) -> a + " and " + b)
                 .orElse("");
 

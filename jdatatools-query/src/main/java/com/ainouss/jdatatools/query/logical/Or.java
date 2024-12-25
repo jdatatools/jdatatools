@@ -1,6 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 
 /**
  * Represents the logical OR operator in a query.
@@ -33,7 +34,7 @@ public class Or extends AbstractExpression {
      *
      * @param expression The expression to add to the OR condition.
      */
-    public Or(AbstractExpression expression) {
+    public Or(Expression expression) {
         this.or.add(expression);
     }
 

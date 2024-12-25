@@ -2,10 +2,9 @@ package com.ainouss.jdatatools.query.subquery;
 
 
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
-import com.ainouss.jdatatools.query.core.AbstractExpression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
-public class Exists extends AbstractExpression implements Selectable {
+public class Exists implements Selectable {
 
     private final CriteriaQuery<?> subquery; // Subquery is now a local variable
 
@@ -14,7 +13,7 @@ public class Exists extends AbstractExpression implements Selectable {
     }
 
     @Override
-    public String sql() {
+    public String toSql() {
         return " exists (" + subquery.buildSelectQuery() + ")";
     }
 

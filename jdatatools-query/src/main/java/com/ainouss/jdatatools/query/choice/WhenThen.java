@@ -1,16 +1,16 @@
 package com.ainouss.jdatatools.query.choice;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 import lombok.Data;
 
 @Data
 public class WhenThen {
 
-    private final AbstractExpression when;
+    private final Expression when;
     private Selectable then;
 
-    WhenThen(AbstractExpression when) {
+    WhenThen(Expression when) {
         this.when = when;
     }
 

@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -23,7 +23,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE salary > 30
  * </pre>
  */
-public class Gt extends AbstractExpression {
+public class Gt implements Expression {
 
     private final Selectable attribute;
     private final Selectable right;
@@ -31,8 +31,8 @@ public class Gt extends AbstractExpression {
     /**
      * Constructs a new {@code Gt} operator with the given path and value.
      *
-     * @param attribute  The attribute representing the attribute to compare.
-     * @param right The value to compare against.
+     * @param attribute The attribute representing the attribute to compare.
+     * @param right     The value to compare against.
      */
     public Gt(Selectable attribute, Selectable right) {
         this.attribute = attribute;
@@ -42,7 +42,7 @@ public class Gt extends AbstractExpression {
     /**
      * Generates the SQL representation of the greater than operator.
      */
-    public String sql() {
+    public String toSql() {
         return attribute.toSql() + " > " + right.toSql();
     }
 }

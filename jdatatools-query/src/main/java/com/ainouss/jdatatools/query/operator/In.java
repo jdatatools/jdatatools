@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ import java.util.stream.Collectors;
  * </pre>
  * This would generate an empty SQL WHERE clause.
  */
-public class In extends AbstractExpression {
+public class In implements Expression {
 
     private final Selectable attribute;
     private final List<Selectable> args = new ArrayList<>();
@@ -77,7 +77,7 @@ public class In extends AbstractExpression {
      *
      * @return The SQL representation of the 'IN' operator.
      */
-    public String sql() {
+    public String toSql() {
         String values = args.stream()
                 .map(Selectable::toSql)
                 .collect(Collectors.joining(","));

@@ -27,8 +27,9 @@ class CriteriaQueryTest {
 
         cr.select(rt.get("id"), rt.get("lastName"))
                 .from(rt)
-                .where(cb.gt(rt.get("id"), 0)
-                        .and(
+                .where(
+                        cb.and(
+                                cb.gt(rt.get("id"), 0),
                                 cb.lt(rt.get("id"), 30),
                                 cb.gt(rt.get("id"), 10),
                                 cb.lt(rt.get("id"), 20),
@@ -36,7 +37,7 @@ class CriteriaQueryTest {
                                 cb.lt(rt.get("id"), 19)
                         ));
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where (tbl.ID > 0 and (tbl.ID < 30 and tbl.ID > 10 and tbl.ID < 20 and tbl.ID > 17 and tbl.ID < 19))", select);
+        Assertions.assertEquals("select tbl.ID as id,tbl.LAST_NAME as lastName from EMPLOYEES tbl where ((tbl.ID > 0 and tbl.ID < 30 and tbl.ID > 10 and tbl.ID < 20 and tbl.ID > 17 and tbl.ID < 19))", select);
     }
 
     @Test
@@ -46,33 +47,34 @@ class CriteriaQueryTest {
         cr
                 .select(rt)
                 .where(
-                        cb.eq(
-                                        rt.get("firstName"), "XYZ"
+                        cb.and(
+                                        cb.eq(rt.get("firstName"), "XYZ"),
+                                        cb.like(rt.get("salary"), "TEST"),
+                                        cb.isNull(rt.get("lastName")),
+                                        cb.isNotNull(rt.get("enabled"))
                                 )
                                 .or(
-                                        cb.eq(
-                                                rt.get("firstName"), "ABCD"
-                                        ).and(
+                                        cb.and(
+                                                cb.eq(rt.get("firstName"), "ABCD"),
                                                 cb.eq(rt.get("id"), 1000)
                                         )
                                 )
                                 .or(
-                                        cb.eq(rt.get("firstName"), "ABBFSTO")
-                                                .and(
-                                                        cb.eq(rt.get("id"), 15)
-                                                                .or(
-                                                                        cb.between(rt.get("id"), 5, 1000)
-                                                                )
+                                        cb.and(
+                                                cb.eq(rt.get("firstName"), "ABBFSTO"),
+                                                cb.or(
+                                                        cb.eq(rt.get("id"), 15),
+                                                        cb.between(rt.get("id"), 5, 1000)
                                                 )
 
+                                        )
                                 )
-                                .and(cb.like(rt.get("salary"), "TEST"))
-                                .and(cb.isNull(rt.get("lastName")))
-                                .and(cb.isNotNull(rt.get("enabled"))));
+                );
+
         String select = cr
                 .select(rt)
                 .buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where (tbl.FIRST_NAME = 'XYZ' and (tbl.SALARY like '%TEST%' and tbl.LAST_NAME is null and tbl.ENABLED is not null ) or (tbl.FIRST_NAME = 'ABCD' and (tbl.ID = 1000) or tbl.FIRST_NAME = 'ABBFSTO' and (tbl.ID = 15 or (tbl.ID between 5 and 1000))))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where ((tbl.FIRST_NAME = 'XYZ' and tbl.SALARY like '%TEST%' and tbl.LAST_NAME is null and tbl.ENABLED is not null ) or ((tbl.FIRST_NAME = 'ABCD' and tbl.ID = 1000) or (tbl.FIRST_NAME = 'ABBFSTO' and (tbl.ID = 15 or tbl.ID between 5 and 1000))))", select);
     }
 
     @Test
@@ -83,23 +85,20 @@ class CriteriaQueryTest {
                 .select(rt)
                 .where(
                         cb.and(
-                                cb.gt(rt.get("id"), 10)
-                                        .and(
-                                                cb.lt(rt.get("id"), 20)
-                                        ),
-                                cb.gt(rt.get("id"), 10)
-                                        .and(
-                                                cb.lt(rt.get("id"), 1000)
-                                        )
+                                cb.gt(rt.get("id"), 10),
+                                cb.lt(rt.get("id"), 20),
+                                cb.gt(rt.get("id"), 10),
+                                cb.lt(rt.get("id"), 1000)
                         ).or(
-                                cb.gt(rt.get("id"), 55)
-                                        .and(
-                                                cb.lt(rt.get("id"), 99)
-                                        )
+                                cb.and(
+                                        cb.gt(rt.get("id"), 55),
+                                        cb.lt(rt.get("id"), 99)
+
+                                )
                         )
                 );
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where ((tbl.ID > 10 and (tbl.ID < 20 and tbl.ID > 10 and (tbl.ID < 1000))) or (tbl.ID > 55 and (tbl.ID < 99)))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where ((tbl.ID > 10 and tbl.ID < 20 and tbl.ID > 10 and tbl.ID < 1000) or ((tbl.ID > 55 and tbl.ID < 99)))", select);
     }
 
 
@@ -190,7 +189,7 @@ class CriteriaQueryTest {
                         ))
                 .where(where);
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl left join EMPLOYEE_DETAILS det on tbl.ID = det.ID where ((det.ID = 0 and (tbl.ID > 1)))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl left join EMPLOYEE_DETAILS det on tbl.ID = det.ID where ((det.ID = 0 and tbl.ID > 1))", select);
     }
 
     @Test
@@ -214,7 +213,7 @@ class CriteriaQueryTest {
                                 cb.eq(rt.get("id"), det.get("id"))
                         )).where(and);
         String select = cr.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from DB.EMPLOYEES tbl left join DB2.EMPLOYEE_DETAILS det on tbl.ID = det.ID where ((det.ID = 0 and (tbl.ID > 1)))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from DB.EMPLOYEES tbl left join DB2.EMPLOYEE_DETAILS det on tbl.ID = det.ID where ((det.ID = 0 and tbl.ID > 1))", select);
     }
 
     @Test
@@ -344,21 +343,21 @@ class CriteriaQueryTest {
     public void should__not_operation() {
         CriteriaQuery<Employee> cr = cb.createQuery(Employee.class);
         Root<Employee> rt = cr.from(Employee.class).as("tbl");
-        AbstractExpression not = cb.not(
+        Expression not = cb.not(
                 cb.eq(
-                                rt.get("id"), 3
+                        rt.get("id"), 3
+                )
+                , (
+                        cb.not(
+                                cb.eq(rt.get("id"), 4)
                         )
-                        .and(
-                                cb.not(
-                                        cb.eq(rt.get("id"), 4)
-                                ))
-
+                )
         );
         CriteriaQuery<?> criteria = cr
                 .select(rt)
                 .where(not);
         String select = criteria.buildSelectQuery();
-        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where ( not (tbl.ID = 3 and ( not (tbl.ID = 4))))", select);
+        Assertions.assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl where ( not (tbl.ID = 3 and not (tbl.ID = 4)))", select);
     }
 
     @Test
@@ -409,7 +408,7 @@ class CriteriaQueryTest {
                 .select(rt)
                 .where(and);
         String select = cr.buildDeleteQuery();
-        Assertions.assertEquals("delete from EMPLOYEES tbl where ((tbl.ID > 0 and (tbl.ID < 30 and tbl.ID > 10 and tbl.ID < 20 and tbl.ID > 17 and tbl.ID < 19)))", select);
+        Assertions.assertEquals("delete from EMPLOYEES tbl where ((tbl.ID > 0 and tbl.ID < 30 and tbl.ID > 10 and tbl.ID < 20 and tbl.ID > 17 and tbl.ID < 19))", select);
     }
 
     @Test
@@ -502,7 +501,7 @@ class CriteriaQueryTest {
         String sql = query
                 .select(emp)
                 .having(cb.gt(cb.avg(emp.get("salary")), 30)).buildSelectQuery();
-        assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl having (avg(tbl.SALARY) > 30)", sql);
+        assertEquals("select tbl.ENABLED as enabled,tbl.FIRST_NAME as firstName,tbl.ID as id,tbl.LAST_NAME as lastName,tbl.SALARY as salary from EMPLOYEES tbl having avg(tbl.SALARY) > 30", sql);
     }
 
     @Test
@@ -517,7 +516,7 @@ class CriteriaQueryTest {
                 .having(cb.gt(cb.avg(root.get("salary")), 30))
                 .buildSelectQuery();
 
-        assertEquals("select tbl.ID as id from EMPLOYEES tbl group by tbl.SALARY having (avg(tbl.SALARY) > 30)", sql);
+        assertEquals("select tbl.ID as id from EMPLOYEES tbl group by tbl.SALARY having avg(tbl.SALARY) > 30", sql);
     }
 
     @Test
@@ -1076,7 +1075,7 @@ class CriteriaQueryTest {
                         ));
 
 
-        String expectedSql = "select e.ENABLED as enabled,e.FIRST_NAME as firstName,e.ID as id,e.LAST_NAME as lastName,e.SALARY as salary from EMPLOYEES e inner join DEPARTMENTS d on (d.ID in ( (select sqe1.departmentId as departmentId from EMPLOYEES sqe1 where (sqe1.SALARY > 50000)) ) and ( not (d.ID in ( (select sqd.ID as id from DEPARTMENTS sqd where (sqd.NAME like '%%Engineering%%')) ))))";
+        String expectedSql = "select e.ENABLED as enabled,e.FIRST_NAME as firstName,e.ID as id,e.LAST_NAME as lastName,e.SALARY as salary from EMPLOYEES e inner join DEPARTMENTS d on (d.ID in ( (select sqe1.departmentId as departmentId from EMPLOYEES sqe1 where (sqe1.SALARY > 50000)) ) and not (d.ID in ( (select sqd.ID as id from DEPARTMENTS sqd where (sqd.NAME like '%%Engineering%%')) )))";
         assertEquals(expectedSql, query.buildSelectQuery());
 
     }

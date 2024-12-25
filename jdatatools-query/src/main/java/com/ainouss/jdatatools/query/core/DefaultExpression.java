@@ -3,18 +3,18 @@ package com.ainouss.jdatatools.query.core;
 /**
  * Where expression, entry point to where conditions
  */
-public class Where extends AbstractExpression {
+public class DefaultExpression implements Expression {
 
-    private AbstractExpression expression;
+    private Expression expression;
 
-    public Where() {
+    public DefaultExpression() {
     }
 
-    public void with(AbstractExpression expression) {
+    public void with(Expression expression) {
         this.expression = expression;
     }
 
-    public String sql() {
+    public String toSql() {
         if (expression == null) {
             return "";
         }

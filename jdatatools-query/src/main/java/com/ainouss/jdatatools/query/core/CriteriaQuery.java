@@ -27,8 +27,8 @@ public class CriteriaQuery<T> {
     protected Class<T> resultType;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
-    private final Where where = new Where();
-    protected final IdentityExpression having = new IdentityExpression();
+    private final DefaultExpression where = new DefaultExpression();
+    protected final DefaultExpression having = new DefaultExpression();
     protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
     protected final LinkedHashSet<Path<?>> groupBy = new LinkedHashSet<>();
@@ -144,7 +144,7 @@ public class CriteriaQuery<T> {
      * @param expression The expression for the where clause.
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public CriteriaQuery<T> where(AbstractExpression expression) {
+    public CriteriaQuery<T> where(Expression expression) {
         this.where.with(expression);
         return this;
     }
@@ -166,8 +166,8 @@ public class CriteriaQuery<T> {
      *
      * @return This {@code CriteriaQuery} instance for method chaining.
      */
-    public CriteriaQuery<T> having(AbstractExpression expression) {
-        this.having.and(expression);
+    public CriteriaQuery<T> having(Expression expression) {
+        this.having.with(expression);
         return this;
     }
 
@@ -279,7 +279,7 @@ public class CriteriaQuery<T> {
      * @return The where clause of the SQL query.
      */
     private String where() {
-        String sql = where.sql();
+        String sql = where.toSql();
         if (sql.isEmpty()) {
             return "";
         }

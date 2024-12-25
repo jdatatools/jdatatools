@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.operator;
 
-import com.ainouss.jdatatools.query.core.AbstractExpression;
+import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
 
 /**
@@ -24,7 +24,7 @@ import com.ainouss.jdatatools.query.core.Selectable;
  *  WHERE name LIKE '%John%'
  * </pre>
  */
-public class Like extends AbstractExpression {
+public class Like implements Expression {
 
     private final Selectable attribute;
     private final Selectable right;
@@ -46,7 +46,7 @@ public class Like extends AbstractExpression {
      *
      * @return The SQL representation of the LIKE operator.
      */
-    public String sql() {
+    public String toSql() {
         String escaped = right.toSql().replace("'", "");
         return attribute.toSql() + " like '%" + escaped + "%'";
     }
