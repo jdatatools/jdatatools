@@ -27,15 +27,13 @@ public class CriteriaQuery<T> {
     protected Class<T> resultType;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
-    private final SimpleExpression where = new SimpleExpression();
+    protected final SimpleExpression where = new SimpleExpression();
     protected final SimpleExpression having = new SimpleExpression();
     protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
     protected final LinkedHashSet<Expression> groupBy = new LinkedHashSet<>();
     protected final List<SetOperation> unions = new ArrayList<>();
     protected final Pagination pagination = new Pagination();
-    private boolean alias = true;
-
 
     /**
      * Constructs a new {@code CriteriaQuery} instance.
@@ -264,9 +262,6 @@ public class CriteriaQuery<T> {
 
     private String toSql(Selectable attr) {
         String str = attr.toSql();
-        if (!alias) {
-            return str;
-        }
         if (isNotBlank(attr.getAlias())) {
             return str + " as " + attr.getAlias();
         }
