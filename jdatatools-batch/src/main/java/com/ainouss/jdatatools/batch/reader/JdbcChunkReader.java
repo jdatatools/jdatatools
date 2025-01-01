@@ -4,13 +4,13 @@ import com.ainouss.jdatatools.batch.data.Chunk;
 import com.ainouss.jdatatools.batch.util.QueryBuilder;
 import com.ainouss.jdatatools.query.core.CriteriaBuilder;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
+import com.ainouss.jdatatools.query.core.FieldMetaData;
 import com.ainouss.jdatatools.query.registery.EntityRegistry;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -87,7 +87,7 @@ public class JdbcChunkReader {
         }
         int start = 0;
         List<CompletableFuture<Void>> futures = new ArrayList<>();
-        final List<Field> fields = template.getCriteria().getFields();
+        final List<FieldMetaData> fields = template.getCriteria().getFields();
         while (start < template.getCount()) {
             final int row = start;
             CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> getChunk(template, row, fields)).thenAccept(template.getConsumer());
@@ -145,7 +145,7 @@ public class JdbcChunkReader {
      * @param start  start row
      * @return the list of data
      */
-    private <T, R> Chunk<R> getChunk(JdbcReadTemplate<T, R> template, final int start, List<Field> fields) {
+    private <T, R> Chunk<R> getChunk(JdbcReadTemplate<T, R> template, final int start, List<FieldMetaData> fields) {
         var jdbc = template.getJdbcTemplate();
         var clazz = template.getClazz();
         var mapper = template.getMapper();
@@ -168,7 +168,7 @@ public class JdbcChunkReader {
         if (fields == null) {
             fields = template.getCriteria().getFields();
         }
-        List<Field> finalFields = fields;
+        List<FieldMetaData> finalFields = fields;
         jdbc.query(sql, resultSet -> {
             do {
                 chunk.getData().add(extract(resultSet, clazz, finalFields, mapper, template.getCorrelationId()));

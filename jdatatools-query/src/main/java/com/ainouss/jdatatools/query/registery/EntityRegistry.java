@@ -8,7 +8,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,7 +67,7 @@ public class EntityRegistry {
         Root<?> root = new Root<>(clazz);
         roots.put(root, getTableName(clazz));
         getSelectableFields(clazz)
-                .forEach(field -> paths.put(new Path<>(root, field.getName()), field.getAnnotation(Column.class).name()));
+                .forEach(field -> paths.put(new Path<>(root, field.getLabel()), field.getColumn()));
         registered.add(clazz);
     }
 
@@ -140,11 +139,18 @@ public class EntityRegistry {
      * @param clazz class
      * @return fields
      */
-    public static List<Field> getSelectableFields(Class<?> clazz) {
+    public static List<FieldMetaData> getSelectableFields(Class<?> clazz) {
         return Arrays.stream(
                         FieldUtils.getFieldsWithAnnotation(clazz, Column.class)
                 )
-                .sorted(Comparator.comparing(Field::getName))
+                .map(field -> {
+                    FieldMetaData fieldMetaData = new FieldMetaData();
+                    fieldMetaData.setLabel(field.getName());
+                    fieldMetaData.setColumn(field.getAnnotation(Column.class).name());
+                    fieldMetaData.setJavaType(field.getType());
+                    return fieldMetaData;
+                })
+                .sorted(Comparator.comparing(FieldMetaData::getLabel))
                 .collect(Collectors.toList());
     }
 

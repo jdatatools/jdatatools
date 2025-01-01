@@ -10,6 +10,7 @@
     <modules>
         <module>jdatatools-query</module>
         <module>jdatatools-batch</module>
+        <module>jdatatools-transfer</module>
     </modules>
     <properties>
         <java.version>17</java.version>
@@ -30,6 +31,11 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>jdatatools-query</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>jdatatools-batch</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

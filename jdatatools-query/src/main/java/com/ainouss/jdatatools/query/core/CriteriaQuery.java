@@ -5,6 +5,7 @@ import com.ainouss.jdatatools.query.order.Order;
 import com.ainouss.jdatatools.query.order.OrderDirection;
 import com.ainouss.jdatatools.query.registery.EntityRegistry;
 import com.ainouss.jdatatools.query.setoperation.*;
+import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -24,6 +25,7 @@ import static com.ainouss.jdatatools.query.util.DataUtils.isNotBlank;
  */
 public class CriteriaQuery<T> {
 
+    @Getter
     protected Class<T> resultType;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
@@ -543,25 +545,26 @@ public class CriteriaQuery<T> {
      *
      * @return The list of selected fields.
      */
-    public List<Field> getFields() {
+    public List<FieldMetaData> getFields() {
         return this.selections
                 .stream()
                 .map(select -> {
+                    FieldMetaData field = new FieldMetaData();
+                    field.setLabel(select.getAlias());
+                    field.setColumn(select.getColumn());
                     try {
-                        return this.getResultType().getDeclaredField(select.getAlias());
+                        Field declaredField = this.getResultType().getDeclaredField(select.getAlias());
+                        field.setJavaType(declaredField.getType());
                     } catch (NoSuchFieldException e) {
                         throw new RuntimeException(e);
                     }
+                    return field;
                 })
-                .sorted(Comparator.comparing(Field::getName))
+                .sorted(Comparator.comparing(FieldMetaData::getLabel))
                 .collect(Collectors.toList());
     }
 
     public LinkedHashSet<Selectable> getSelect() {
         return selections;
-    }
-
-    public Class<T> getResultType() {
-        return resultType;
     }
 }

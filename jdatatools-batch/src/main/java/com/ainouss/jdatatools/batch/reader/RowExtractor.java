@@ -1,10 +1,11 @@
 package com.ainouss.jdatatools.batch.reader;
 
+import com.ainouss.jdatatools.batch.mapping.JdbcToJavaTypeMapping;
+import com.ainouss.jdatatools.query.core.FieldMetaData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -14,7 +15,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static com.ainouss.jdatatools.query.util.DataUtils.isBlank;
@@ -23,10 +27,31 @@ import static com.ainouss.jdatatools.query.util.DataUtils.trimToNull;
 @Slf4j
 @Component
 public class RowExtractor {
+
     final static DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     final static DateTimeFormatter dtmf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private RowExtractor() {
+    public RowExtractor() {
+    }
+
+    public static <R> List<R> asList(ResultSet resultSet, Class<R> clazz) throws SQLException {
+        List<R> data = new ArrayList<>();
+        String uuid = UUID.randomUUID().toString();
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        List<FieldMetaData> fields = new ArrayList<>();
+        for (int i = 1; i <= columnCount; i++) {
+            FieldMetaData fieldMetaData = new FieldMetaData();
+            fieldMetaData.setLabel(metaData.getColumnLabel(i));
+            fieldMetaData.setColumn(metaData.getColumnName(i));
+            fieldMetaData.setJavaType(JdbcToJavaTypeMapping.getJavaType(metaData.getColumnType(i)));
+            fields.add(fieldMetaData);
+        }
+        while (resultSet.next()) {
+            data.add(extract(resultSet, clazz, fields, null, uuid));
+        }
+        resultSet.close();
+        return data;
     }
 
     /**
@@ -39,18 +64,20 @@ public class RowExtractor {
      * @param correlationId correlation id
      * @return record
      */
-    public static <T, R> R extract(ResultSet resultSet, Class<T> clazz, List<Field> fields, Function<T, R> mapper, String correlationId) {
+    public static <T, R> R extract(ResultSet resultSet, Class<T> clazz, List<FieldMetaData> fields, Function<T, R> mapper, String correlationId) {
         T instance = instantiate(clazz);
-        for (Field field : fields) {
+        for (FieldMetaData field : fields) {
             try {
-                Object value = extractField(resultSet, field, correlationId);
+                Object value = extractField(resultSet, field.getColumn(), field.getJavaType(), correlationId);
                 if (value != null) {
-                    FieldUtils.writeField(field, instance, value, true);
+                    FieldUtils.writeField(instance.getClass().getDeclaredField(field.getLabel()), instance, value, true);
                 }
             } catch (SQLException e) {
-                log.warn("ID-{} received an invalid value for {}, exception {}", correlationId, field.getName(), e.getMessage());
+                log.warn("ID-{} received an invalid value for {}, exception {}", correlationId, field.getLabel(), e.getMessage());
             } catch (IllegalAccessException | IllegalArgumentException e) {
-                log.warn("ID-{} could not write value for {}, exception {}", correlationId, field.getName(), e.getMessage());
+                log.warn("ID-{} could not write value for {}, exception {}", correlationId, field.getLabel(), e.getMessage());
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
             }
         }
         if (mapper == null) {
@@ -79,13 +106,10 @@ public class RowExtractor {
      * Extract a field value
      *
      * @param resultSet     current resultset
-     * @param field         field
      * @param correlationId correlation id
      * @return Value of the field as object
      */
-    public static Object extractField(ResultSet resultSet, Field field, String correlationId) throws SQLException {
-        Class<?> fieldType = field.getType();
-        String name = field.getName();
+    public static Object extractField(ResultSet resultSet, String name, Class<?> fieldType, String correlationId) throws SQLException {
         if (fieldType.equals(String.class)) {
             return trimToNull(resultSet.getString(name));
         } else if (fieldType.equals(Double.class)) {
@@ -248,7 +272,7 @@ public class RowExtractor {
         } catch (SQLException e) {
             String strDate = resultSet.getString(name);
             log.error("ID-{} could not extract value for field {} of type LocalDateTime with value : {}, error :{} ", correlationId, name, strDate, e.getMessage());
-            return parseLocalDateTime(strDate, name, correlationId);
+            return parseLocalDateTime(strDate);
         }
     }
 
@@ -262,10 +286,8 @@ public class RowExtractor {
      * @throws SQLException on fail
      */
     private static Date getSqlDate(ResultSet resultSet, String name, String correlationId) throws SQLException {
-        Date date;
         try {
-            date = resultSet.getDate(name);
-            return date;
+            return resultSet.getDate(name);
         } catch (SQLException e) {
             String strDate = resultSet.getString(name);
             log.error("ID-{} could not extract value for field {} of type Date with value : {}, error :{} ", correlationId, name, strDate, e.getMessage());
@@ -332,7 +354,7 @@ public class RowExtractor {
         } catch (SQLException e) {
             String strDate = resultSet.getString(name);
             log.error("ID-{} could not extract value for field {} of type LocalDate with value : {}, error :{} ", correlationId, name, strDate, e.getMessage());
-            return parseLocalDate(strDate, name, correlationId);
+            return parseLocalDate(strDate);
         }
     }
 
@@ -340,23 +362,13 @@ public class RowExtractor {
      * Read date time
      *
      * @param strDate       date string
-     * @param name          field name
-     * @param correlationId correlation ID
      * @return date time, nullable
      */
-    public static LocalDateTime parseLocalDateTime(String strDate, String name, String correlationId) {
+    public static LocalDateTime parseLocalDateTime(String strDate) {
         try {
             return LocalDateTime.parse(strDate, dtmf);
         } catch (DateTimeParseException e) {
-            String datePattern = getDatePattern(strDate);
-            String date = normalizeDateString(strDate);
-            if (datePattern == null || date == null) {
-                log.error("ID-{} could auto detect date format for field {} of type LocalDateTime with value : {}, error :{} ", correlationId, name, strDate, e.getMessage());
-                return null;
-            } else {
-                log.info("ID-{} auto detected date format {} for field {} of type LocalDateTime with value : {} ({}), error :{} ", correlationId, datePattern, name, strDate, date, e.getMessage());
-            }
-            return LocalDateTime.parse(date, DateTimeFormatter.ofPattern(datePattern));
+           throw new RuntimeException(e);
         }
     }
 
@@ -364,46 +376,18 @@ public class RowExtractor {
      * Read date
      *
      * @param strDate       date string
-     * @param name          field name
-     * @param correlationId correlation id
      * @return LocalDate, nullable
      */
 
-    public static LocalDate parseLocalDate(String strDate, String name, String correlationId) {
+    public static LocalDate parseLocalDate(String strDate) {
         if (isBlank(strDate)) {
             return null;
         }
         try {
             return LocalDate.parse(strDate, dtf);
         } catch (DateTimeParseException e) {
-            String datePattern = getDatePattern(strDate);
-            String date = normalizeDateString(strDate);
-            if (datePattern == null || date == null) {
-                log.error("ID-{} invalid format for field {} of type LocalDate with value : {}, error :{} ", correlationId, name, strDate, e.getMessage());
-                return null;
-            }
-            return LocalDate.parse(date, DateTimeFormatter.ofPattern(datePattern));
+            throw new RuntimeException(e);
         }
     }
 
-
-    /**
-     * Date format from String
-     *
-     * @param str string
-     * @return simple date  format
-     */
-    public static String getDatePattern(String str) {
-        throw new RuntimeException("not implemented yet");
-    }
-
-    /**
-     * Normalize date string input
-     *
-     * @param str date string
-     * @return string
-     */
-    private static String normalizeDateString(String str) {
-        throw new RuntimeException("not implemented yet");
-    }
 }

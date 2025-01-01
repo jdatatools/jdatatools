@@ -50,7 +50,6 @@ public abstract class AggregateFunction extends Alias implements Aggregable {
                 .append(orders())
                 .append(")")
                 .toString();
-        // return "OVER ( [PARTITION BY column1, column2, ...] [ORDER BY columnA [ASC|DESC], columnB [ASC|DESC], ...] [frame_clause] )";
     }
 
     private String orders() {
