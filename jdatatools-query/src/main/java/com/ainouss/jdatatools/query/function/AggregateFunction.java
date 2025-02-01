@@ -2,6 +2,7 @@ package com.ainouss.jdatatools.query.function;
 
 import com.ainouss.jdatatools.query.core.Alias;
 import com.ainouss.jdatatools.query.core.Selectable;
+import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 import com.ainouss.jdatatools.query.order.Order;
 
 import java.util.Arrays;
@@ -13,13 +14,16 @@ public abstract class AggregateFunction extends Alias implements Aggregable {
     protected final Selectable selectable;
     private final LinkedHashSet<Selectable> partitionBy = new LinkedHashSet<>();
     protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
+    private final SqlDialect sqlDialect; // Dialect Integration
 
-    protected AggregateFunction() {
+    protected AggregateFunction(SqlDialect sqlDialect) { // Dialect Integration
         this.selectable = null;
+        this.sqlDialect = sqlDialect;
     }
 
-    public AggregateFunction(Selectable selectable) {
+    public AggregateFunction(Selectable selectable, SqlDialect sqlDialect) { // Dialect Integration
         this.selectable = selectable;
+        this.sqlDialect = sqlDialect;
     }
 
     public abstract String sql();

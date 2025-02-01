@@ -4,12 +4,25 @@ package com.ainouss.jdatatools.query.choice;
 import com.ainouss.jdatatools.query.core.LiteralValue;
 import com.ainouss.jdatatools.query.core.Selectable;
 import com.ainouss.jdatatools.query.core.SelectableExpression;
+import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 
 public class SimpleCase extends Case {
 
-    public SimpleCase(Selectable attribute) {
+    private final SqlDialect sqlDialect; // Dialect Integration
+
+    public SimpleCase(Selectable attribute, SqlDialect sqlDialect) { // Dialect Integration
+        super(sqlDialect); // Dialect Integration
         this.attribute = attribute;
+        this.sqlDialect = sqlDialect;
     }
+
+    public SimpleCase() { // For CTE - default constructor // Dialect Integration
+        this(null, null);
+    }
+    public SimpleCase(SqlDialect sqlDialect) { // For CriteriaBuilder default constructor // Dialect Integration
+        this(null, sqlDialect);
+    }
+
 
     public SimpleWhen when(Object val) {
         SelectableExpression when = new SelectableExpression(new LiteralValue(val));

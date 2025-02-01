@@ -1,5 +1,6 @@
 package com.ainouss.jdatatools.query.core;
 
+import com.ainouss.jdatatools.query.dialect.StandardDialect;
 import com.ainouss.jdatatools.query.logical.AbstractExpression;
 import com.ainouss.jdatatools.query.model.Department;
 import com.ainouss.jdatatools.query.model.Employee;
@@ -739,7 +740,7 @@ class CriteriaQueryTest {
         query1.select(emp)
                 .where(cb.gt(emp.get("salary"), 1000));
 
-        Subquery subquery = new Subquery(query1);
+        Subquery subquery = new Subquery(query1, new StandardDialect());
         subquery.setAlias("e");//alias overload
         query.select(depRoot.get("name"), emp.get("firstName"))
                 .from(depRoot.rightJoin(subquery).on(cb.eq(depRoot.get("id"), emp.get("id"))));
@@ -943,7 +944,7 @@ class CriteriaQueryTest {
         subquery
                 .select(emp.get("salary")).where(cb.eq(emp.get("departmentId"), dep.get("id"))); // Correlating condition
 
-        query.select(dep).where(cb.gt(dep.get("budget"), new Subquery(subquery))); // Using the correlated subquery
+        query.select(dep).where(cb.gt(dep.get("budget"), new Subquery(subquery, new StandardDialect()))); // Using the correlated subquery
 
         String expectedSql = "select DEPARTMENTS.ID as id,DEPARTMENTS.LOCATION as location,DEPARTMENTS.NAME as name from DEPARTMENTS DEPARTMENTS where (DEPARTMENTS.budget > (select EMPLOYEES.SALARY as salary from EMPLOYEES EMPLOYEES where (EMPLOYEES.departmentId = DEPARTMENTS.ID)) )";  // Verify correct correlation
         assertEquals(expectedSql, query.buildSelectQuery());
@@ -1070,8 +1071,8 @@ class CriteriaQueryTest {
                 .from(emp.innerJoin(dept)
                         .on(
                                 cb.and(
-                                        cb.in(dept.get("id"), new Subquery(subquery1)),  // Subquery in IN clause
-                                        cb.not(cb.in(dept.get("id"), new Subquery(subquery2))) // Subquery in NOT IN clause, combined with NOT
+                                        cb.in(dept.get("id"), new Subquery(subquery1, cb.getSqlDialect())),  // Subquery in IN clause
+                                        cb.not(cb.in(dept.get("id"), new Subquery(subquery2, cb.getSqlDialect()))) // Subquery in NOT IN clause, combined with NOT
                                 )
                         ));
 

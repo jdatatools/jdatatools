@@ -2,6 +2,7 @@ package com.ainouss.jdatatools.query.operator;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
+import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 
 /**
  * Represents the inequality operator (!=) in a query.
@@ -27,10 +28,12 @@ public class Ne implements Expression {
 
     private final Selectable left;
     private final Selectable right;
+    private final SqlDialect sqlDialect; // Dialect Integration
 
-    public Ne(Selectable left, Selectable right) {
+    public Ne(Selectable left, Selectable right, SqlDialect sqlDialect) { // Dialect Integration
         this.left = left;
         this.right = right;
+        this.sqlDialect = sqlDialect;
     }
 
     /**
@@ -40,6 +43,6 @@ public class Ne implements Expression {
      * @throws RuntimeException If the operator is used with null or array values.
      */
     public String toSql() {
-        return left.toSql() + " != " + right.toSql();
+        return sqlDialect.escapeIdentifier(left.toSql()) + " != " + right.toSql(); // Dialect Integration
     }
 }

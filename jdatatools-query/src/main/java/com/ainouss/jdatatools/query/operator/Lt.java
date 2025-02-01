@@ -2,6 +2,7 @@ package com.ainouss.jdatatools.query.operator;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
+import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 
 /**
  * Represents the less than operator (<) in a query.
@@ -27,16 +28,19 @@ public class Lt implements Expression {
 
     private final Selectable attribute;
     private final Selectable right;
+    private final SqlDialect sqlDialect; // Dialect Integration
 
     /**
      * Constructs a new {@code Lt} operator with the given path and value.
      *
      * @param attribute The path representing the attribute to compare.
      * @param right     The value to compare against.
+     * @param sqlDialect The SQL dialect to use for rendering. // Dialect Integration
      */
-    public Lt(Selectable attribute, Selectable right) {
+    public Lt(Selectable attribute, Selectable right, SqlDialect sqlDialect) { // Dialect Integration
         this.attribute = attribute;
         this.right = right;
+        this.sqlDialect = sqlDialect;
     }
 
     /**
@@ -46,6 +50,6 @@ public class Lt implements Expression {
      * @throws RuntimeException If the operator is used with null values.
      */
     public String toSql() {
-        return attribute.toSql() + " < " + right.toSql();
+        return sqlDialect.escapeIdentifier(attribute.toSql()) + " < " + right.toSql(); // Dialect Integration
     }
 }

@@ -1,5 +1,6 @@
 package com.ainouss.jdatatools.query.core;
 
+import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 import com.ainouss.jdatatools.query.join.Join;
 import com.ainouss.jdatatools.query.order.Order;
 import com.ainouss.jdatatools.query.order.OrderDirection;
@@ -29,13 +30,14 @@ public class CriteriaQuery<T> {
     protected Class<T> resultType;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
-    protected final SimpleExpression where = new SimpleExpression();
-    protected final SimpleExpression having = new SimpleExpression();
+    protected final SimpleExpression where; // Dialect Integration
+    protected final SimpleExpression having; // Dialect Integration
     protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
     protected final LinkedHashSet<Expression> groupBy = new LinkedHashSet<>();
     protected final List<SetOperation> unions = new ArrayList<>();
-    protected final Pagination pagination = new Pagination();
+    protected final Pagination pagination; // Dialect Integration
+    private final CriteriaBuilder criteriaBuilder;
 
     /**
      * Constructs a new {@code CriteriaQuery} instance.
@@ -45,13 +47,23 @@ public class CriteriaQuery<T> {
      *
      * @param javaType The Java class of the entity being queried.
      */
-    CriteriaQuery(Class<T> javaType) {
+    CriteriaQuery(Class<T> javaType, CriteriaBuilder criteriaBuilder) {
         EntityRegistry.registerClass(javaType);
         this.resultType = javaType;
+        this.criteriaBuilder = criteriaBuilder;
+        this.where = new SimpleExpression(criteriaBuilder.getSqlDialect()); // Dialect Integration
+        this.having = new SimpleExpression(criteriaBuilder.getSqlDialect());// Dialect Integration
+        this.pagination = new Pagination(criteriaBuilder.getSqlDialect()); // Dialect Integration
     }
 
     protected CriteriaQuery() {
+        // For CTEs - no dialect initially, dialect will be inherited from root query
+        this.criteriaBuilder = null; // CTEs don't have a CriteriaBuilder initially
+        this.where = new SimpleExpression();
+        this.having = new SimpleExpression();
+        this.pagination = new Pagination();
     }
+
 
     public CriteriaQuery<T> from(Source source, Source... sources) {
         if (source == null && sources == null) {
@@ -401,9 +413,9 @@ public class CriteriaQuery<T> {
 
     private String buildNestedSelectQuery() {
         Pagination pagination1 = Pagination.from(this.pagination);
-        Subquery subquery = new Subquery(this);
+        Subquery subquery = new Subquery(this, criteriaBuilder.getSqlDialect()); // Dialect Integration
         subquery.setAlias("nested_query");
-        var nq = new CriteriaQuery<>(this.resultType);
+        var nq = new CriteriaQuery<>(this.resultType, criteriaBuilder); // Dialect Integration
         nq.from(subquery);
         this.orderBy.forEach((order) -> {
             Selectable p = new Path<>("nested_query", order.getColumn().getAlias());

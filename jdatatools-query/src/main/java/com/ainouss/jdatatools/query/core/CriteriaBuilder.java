@@ -2,6 +2,8 @@ package com.ainouss.jdatatools.query.core;
 
 import com.ainouss.jdatatools.query.choice.SearchedCase;
 import com.ainouss.jdatatools.query.choice.SimpleCase;
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
+import com.ainouss.jdatatools.query.dialect.StandardDialect;
 import com.ainouss.jdatatools.query.function.*;
 import com.ainouss.jdatatools.query.logical.AbstractExpression;
 import com.ainouss.jdatatools.query.logical.And;
@@ -19,7 +21,18 @@ import java.util.List;
  * Used to construct criteria queries, selections, expressions, predicates, orderings.
  */
 public class CriteriaBuilder {
+    private final SqlDialect sqlDialect; // Dialect Integration
+
+    public CriteriaBuilder(SqlDialect sqlDialect) { // Dialect Integration
+        this.sqlDialect = sqlDialect;
+    }
+
     public CriteriaBuilder() {
+        this(new StandardDialect()); // Default to standard SQL if no dialect is specified // Dialect Integration
+    }
+
+    public SqlDialect getSqlDialect() {
+        return sqlDialect;
     }
 
     /**
@@ -28,7 +41,7 @@ public class CriteriaBuilder {
      * @return new CriteriaQuery
      */
     public <T> CriteriaQuery<T> createQuery(Class<T> clazz) {
-        return new CriteriaQuery<>(clazz);
+        return new CriteriaQuery<>(clazz, this); // Dialect Integration
     }
 
     public <T> ScalarQuery<T> scalar(CriteriaQuery<T> cr) {
@@ -38,67 +51,67 @@ public class CriteriaBuilder {
 
     public Expression like(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
-            return new Like(attribute, selectable);
+            return new Like(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new Like(attribute, new LiteralValue(value));
+        return new Like(attribute, new LiteralValue(value), sqlDialect); // Dialect Integration
     }
 
     public Expression endsWith(Selectable attribute, Object exp) {
         if (exp instanceof Selectable selectable) {
-            return new EndsWith(attribute, selectable);
+            return new EndsWith(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new EndsWith(attribute, new LiteralValue(exp));
+        return new EndsWith(attribute, new LiteralValue(exp), sqlDialect); // Dialect Integration
     }
 
     public Expression startsWith(Selectable attribute, Object exp) {
         if (exp instanceof Selectable selectable) {
-            return new StartsWith(attribute, selectable);
+            return new StartsWith(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new StartsWith(attribute, new LiteralValue(exp));
+        return new StartsWith(attribute, new LiteralValue(exp), sqlDialect); // Dialect Integration
     }
 
     public Expression eq(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
-            return new Eq(attribute, selectable);
+            return new Eq(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new Eq(attribute, new LiteralValue(value));
+        return new Eq(attribute, new LiteralValue(value), sqlDialect); // Dialect Integration
     }
 
 
     public Expression ne(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
-            return new Ne(attribute, selectable);
+            return new Ne(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new Ne(attribute, new LiteralValue(value));
+        return new Ne(attribute, new LiteralValue(value), sqlDialect); // Dialect Integration
     }
 
     public Expression gt(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
-            return new Gt(attribute, selectable);
+            return new Gt(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new Gt(attribute, new LiteralValue(value));
+        return new Gt(attribute, new LiteralValue(value), sqlDialect); // Dialect Integration
     }
 
 
     public Expression lt(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
-            return new Lt(attribute, selectable);
+            return new Lt(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new Lt(attribute, new LiteralValue(value));
+        return new Lt(attribute, new LiteralValue(value), sqlDialect); // Dialect Integration
     }
 
     public Expression le(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
-            return new Le(attribute, selectable);
+            return new Le(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new Le(attribute, new LiteralValue(value));
+        return new Le(attribute, new LiteralValue(value), sqlDialect); // Dialect Integration
     }
 
     public Expression ge(Selectable attribute, Object value) {
         if (value instanceof Selectable selectable) {
-            return new Ge(attribute, selectable);
+            return new Ge(attribute, selectable, sqlDialect); // Dialect Integration
         }
-        return new Ge(attribute, new LiteralValue(value));
+        return new Ge(attribute, new LiteralValue(value), sqlDialect); // Dialect Integration
     }
 
     public Expression in(Selectable attribute, Object... values) {
@@ -108,7 +121,7 @@ public class CriteriaBuilder {
         List<Selectable> list = Arrays.stream(values)
                 .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))
                 .toList();
-        return new In(attribute, list);
+        return new In(attribute, list, sqlDialect); // Dialect Integration
     }
 
     public Expression inL(Selectable attribute, List<?> values) {
@@ -118,7 +131,7 @@ public class CriteriaBuilder {
         List<Selectable> list = values.stream()
                 .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))
                 .toList();
-        return new In(attribute, list);
+        return new In(attribute, list, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -135,11 +148,11 @@ public class CriteriaBuilder {
         List<Selectable> list = values.stream()
                 .map(o -> o instanceof Selectable ? (Selectable) o : new LiteralValue(o))
                 .toList();
-        return new In(attribute, list);
+        return new In(attribute, list, sqlDialect); // Dialect Integration
     }
 
     public Expression between(Selectable attribute, Object exp1, Object exp2) {
-        return new Bt(attribute, new LiteralValue(exp1), new LiteralValue(exp2));
+        return new Bt(attribute, new LiteralValue(exp1), new LiteralValue(exp2), sqlDialect); // Dialect Integration
     }
 
     /**
@@ -149,7 +162,7 @@ public class CriteriaBuilder {
      * @return is not null
      */
     public Expression isNotNull(Path<?> path) {
-        return new IsNotNull(path);
+        return new IsNotNull(path, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -160,7 +173,7 @@ public class CriteriaBuilder {
      */
 
     public Expression isNull(Path<?> path) {
-        return new IsNull(path);
+        return new IsNull(path, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -171,7 +184,7 @@ public class CriteriaBuilder {
      * @return combined expressions with AND operator
      */
     public AbstractExpression and(Expression expression, Expression... expressions) {
-        And and = new And(expression);
+        And and = new And(expression, sqlDialect); // Dialect Integration
         and.and(expressions);
         return and;
     }
@@ -184,7 +197,7 @@ public class CriteriaBuilder {
      * @return combined expressions with OR operator
      */
     public AbstractExpression or(Expression expression, Expression... expressions) {
-        Or or = new Or(expression);
+        Or or = new Or(expression, sqlDialect); // Dialect Integration
         or.or(expressions);
         return or;
     }
@@ -196,8 +209,8 @@ public class CriteriaBuilder {
      * @return combined expressions with OR operator
      */
     public Expression not(Expression expression, Expression... expressions) {
-        Expression and = new And(expression).and(expressions);
-        return new Not(and);
+        Expression and = new And(expression, sqlDialect).and(expressions); // Dialect Integration
+        return new Not(and, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -206,7 +219,7 @@ public class CriteriaBuilder {
      * @return max(attribute)
      */
     public Selectable max(Selectable selectable) {
-        return new Max(selectable);
+        return new Max(selectable, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -215,7 +228,7 @@ public class CriteriaBuilder {
      * @return min(attribute)
      */
     public Aggregable min(Selectable selectable) {
-        return new Min(selectable);
+        return new Min(selectable, sqlDialect); // Dialect Integration
     }
 
 
@@ -226,15 +239,15 @@ public class CriteriaBuilder {
      * @return avg(attribute)
      */
     public Aggregable sum(Selectable selectable) {
-        return new Sum(selectable);
+        return new Sum(selectable, sqlDialect); // Dialect Integration
     }
 
     public Aggregable rank() {
-        return new Rank();
+        return new Rank(sqlDialect); // Dialect Integration
     }
 
     public Aggregable rowNumber() {
-        return new RowNumber();
+        return new RowNumber(sqlDialect); // Dialect Integration
     }
 
 
@@ -245,7 +258,7 @@ public class CriteriaBuilder {
      * @return avg(attribute)
      */
     public Aggregable avg(Selectable selectable) {
-        return new Avg(selectable);
+        return new Avg(selectable, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -254,7 +267,7 @@ public class CriteriaBuilder {
      * @return count(attribute)
      */
     public Aggregable count(Selectable selectable) {
-        return new Count(selectable);
+        return new Count(selectable, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -263,7 +276,7 @@ public class CriteriaBuilder {
      * @return distinct(attribute)
      */
     public Selectable distinct(Selectable selectable) {
-        return new Distinct(selectable);
+        return new Distinct(selectable, sqlDialect); // Dialect Integration
     }
 
 
@@ -274,7 +287,7 @@ public class CriteriaBuilder {
      * @return EXISTS expression
      */
     public Expression exists(CriteriaQuery<?> subquery) {
-        return new Exists(subquery);
+        return new Exists(subquery, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -284,7 +297,7 @@ public class CriteriaBuilder {
      * @return 'ANY' expression
      */
     public Expression any(CriteriaQuery<?> subquery) {
-        return new Any(subquery);
+        return new Any(subquery, sqlDialect); // Dialect Integration
     }
 
     /**
@@ -294,21 +307,19 @@ public class CriteriaBuilder {
      * @return 'ALL' expression
      */
     public Expression all(CriteriaQuery<?> subquery) {
-        return new All(subquery);
+        return new All(subquery, sqlDialect); // Dialect Integration
     }
 
 
     public SimpleCase choice(Selectable attribute) {
-        return new SimpleCase(attribute);
+        return new SimpleCase(attribute, sqlDialect); // Dialect Integration
     }
 
     public SearchedCase choice() {
-        return new SearchedCase();
+        return new SearchedCase(sqlDialect); // Dialect Integration
     }
 
     public <T> Cte<T> with(String name) {
-        return new Cte<>(name);
+        return new Cte<>(name, sqlDialect); // Dialect Integration
     }
-
-
 }

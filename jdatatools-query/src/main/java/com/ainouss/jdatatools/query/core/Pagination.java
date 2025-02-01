@@ -1,5 +1,6 @@
 package com.ainouss.jdatatools.query.core;
 
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 import lombok.Data;
 
 @Data
@@ -7,17 +8,25 @@ public class Pagination {
 
     private Integer limit;
     private Integer offset;
+    private final SqlDialect sqlDialect; // Dialect Integration
+
+    public Pagination(SqlDialect sqlDialect) { // Dialect Integration
+        this.sqlDialect = sqlDialect;
+    }
 
     public Pagination() {
+        this(null); // For CTE - default constructor // Dialect Integration
     }
 
-    public Pagination(Integer limit, Integer offset) {
+    public Pagination(Integer limit, Integer offset, SqlDialect sqlDialect) {
         this.limit = limit;
         this.offset = offset;
+        this.sqlDialect = sqlDialect;
     }
 
+
     public static Pagination from(Pagination pagination) {
-        return new Pagination(pagination.getLimit(), pagination.getOffset());
+        return new Pagination(pagination.getLimit(), pagination.getOffset(), pagination.getSqlDialect()); // Dialect Integration
     }
 
     public void apply(Pagination pagination) {
@@ -30,17 +39,10 @@ public class Pagination {
     }
 
     public String render() {
-        if (this.isVoid()) {
+        if (this.isVoid() || sqlDialect == null) { // Dialect Integration - null check for CTE
             return "";
         }
-        StringBuilder sb = new StringBuilder();
-        if (limit != null) {
-            sb.append(" limit ").append(limit);
-        }
-        if (offset != null) {
-            sb.append(" offset ").append(offset);
-        }
-        return sb.toString().trim();
+        return sqlDialect.getLimitOffsetSql(limit, offset); // Dialect Integration
     }
 
     public void clear() {
