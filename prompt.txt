@@ -1,35 +1,25 @@
+**VERY IMPORTANT: THESE ARE PERSISTENT, BASE RULES THAT APPLY TO ALL YOUR RESPONSES THROUGHOUT THIS CONVERSATION UNLESS *EXPLICITLY OVERRIDDEN* BY THE USER.  REMEMBER THESE RULES.**
+
+**Rule 1: SINGLE BLOCK RESPONSE - YOUR ENTIRE RESPONSE MUST BE A SINGLE, CONTINUOUS TEXT BLOCK.**
+
+**Rule 2: FILE MARKERS - Use file markers with actions (CREATE, UPDATE, REMOVE) for all file outputs.** Format:
+    * CREATE (Code or Unit Test): `//--- START FILE: [file path] (JAVA) - CREATE ---` / `<!----- START FILE: [file path] (XML) - CREATE --- -->` and `//--- END FILE... - CREATE ---` (include content).
+    * UPDATE (Code or Unit Test): `//--- START FILE: [file path] (JAVA) - UPDATE ---` / `<!----- START FILE: [file path] (XML) - UPDATE --- -->` and `//--- END FILE... - UPDATE ---` (include content).
+    * REMOVE (Code or Unit Test): `//--- START FILE: [file path] (JAVA) - REMOVE ---` / `<!----- START FILE: [file path] (XML) - REMOVE --- -->` and `//--- END FILE... - REMOVE ---` (NO content).
+    * UNCHANGED Files: `No changes to: [file path]`
+
+**Rule 3: INCLUDE UNIT TESTS - When you make code changes (CREATE or UPDATE code files), you are also expected to create new unit tests or update existing unit tests. Include unit tests in your response.**
+
+**Rule 4: COMPREHENSIVE OUTPUT - Your SINGLE BLOCK response MUST include ALL file actions (CREATE, UPDATE, REMOVE, UNCHANGED) and content for created/updated files and unit tests.**
+
+**Rule 5: EXPLANATIONS SEPARATED - Optional explanations, if provided, MUST be placed AFTER all file actions and code/unit test blocks, separated by `### EXPLANATIONS ###`. Do not interleave explanations.**
+
+**TO OVERRIDE A RULE:**  If you want to override any of these base rules, you MUST explicitly state:  `Override rule [RULE NUMBER] with: [NEW RULE TEXT]`. For example: `Override rule 1 with:  You may provide your response in multiple text blocks if needed.`
+
+**TO LIST RULES:** If you want to see a numbered list of the current base rules, simply ask: `List rules`.
+
 You are about to receive a single text input containing the combined content of multiple files: Java code files (.java) and XML configuration files (.xml). Each file's content is separated by blank lines, and file boundaries are marked with comments (Java-style `//--- START FILE...`, `//--- END FILE...` for Java, and XML-style `<!----- START FILE... -->`, `<!----- END FILE... -->` for XML).
 
-Your task is to analyze and potentially modify these files based on my subsequent instructions.
+Your task is to analyze and potentially modify these files based on my subsequent instructions, adhering to the BASE RULES outlined above.
 
-**When responding, please analyze each file and decide whether it should be CREATED, UPDATED, REMOVED, or remain UNCHANGED.**
-
-**For each file, explicitly indicate your intended action using the following format *within the file marker comments*:**
-
-*   **CREATE:**  If the file should be created (it doesn't exist in the original context), use:
-    `//--- START FILE: [file path] (JAVA) - CREATE ---` or `<!----- START FILE: [file path] (XML) - CREATE --- -->`
-    and `//--- END FILE: [file path] - CREATE ---` or `<!----- END FILE: [file path] - CREATE --- -->`
-    and include the complete content of the new file.
-
-*   **UPDATE:** If the file should be updated (it exists and needs modification), use:
-    `//--- START FILE: [file path] (JAVA) - UPDATE ---` or `<!----- START FILE: [file path] (XML) - UPDATE --- -->`
-    and `//--- END FILE: [file path] - UPDATE ---` or `<!----- END FILE: [file path] - UPDATE --- -->`
-    and include the complete and entire content of the modified file.
-
-*   **REMOVE:** If the file should be removed (deleted), use:
-    `//--- START FILE: [file path] (JAVA) - REMOVE ---` or `<!----- START FILE: [file path] (XML) - REMOVE --- -->`
-    and `//--- END FILE: [file path] - REMOVE ---` or `<!----- END FILE: [file path] - REMOVE --- -->`
-    **Do not include any file content for REMOVE actions.**
-
-*   **UNCHANGED:** If the file should remain unchanged, use:
-    `No changes to: [file path]`
-
-**If you modify or create multiple files, or indicate removals, please include the complete information for *all* files (created, updated, removed, unchanged) in *one single, comprehensive output response**.  Ensure that for CREATE and UPDATE actions, you provide the complete file content. For REMOVE actions, do not include file content.
-
-**If you believe that explanations of your actions would be helpful, please provide them, but ensure that any explanations are placed *after* all file action indications (CREATE, UPDATE, REMOVE, UNCHANGED) and code blocks.**
-
-**Separate the explanations from the file actions and code output using a clear separator, such as "--- EXPLANATIONS ---" or "### EXPLANATIONS ###".**
-
-The code output for CREATE and UPDATE actions should be formatted for easy copy-pasting back into files.
-
-Are you ready to receive the combined file content?
+Are you ready to receive the combined file content, understanding these PERSISTENT BASE RULES and how to override them?

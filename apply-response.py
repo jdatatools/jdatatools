@@ -55,7 +55,7 @@ def parse_gemini_response(response_text):
 
         if start_match:
             if current_file_path:
-                logging.warning(f"Unexpected start marker before end marker for file: {current_file_path}")
+                logging.warning(f"Unexpected start marker found before end marker for file: {current_file_path}")
             current_file_path = start_match.group(1)
             current_action = start_match.group(2) # Extract action (CREATE, UPDATE, REMOVE)
             file_content_lines = []
@@ -114,9 +114,10 @@ def normalize_lines(content):
 def apply_modifications(modifications, removals, creations):
     """
     Applies modifications, removals, and creations based on Gemini's response.
+    Now creates new files if they don't exist, even for "UPDATE" actions (if original not found).
     """
     if modifications:
-        logging.info("Applying file updates...")
+        logging.info("Applying file updates and creations...") # Updated log message
         for filepath, new_content in modifications.items():
             filepath = filepath.replace("/", "\\") # Normalize path for Windows
             if os.path.exists(filepath):
@@ -137,7 +138,15 @@ def apply_modifications(modifications, removals, creations):
                 except Exception as e:
                     logging.error(f"Error processing existing file '{filepath}': {e}")
             else:
-                logging.warning(f"Original file not found for update, skipping: {filepath}") # Should not happen in UPDATE flow
+                # File not found for UPDATE, creating it instead
+                try:
+                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+                    with open(filepath, "w", encoding="utf-8", errors='replace') as outfile:
+                        outfile.write(new_content)
+                    logging.info(f"File not found for update, CREATING new file: {filepath}") # Modified log message
+                except Exception as e:
+                    logging.error(f"Error creating file (even though marked for UPDATE) '{filepath}': {e}")
+
 
     if creations:
         logging.info("Creating new files...")

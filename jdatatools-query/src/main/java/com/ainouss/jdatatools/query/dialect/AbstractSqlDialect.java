@@ -14,7 +14,7 @@ public abstract class AbstractSqlDialect implements SqlDialect {
 
     @Override
     public String escapeIdentifier(String identifier) {
-        return identifier;// Default to double quotes (standard SQL)
+        return identifier;// Default to no escaping - escape only when necessary in subclasses
     }
 
     @Override
