@@ -1,15 +1,15 @@
 package com.ainouss.jdatatools.query.function;
 
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Avg aggregate function
  */
 public class Avg extends AggregateFunction {
 
-    public Avg(Selectable selectable, SqlDialect sqlDialect) { // Dialect Integration
-        super(selectable, sqlDialect); // Dialect Integration
+    public Avg(Selectable selectable, SqlDialect sqlDialect) {
+        super(selectable, sqlDialect);
     }
 
     @Override

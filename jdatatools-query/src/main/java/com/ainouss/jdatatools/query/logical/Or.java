@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.Expression;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Represents the logical OR operator in a query.
@@ -33,10 +33,10 @@ public class Or extends AbstractExpression {
      * Constructs a new {@code Or} operator with the given expression.
      *
      * @param expression The expression to add to the OR condition.
-     * @param sqlDialect The SQL dialect to use for rendering. // Dialect Integration
+     * @param sqlDialect The SQL dialect to use for rendering.
      */
-    public Or(Expression expression, SqlDialect sqlDialect) { // Dialect Integration
-        super(sqlDialect); // Dialect Integration
+    public Or(Expression expression, SqlDialect sqlDialect) {
+        super(sqlDialect);
         this.or.add(expression);
     }
 

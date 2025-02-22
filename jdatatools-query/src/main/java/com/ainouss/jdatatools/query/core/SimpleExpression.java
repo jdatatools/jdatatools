@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Where expression, entry point to where conditions
@@ -8,14 +8,14 @@ import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 public class SimpleExpression implements Expression {
 
     private Expression expression;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public SimpleExpression(SqlDialect sqlDialect) { // Dialect Integration
+    public SimpleExpression(SqlDialect sqlDialect) {
         this.sqlDialect = sqlDialect;
     }
 
     public SimpleExpression() {
-        this(null); // For CTE - default constructor // Dialect Integration
+        this(null); // For CTE - default constructor
     }
 
 

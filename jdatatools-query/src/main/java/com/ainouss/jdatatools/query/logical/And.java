@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.Expression;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Represents the logical AND operator in a query.
@@ -33,10 +33,10 @@ public class And extends AbstractExpression {
      * Constructs a new {@code And} operator with the given expression.
      *
      * @param expression The expression to add to the AND condition.
-     * @param sqlDialect The SQL dialect to use for rendering. // Dialect Integration
+     * @param sqlDialect The SQL dialect to use for rendering.
      */
-    public And(Expression expression, SqlDialect sqlDialect) { // Dialect Integration
-        super(sqlDialect); // Dialect Integration
+    public And(Expression expression, SqlDialect sqlDialect) {
+        super(sqlDialect);
         this.and.add(expression);
     }
 }

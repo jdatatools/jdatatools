@@ -1,6 +1,6 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 import com.ainouss.jdatatools.query.join.Join;
 import com.ainouss.jdatatools.query.order.Order;
 import com.ainouss.jdatatools.query.order.OrderDirection;
@@ -30,13 +30,13 @@ public class CriteriaQuery<T> {
     protected Class<T> resultType;
     protected final LinkedHashSet<Selectable> selections = new LinkedHashSet<>();
     protected final LinkedHashSet<Source> froms = new LinkedHashSet<>();
-    protected final SimpleExpression where; // Dialect Integration
-    protected final SimpleExpression having; // Dialect Integration
+    protected final SimpleExpression where;
+    protected final SimpleExpression having;
     protected final LinkedHashSet<Order> orderBy = new LinkedHashSet<>();
     protected final List<Join<?, ?>> joins = new ArrayList<>();
     protected final LinkedHashSet<Expression> groupBy = new LinkedHashSet<>();
     protected final List<SetOperation> unions = new ArrayList<>();
-    protected final Pagination pagination; // Dialect Integration
+    protected final Pagination pagination;
     private final CriteriaBuilder criteriaBuilder;
 
     /**
@@ -51,9 +51,9 @@ public class CriteriaQuery<T> {
         EntityRegistry.registerClass(javaType);
         this.resultType = javaType;
         this.criteriaBuilder = criteriaBuilder;
-        this.where = new SimpleExpression(criteriaBuilder.getSqlDialect()); // Dialect Integration
+        this.where = new SimpleExpression(criteriaBuilder.getSqlDialect());
         this.having = new SimpleExpression(criteriaBuilder.getSqlDialect());// Dialect Integration
-        this.pagination = new Pagination(criteriaBuilder.getSqlDialect()); // Dialect Integration
+        this.pagination = new Pagination(criteriaBuilder.getSqlDialect());
     }
 
     protected CriteriaQuery() {
@@ -413,9 +413,9 @@ public class CriteriaQuery<T> {
 
     private String buildNestedSelectQuery() {
         Pagination pagination1 = Pagination.from(this.pagination);
-        Subquery subquery = new Subquery(this, criteriaBuilder.getSqlDialect()); // Dialect Integration
+        Subquery subquery = new Subquery(this, criteriaBuilder.getSqlDialect());
         subquery.setAlias("nested_query");
-        var nq = new CriteriaQuery<>(this.resultType, criteriaBuilder); // Dialect Integration
+        var nq = new CriteriaQuery<>(this.resultType, criteriaBuilder);
         nq.from(subquery);
         this.orderBy.forEach((order) -> {
             Selectable p = new Path<>("nested_query", order.getColumn().getAlias());

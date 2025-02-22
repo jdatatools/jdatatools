@@ -2,7 +2,7 @@ package com.ainouss.jdatatools.query.operator;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -60,17 +60,17 @@ public class In implements Expression {
 
     private final Selectable attribute;
     private final List<Selectable> args = new ArrayList<>();
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
     /**
      * Constructs a new {@code In} operator with the given path and values.
      *
      * @param attribute The attribute representing the attribute to compare.
      * @param args      The collection of values to compare against.
-     * @param sqlDialect The SQL dialect to use for rendering. // Dialect Integration
+     * @param sqlDialect The SQL dialect to use for rendering.
      * @throws RuntimeException If no values are provided or if the value is null.
      */
-    public In(Selectable attribute, Collection<Selectable> args, SqlDialect sqlDialect) { // Dialect Integration
+    public In(Selectable attribute, Collection<Selectable> args, SqlDialect sqlDialect) {
         this.attribute = attribute;
         this.args.addAll(args);
         this.sqlDialect = sqlDialect;
@@ -85,6 +85,6 @@ public class In implements Expression {
         String values = args.stream()
                 .map(Selectable::toSql)
                 .collect(Collectors.joining(","));
-        return sqlDialect.escapeIdentifier(attribute.toSql()) + " in  (" + values + ")"; // Dialect Integration
+        return sqlDialect.escapeIdentifier(attribute.toSql()) + " in  (" + values + ")";
     }
 }

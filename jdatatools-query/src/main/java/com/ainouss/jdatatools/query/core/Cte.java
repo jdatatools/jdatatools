@@ -1,20 +1,20 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 public class Cte<T> extends CriteriaQuery<T> implements Source {
 
     private CriteriaQuery<?> cr;
     private final String name;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public Cte(String name, SqlDialect sqlDialect) { // Dialect Integration
+    public Cte(String name, SqlDialect sqlDialect) {
         super(); // No Class<T> or CriteriaBuilder needed for CTE constructor
         this.name = name;
         this.sqlDialect = sqlDialect;
     }
 
-    public Cte(String name) { // For CriteriaBuilder default constructor // Dialect Integration
+    public Cte(String name) { // For CriteriaBuilder default constructor
         this(name, null);
     }
 

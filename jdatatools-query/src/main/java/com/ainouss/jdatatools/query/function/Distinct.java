@@ -1,23 +1,23 @@
 package com.ainouss.jdatatools.query.function;
 
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Avg aggregate function
  */
 public class Distinct extends AggregateFunction {
 
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public Distinct(Selectable selectable, SqlDialect sqlDialect) { // Dialect Integration
-        super(selectable, sqlDialect); // Dialect Integration
+    public Distinct(Selectable selectable, SqlDialect sqlDialect) {
+        super(selectable, sqlDialect);
         this.sqlDialect = sqlDialect;
     }
 
     @Override
     public String sql() {
-        return sqlDialect.getDistinctKeyword() + " " + selectable.toSql(); // Dialect Integration
+        return sqlDialect.getDistinctKeyword() + " " + selectable.toSql();
     }
 
 }

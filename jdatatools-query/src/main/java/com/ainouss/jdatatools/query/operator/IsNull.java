@@ -2,7 +2,7 @@ package com.ainouss.jdatatools.query.operator;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * A field with a NULL value is a field with no value.
@@ -10,14 +10,14 @@ import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 public class IsNull implements Expression {
 
     private final Selectable attribute;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public IsNull(Selectable attribute, SqlDialect sqlDialect) { // Dialect Integration
+    public IsNull(Selectable attribute, SqlDialect sqlDialect) {
         this.attribute = attribute;
         this.sqlDialect = sqlDialect;
     }
 
     public String toSql() {
-        return sqlDialect.escapeIdentifier(attribute.toSql()) + " is null "; // Dialect Integration
+        return sqlDialect.escapeIdentifier(attribute.toSql()) + " is null ";
     }
 }

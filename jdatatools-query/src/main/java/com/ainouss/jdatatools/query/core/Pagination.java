@@ -8,14 +8,14 @@ public class Pagination {
 
     private Integer limit;
     private Integer offset;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public Pagination(SqlDialect sqlDialect) { // Dialect Integration
+    public Pagination(SqlDialect sqlDialect) {
         this.sqlDialect = sqlDialect;
     }
 
     public Pagination() {
-        this(null); // For CTE - default constructor // Dialect Integration
+        this(null); // For CTE - default constructor
     }
 
     public Pagination(Integer limit, Integer offset, SqlDialect sqlDialect) {
@@ -26,7 +26,7 @@ public class Pagination {
 
 
     public static Pagination from(Pagination pagination) {
-        return new Pagination(pagination.getLimit(), pagination.getOffset(), pagination.getSqlDialect()); // Dialect Integration
+        return new Pagination(pagination.getLimit(), pagination.getOffset(), pagination.getSqlDialect());
     }
 
     public void apply(Pagination pagination) {
@@ -39,10 +39,10 @@ public class Pagination {
     }
 
     public String render() {
-        if (this.isVoid() || sqlDialect == null) { // Dialect Integration - null check for CTE
+        if (this.isVoid() || sqlDialect == null) {
             return "";
         }
-        return sqlDialect.getLimitOffsetSql(limit, offset); // Dialect Integration
+        return sqlDialect.getLimitOffsetSql(limit, offset);
     }
 
     public void clear() {

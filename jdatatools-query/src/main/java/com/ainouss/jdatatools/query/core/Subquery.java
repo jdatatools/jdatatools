@@ -1,13 +1,13 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 public class Subquery extends Alias implements Source {
 
     private final CriteriaQuery<?> cr;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public Subquery(CriteriaQuery<?> criteria, SqlDialect sqlDialect) { // Dialect Integration - constructor now accepts SqlDialect
+    public Subquery(CriteriaQuery<?> criteria, SqlDialect sqlDialect) {
         this.cr = criteria;
         this.sqlDialect = sqlDialect;
     }
@@ -26,7 +26,6 @@ public class Subquery extends Alias implements Source {
         return new Path<>(alias, attr);
     }
 
-    // No changes needed for getName() and setAlias() as they are dialect-independent
 
     public SqlDialect getSqlDialect() {
         return sqlDialect;

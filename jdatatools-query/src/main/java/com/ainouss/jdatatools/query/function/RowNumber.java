@@ -1,17 +1,17 @@
 package com.ainouss.jdatatools.query.function;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 public class RowNumber extends AggregateFunction {
 
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public RowNumber(SqlDialect sqlDialect) { // Dialect Integration
-        super(sqlDialect); // Dialect Integration
+    public RowNumber(SqlDialect sqlDialect) {
+        super(sqlDialect);
         this.sqlDialect = sqlDialect;
     }
 
-    public RowNumber() { // For CTE - default constructor // Dialect Integration
+    public RowNumber() { // For CTE - default constructor
         this(null);
     }
 

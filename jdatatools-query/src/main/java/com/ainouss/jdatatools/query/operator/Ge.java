@@ -2,7 +2,7 @@ package com.ainouss.jdatatools.query.operator;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Represents the greater than or equal operator (>=) in a query.
@@ -26,16 +26,16 @@ public class Ge implements Expression {
 
     private final Selectable attribute;
     private final Selectable right;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
     /**
      * Constructs a new {@code Ge} operator with the given path and value.
      *
      * @param attribute The path representing the attribute to compare.
      * @param right     The value to compare against.
-     * @param sqlDialect The SQL dialect to use for rendering. // Dialect Integration
+     * @param sqlDialect The SQL dialect to use for rendering.
      */
-    public Ge(Selectable attribute, Selectable right, SqlDialect sqlDialect) { // Dialect Integration
+    public Ge(Selectable attribute, Selectable right, SqlDialect sqlDialect) {
         this.attribute = attribute;
         this.right = right;
         this.sqlDialect = sqlDialect;
@@ -48,6 +48,6 @@ public class Ge implements Expression {
      * @throws RuntimeException If the operator is used with null values.
      */
     public String toSql() {
-        return sqlDialect.escapeIdentifier(attribute.toSql()) + " >= " + right.toSql(); // Dialect Integration
+        return sqlDialect.escapeIdentifier(attribute.toSql()) + " >= " + right.toSql();
     }
 }

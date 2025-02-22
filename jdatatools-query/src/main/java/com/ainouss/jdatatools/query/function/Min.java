@@ -8,9 +8,9 @@ import com.ainouss.jdatatools.query.dialect.SqlDialect;
  */
 public class Min extends AggregateFunction {
 
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public Min(Selectable selectable, SqlDialect sqlDialect) { // Dialect Integration
+    public Min(Selectable selectable, SqlDialect sqlDialect) {
         super(selectable, sqlDialect);
         this.sqlDialect = sqlDialect;
     }

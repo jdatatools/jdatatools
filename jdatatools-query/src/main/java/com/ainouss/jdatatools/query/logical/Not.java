@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.Expression;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Represents the logical NOT operator in a query.
@@ -27,15 +27,15 @@ import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
 public class Not implements Expression {
 
     private final Expression expression;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
     /**
      * Constructs a new {@code Not} operator with the given expression.
      *
      * @param expression The expression to be negated.
-     * @param sqlDialect The SQL dialect to use for rendering. // Dialect Integration
+     * @param sqlDialect The SQL dialect to use for rendering.
      */
-    public Not(Expression expression, SqlDialect sqlDialect) { // Dialect Integration
+    public Not(Expression expression, SqlDialect sqlDialect) {
         this.expression = expression;
         this.sqlDialect = sqlDialect;
     }

@@ -2,7 +2,7 @@ package com.ainouss.jdatatools.query.operator;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 /**
  * Represents the BETWEEN operator in a query.
@@ -27,7 +27,7 @@ public class Bt implements Expression {
     private final Selectable attribute;
     private final Selectable left;
     private final Selectable right;
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
     /**
      * Constructs a new {@code Bt} operator with the given path and range values.
@@ -35,9 +35,9 @@ public class Bt implements Expression {
      * @param selectable The path representing the attribute to compare.
      * @param left       The lower bound of the range.
      * @param right      The upper bound of the range.
-     * @param sqlDialect The SQL dialect to use for rendering. // Dialect Integration
+     * @param sqlDialect The SQL dialect to use for rendering.
      */
-    public Bt(Selectable selectable, Selectable left, Selectable right, SqlDialect sqlDialect) { // Dialect Integration
+    public Bt(Selectable selectable, Selectable left, Selectable right, SqlDialect sqlDialect) {
         this.attribute = selectable;
         this.left = left;
         this.right = right;
@@ -46,6 +46,6 @@ public class Bt implements Expression {
 
 
     public String toSql() {
-        return sqlDialect.escapeIdentifier(attribute.toSql()) + " between " + left.toSql() + " and " + right.toSql(); // Dialect Integration
+        return sqlDialect.escapeIdentifier(attribute.toSql()) + " between " + left.toSql() + " and " + right.toSql();
     }
 }

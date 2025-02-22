@@ -3,18 +3,18 @@ package com.ainouss.jdatatools.query.choice;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.LiteralValue;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 public class SearchedCase extends Case {
 
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public SearchedCase(SqlDialect sqlDialect) { // Dialect Integration
-        super(sqlDialect); // Dialect Integration
+    public SearchedCase(SqlDialect sqlDialect) {
+        super(sqlDialect);
         this.sqlDialect = sqlDialect;
     }
 
-    public SearchedCase() { // For CTE - default constructor // Dialect Integration
+    public SearchedCase() { // For CTE - default constructor
         this(null);
     }
 
@@ -22,7 +22,7 @@ public class SearchedCase extends Case {
     public SearchedWhen when(Expression expression) {
         WhenThen whenThen = new WhenThen(expression);
         whenThens.add(whenThen);
-        return new SearchedWhen(this, whenThen, sqlDialect); // Dialect Integration
+        return new SearchedWhen(this, whenThen, sqlDialect);
     }
 
     public SearchedCase whenThen(Expression expression, Object then) {

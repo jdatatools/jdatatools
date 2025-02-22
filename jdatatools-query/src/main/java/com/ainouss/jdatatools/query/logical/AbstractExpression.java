@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.Expression;
-import com.ainouss.jdatatools.query.dialect.SqlDialect; // Dialect Integration
+import com.ainouss.jdatatools.query.dialect.SqlDialect;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,12 +16,12 @@ public abstract class AbstractExpression implements Expression {
 
     protected List<Expression> and = new ArrayList<>();
     protected List<Expression> or = new ArrayList<>();
-    private final SqlDialect sqlDialect; // Dialect Integration
+    private final SqlDialect sqlDialect;
 
-    public AbstractExpression(SqlDialect sqlDialect) { // Dialect Integration
+    public AbstractExpression(SqlDialect sqlDialect) {
         this.sqlDialect = sqlDialect;
     }
-    public AbstractExpression() { // For CTE - default constructor // Dialect Integration
+    public AbstractExpression() { // For CTE - default constructor
         this(null);
     }
 
