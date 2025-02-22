@@ -1,4 +1,4 @@
---- START FILE: .\jdatatools-query\pom.xml (XML) ---
+<!----- START FILE: .\jdatatools-query\pom.xml (XML) --- -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -64,8 +64,8 @@
     </plugins>
   </build>
 </project>
---- END FILE: .\jdatatools-query\pom.xml ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\Case.java (JAVA) ---
+<!----- END FILE: .\jdatatools-query\pom.xml --- -->
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\Case.java (JAVA) ---
 package com.ainouss.jdatatools.query.choice;
 import com.ainouss.jdatatools.query.core.Alias;
 import com.ainouss.jdatatools.query.core.Fragment;
@@ -104,8 +104,8 @@ public abstract class Case extends Alias implements Selectable {
         return this;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\Case.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedCase.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\Case.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedCase.java (JAVA) ---
 package com.ainouss.jdatatools.query.choice;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.LiteralValue;
@@ -135,8 +135,8 @@ public class SearchedCase extends Case {
         return this;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedCase.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedWhen.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedCase.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedWhen.java (JAVA) ---
 package com.ainouss.jdatatools.query.choice;
 import com.ainouss.jdatatools.query.core.LiteralValue;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -156,8 +156,8 @@ public class SearchedWhen {
         return caseExpression;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedWhen.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleCase.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SearchedWhen.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleCase.java (JAVA) ---
 package com.ainouss.jdatatools.query.choice;
 import com.ainouss.jdatatools.query.core.LiteralValue;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -193,8 +193,8 @@ public class SimpleCase extends Case {
         return this;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleCase.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleWhen.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleCase.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleWhen.java (JAVA) ---
 package com.ainouss.jdatatools.query.choice;
 import com.ainouss.jdatatools.query.core.LiteralValue;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -211,8 +211,8 @@ public class SimpleWhen {
         return caseExpression;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleWhen.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\WhenThen.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\SimpleWhen.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\WhenThen.java (JAVA) ---
 package com.ainouss.jdatatools.query.choice;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -225,8 +225,8 @@ public class WhenThen {
         this.when = when;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\WhenThen.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Alias.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\choice\WhenThen.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Alias.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.util.DataUtils;
 public abstract class Alias implements WithAlias {
@@ -240,8 +240,8 @@ public abstract class Alias implements WithAlias {
         return DataUtils.trimToBlank(alias);
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Alias.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaBuilder.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Alias.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaBuilder.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.choice.SearchedCase;
 import com.ainouss.jdatatools.query.choice.SimpleCase;
@@ -519,8 +519,8 @@ public class CriteriaBuilder {
         return new Cte<>(name, sqlDialect);
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaBuilder.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaQuery.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaBuilder.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaQuery.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
 import com.ainouss.jdatatools.query.join.Join;
@@ -1046,8 +1046,8 @@ public class CriteriaQuery<T> {
         return selections;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaQuery.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Cte.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\CriteriaQuery.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Cte.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
 public class Cte<T> extends CriteriaQuery<T> implements Source {
@@ -1093,8 +1093,8 @@ public class Cte<T> extends CriteriaQuery<T> implements Source {
         throw new UnsupportedOperationException("Alias is not supported for CTE");
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Cte.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\EmptyExpression.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Cte.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\EmptyExpression.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 /**
  * Identity expression, renders an empty SQL
@@ -1107,14 +1107,14 @@ public class EmptyExpression implements Expression {
         return "";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\EmptyExpression.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Expression.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\EmptyExpression.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Expression.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 public interface Expression extends Fragment {
     //String toSql(SqlGenerator<T> sqlGenerator);
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Expression.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\FieldMetaData.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Expression.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\FieldMetaData.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -1127,14 +1127,14 @@ public class FieldMetaData {
     private String column;
     private Class<?> javaType;
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\FieldMetaData.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Fragment.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\FieldMetaData.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Fragment.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 public interface Fragment {
     String toSql();
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Fragment.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\LiteralValue.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Fragment.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\LiteralValue.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.util.DataUtils;
 public class LiteralValue extends Alias implements Selectable {
@@ -1157,8 +1157,8 @@ public class LiteralValue extends Alias implements Selectable {
         return value.toString();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\LiteralValue.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Pagination.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\LiteralValue.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Pagination.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
 import lombok.Data;
@@ -1199,8 +1199,8 @@ public class Pagination {
         this.offset = null;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Pagination.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Path.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Pagination.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Path.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.order.Order;
 import com.ainouss.jdatatools.query.order.OrderDirection;
@@ -1251,8 +1251,8 @@ public class Path<T> extends Alias implements Selectable {
         return EntityRegistry.fullResolve(this);
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Path.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Root.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Path.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Root.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.join.Joinable;
 import com.ainouss.jdatatools.query.registery.EntityRegistry;
@@ -1336,8 +1336,8 @@ public class Root<T> extends Alias implements Selectable, Source, Joinable<T> {
         return this;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Root.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\ScalarQuery.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Root.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\ScalarQuery.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 public class ScalarQuery<T> extends Alias implements Selectable {
     private final CriteriaQuery<T> criteria;
@@ -1353,8 +1353,8 @@ public class ScalarQuery<T> extends Alias implements Selectable {
         return " (" + criteria.buildSelectQuery() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\ScalarQuery.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Selectable.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\ScalarQuery.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Selectable.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.util.DataUtils;
 public interface Selectable extends Expression, WithAlias, Comparable<Selectable> {
@@ -1381,8 +1381,8 @@ public interface Selectable extends Expression, WithAlias, Comparable<Selectable
         return alias.compareTo(o.getAlias());
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Selectable.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SelectableExpression.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Selectable.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SelectableExpression.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 /**
  * Identity expression, renders an empty SQL
@@ -1397,8 +1397,8 @@ public class SelectableExpression implements Expression {
         return selectable.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SelectableExpression.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SimpleExpression.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SelectableExpression.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SimpleExpression.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
 /**
@@ -1423,8 +1423,8 @@ public class SimpleExpression implements Expression {
         return expression.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SimpleExpression.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Source.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\SimpleExpression.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Source.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 public interface Source extends Fragment, WithAlias {
     Selectable get(String attr);
@@ -1434,8 +1434,8 @@ public interface Source extends Fragment, WithAlias {
     String getAlias();
     void setAlias(String alias);
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Source.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Subquery.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Source.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Subquery.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
 public class Subquery extends Alias implements Source {
@@ -1460,15 +1460,15 @@ public class Subquery extends Alias implements Source {
         return sqlDialect;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Subquery.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\WithAlias.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\Subquery.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\WithAlias.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 public interface WithAlias {
     void setAlias(String alias);
     String getAlias();
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\WithAlias.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\AbstractSqlDialect.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\core\WithAlias.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\AbstractSqlDialect.java (JAVA) ---
 package com.ainouss.jdatatools.query.dialect;
 public abstract class AbstractSqlDialect implements SqlDialect {
     @Override
@@ -1499,8 +1499,8 @@ public abstract class AbstractSqlDialect implements SqlDialect {
         return "distinct"; // Default DISTINCT keyword
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\AbstractSqlDialect.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\MySqlDialect.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\AbstractSqlDialect.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\MySqlDialect.java (JAVA) ---
 package com.ainouss.jdatatools.query.dialect;
 public class MySqlDialect extends AbstractSqlDialect {
     @Override
@@ -1523,8 +1523,8 @@ public class MySqlDialect extends AbstractSqlDialect {
         return "";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\MySqlDialect.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\PostgreSqlDialect.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\MySqlDialect.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\PostgreSqlDialect.java (JAVA) ---
 package com.ainouss.jdatatools.query.dialect;
 public class PostgreSqlDialect extends AbstractSqlDialect {
     @Override
@@ -1540,8 +1540,8 @@ public class PostgreSqlDialect extends AbstractSqlDialect {
         return super.getLimitOffsetSql(limit, offset); // Uses default LIMIT OFFSET, which PostgreSQL supports
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\PostgreSqlDialect.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialect.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\PostgreSqlDialect.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialect.java (JAVA) ---
 package com.ainouss.jdatatools.query.dialect;
 public interface SqlDialect {
     /**
@@ -1579,8 +1579,8 @@ public interface SqlDialect {
      */
     String getDistinctKeyword();
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialect.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialectFactory.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialect.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialectFactory.java (JAVA) ---
 package com.ainouss.jdatatools.query.dialect;
 public class SqlDialectFactory {
     public static SqlDialect getDialect(String dialectName) {
@@ -1595,8 +1595,8 @@ public class SqlDialectFactory {
         return new StandardDialect(); // Default to standard SQL if dialect not recognized
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialectFactory.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlServerDialect.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlDialectFactory.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlServerDialect.java (JAVA) ---
 package com.ainouss.jdatatools.query.dialect;
 public class SqlServerDialect extends AbstractSqlDialect {
     @Override
@@ -1619,13 +1619,13 @@ public class SqlServerDialect extends AbstractSqlDialect {
         return "";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlServerDialect.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\StandardDialect.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\SqlServerDialect.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\StandardDialect.java (JAVA) ---
 package com.ainouss.jdatatools.query.dialect;
 public class StandardDialect extends AbstractSqlDialect{
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\StandardDialect.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Aggregable.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\dialect\StandardDialect.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Aggregable.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Selectable;
 import com.ainouss.jdatatools.query.order.Order;
@@ -1634,8 +1634,8 @@ public interface Aggregable extends Selectable {
     AggregateFunction orderBy(Order... orders);
     Aggregable over();
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Aggregable.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\AggregateFunction.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Aggregable.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\AggregateFunction.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Alias;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -1704,8 +1704,8 @@ public abstract class AggregateFunction extends Alias implements Aggregable {
         return sql() + overSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\AggregateFunction.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Avg.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\AggregateFunction.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Avg.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Selectable;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -1721,8 +1721,8 @@ public class Avg extends AggregateFunction {
         return "avg(" + selectable.toSql() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Avg.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Count.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Avg.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Count.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Root;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -1748,8 +1748,8 @@ public class Count extends AggregateFunction {
         return "count(" + selectable.toSql() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Count.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Distinct.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Count.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Distinct.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Selectable;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -1767,8 +1767,8 @@ public class Distinct extends AggregateFunction {
         return sqlDialect.getDistinctKeyword() + " " + selectable.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Distinct.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Max.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Distinct.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Max.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Selectable;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -1786,8 +1786,8 @@ public class Max extends AggregateFunction {
         return "max(" + selectable.toSql() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Max.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Min.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Max.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Min.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Selectable;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -1805,8 +1805,8 @@ public class Min extends AggregateFunction {
         return "min(" + selectable.toSql() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Min.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Rank.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Min.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Rank.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
 public class Rank extends AggregateFunction {
@@ -1823,8 +1823,8 @@ public class Rank extends AggregateFunction {
         return "rank()";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Rank.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\RowNumber.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Rank.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\RowNumber.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
 public class RowNumber extends AggregateFunction {
@@ -1841,8 +1841,8 @@ public class RowNumber extends AggregateFunction {
         return "row_number()";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\RowNumber.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Sum.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\RowNumber.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Sum.java (JAVA) ---
 package com.ainouss.jdatatools.query.function;
 import com.ainouss.jdatatools.query.core.Selectable;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -1860,8 +1860,8 @@ public class Sum extends AggregateFunction {
         return "sum(" + selectable.toSql() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Sum.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Join.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\function\Sum.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Join.java (JAVA) ---
 package com.ainouss.jdatatools.query.join;
 import com.ainouss.jdatatools.query.core.*;
 import lombok.Getter;
@@ -1932,8 +1932,8 @@ public class Join<X, Y> extends Alias implements Source, Joinable<Y> {
         return this;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Join.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Joinable.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Join.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Joinable.java (JAVA) ---
 package com.ainouss.jdatatools.query.join;
 import com.ainouss.jdatatools.query.core.Fragment;
 import com.ainouss.jdatatools.query.core.Source;
@@ -1994,8 +1994,8 @@ public interface Joinable<T> extends Fragment {
         return new Join<>(getSelf(), root, JoinType.CROSS);
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Joinable.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinExpression.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\Joinable.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinExpression.java (JAVA) ---
 package com.ainouss.jdatatools.query.join;
 import com.ainouss.jdatatools.query.core.*;
 /**
@@ -2023,8 +2023,8 @@ public class JoinExpression<T, U> extends Alias {
         return join.on(subquery);
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinExpression.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinType.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinExpression.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinType.java (JAVA) ---
 package com.ainouss.jdatatools.query.join;
 /**
  * Join Types
@@ -2036,8 +2036,8 @@ public enum JoinType {
     FULL,
     CROSS
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinType.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\AbstractExpression.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\join\JoinType.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\AbstractExpression.java (JAVA) ---
 package com.ainouss.jdatatools.query.logical;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -2118,8 +2118,8 @@ public abstract class AbstractExpression implements Expression {
         return sqlBuilder.toString();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\AbstractExpression.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\And.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\AbstractExpression.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\And.java (JAVA) ---
 package com.ainouss.jdatatools.query.logical;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -2159,8 +2159,8 @@ public class And extends AbstractExpression {
         this.and.add(expression);
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\And.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Not.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\And.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Not.java (JAVA) ---
 package com.ainouss.jdatatools.query.logical;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -2207,8 +2207,8 @@ public class Not implements Expression {
         return "not (" + sql + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Not.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Or.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Not.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Or.java (JAVA) ---
 package com.ainouss.jdatatools.query.logical;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.dialect.SqlDialect;
@@ -2248,8 +2248,8 @@ public class Or extends AbstractExpression {
         this.or.add(expression);
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Or.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Bt.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\logical\Or.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Bt.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2295,8 +2295,8 @@ public class Bt implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " between " + left.toSql() + " and " + right.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Bt.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\EndsWith.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Bt.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\EndsWith.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2318,8 +2318,8 @@ public class EndsWith implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " like '%" + escaped + "'";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\EndsWith.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Eq.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\EndsWith.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Eq.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2368,8 +2368,8 @@ public class Eq implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " = " + right.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Eq.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ge.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Eq.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ge.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2418,8 +2418,8 @@ public class Ge implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " >= " + right.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ge.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Gt.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ge.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Gt.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2467,8 +2467,8 @@ public class Gt implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " > " + right.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Gt.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\In.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Gt.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\In.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2553,8 +2553,8 @@ public class In implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " in  (" + values + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\In.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNotNull.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\In.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNotNull.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2573,8 +2573,8 @@ public class IsNotNull implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " is not null ";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNotNull.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNull.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNotNull.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNull.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2593,8 +2593,8 @@ public class IsNull implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " is null ";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNull.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Le.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\IsNull.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Le.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2645,8 +2645,8 @@ public class Le implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " <= " + right.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Le.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Like.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Le.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Like.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2698,8 +2698,8 @@ public class Like implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " like '%" + escaped + "%'";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Like.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Lt.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Like.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Lt.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2750,8 +2750,8 @@ public class Lt implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " < " + right.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Lt.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ne.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Lt.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ne.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2795,8 +2795,8 @@ public class Ne implements Expression {
         return sqlDialect.escapeIdentifier(left.toSql()) + " != " + right.toSql();
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ne.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\StartsWith.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\Ne.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\StartsWith.java (JAVA) ---
 package com.ainouss.jdatatools.query.operator;
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2818,8 +2818,8 @@ public class StartsWith implements Expression {
         return sqlDialect.escapeIdentifier(attribute.toSql()) + " like '" + escaped + "%'";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\StartsWith.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\Order.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\operator\StartsWith.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\Order.java (JAVA) ---
 package com.ainouss.jdatatools.query.order;
 import com.ainouss.jdatatools.query.core.Fragment;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -2841,15 +2841,15 @@ public class Order implements Fragment {
         return column.toSql() + " " + direction;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\Order.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\OrderDirection.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\Order.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\OrderDirection.java (JAVA) ---
 package com.ainouss.jdatatools.query.order;
 public enum OrderDirection {
     ASC,
     DESC
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\OrderDirection.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityRegistry.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\order\OrderDirection.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityRegistry.java (JAVA) ---
 package com.ainouss.jdatatools.query.registery;
 import com.ainouss.jdatatools.query.core.*;
 import jakarta.persistence.Column;
@@ -2989,8 +2989,8 @@ public class EntityRegistry {
                 .collect(Collectors.toList());
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityRegistry.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityResolver.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityRegistry.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityResolver.java (JAVA) ---
 package com.ainouss.jdatatools.query.registery;
 import java.util.List;
 /**
@@ -3005,8 +3005,8 @@ public interface EntityResolver {
      */
     List<Class<?>> resolve();
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityResolver.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\SampleEntityResolver.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\EntityResolver.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\SampleEntityResolver.java (JAVA) ---
 package com.ainouss.jdatatools.query.registery;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -3021,8 +3021,8 @@ public class SampleEntityResolver implements EntityResolver {
         return entities;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\SampleEntityResolver.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Except.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\registery\SampleEntityResolver.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Except.java (JAVA) ---
 package com.ainouss.jdatatools.query.setoperation;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 public class Except implements SetOperation {
@@ -3034,8 +3034,8 @@ public class Except implements SetOperation {
         return "except (" + other.buildSelectQuery() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Except.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Intersect.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Except.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Intersect.java (JAVA) ---
 package com.ainouss.jdatatools.query.setoperation;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 public class Intersect implements SetOperation {
@@ -3047,14 +3047,14 @@ public class Intersect implements SetOperation {
         return "intersect (" + other.buildSelectQuery() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Intersect.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\SetOperation.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Intersect.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\SetOperation.java (JAVA) ---
 package com.ainouss.jdatatools.query.setoperation;
 import com.ainouss.jdatatools.query.core.Fragment;
 public interface SetOperation extends Fragment {
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\SetOperation.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Union.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\SetOperation.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Union.java (JAVA) ---
 package com.ainouss.jdatatools.query.setoperation;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 public class Union implements SetOperation {
@@ -3066,8 +3066,8 @@ public class Union implements SetOperation {
         return "union (" + other.buildSelectQuery()+ ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Union.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\UnionAll.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\Union.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\UnionAll.java (JAVA) ---
 package com.ainouss.jdatatools.query.setoperation;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 public class UnionAll implements SetOperation {
@@ -3079,8 +3079,8 @@ public class UnionAll implements SetOperation {
         return "union all (" + other.buildSelectQuery() + ")";
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\UnionAll.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\All.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\setoperation\UnionAll.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\All.java (JAVA) ---
 package com.ainouss.jdatatools.query.subquery;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -3111,8 +3111,8 @@ public class All implements Selectable {
         return sqlDialect;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\All.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Any.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\All.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Any.java (JAVA) ---
 package com.ainouss.jdatatools.query.subquery;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -3143,8 +3143,8 @@ public class Any implements Selectable {
         return sqlDialect;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Any.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Exists.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Any.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Exists.java (JAVA) ---
 package com.ainouss.jdatatools.query.subquery;
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.jdatatools.query.core.Selectable;
@@ -3175,8 +3175,8 @@ public class Exists implements Selectable {
         return sqlDialect;
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Exists.java ---
---- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\util\DataUtils.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\subquery\Exists.java ---
+//--- START FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\util\DataUtils.java (JAVA) ---
 package com.ainouss.jdatatools.query.util;
 public final class DataUtils {
     public static <T extends CharSequence> boolean isBlank(T s) {
@@ -3227,8 +3227,8 @@ public final class DataUtils {
         return str.replace("'", "''");
     }
 }
---- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\util\DataUtils.java ---
---- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaBuilderTest.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\main\java\com\ainouss\jdatatools\query\util\DataUtils.java ---
+//--- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaBuilderTest.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.model.Employee;
 import com.ainouss.jdatatools.query.model.EmployeeDetails;
@@ -3532,8 +3532,8 @@ class CriteriaBuilderTest {
         assertEquals("EMPLOYEES emp left join EMPLOYEE_DETAILS det on emp.ID = det.ID  right join EMPLOYEE_DETAILS det on emp.ID = det.ID", sql);
     }
 }
---- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaBuilderTest.java ---
---- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaQueryTest.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaBuilderTest.java ---
+//--- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaQueryTest.java (JAVA) ---
 package com.ainouss.jdatatools.query.core;
 import com.ainouss.jdatatools.query.dialect.StandardDialect;
 import com.ainouss.jdatatools.query.logical.AbstractExpression;
@@ -4525,8 +4525,8 @@ class CriteriaQueryTest {
         assertEquals("row_number() over (partition by EMPLOYEES.departmentId order by EMPLOYEES.SALARY ASC)", sql);
     }
 }
---- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaQueryTest.java ---
---- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Department.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\core\CriteriaQueryTest.java ---
+//--- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Department.java (JAVA) ---
 package com.ainouss.jdatatools.query.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -4541,8 +4541,8 @@ public class Department {
     @Column(name = "LOCATION")
     private String location;
 }
---- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Department.java ---
---- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Employee.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Department.java ---
+//--- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Employee.java (JAVA) ---
 package com.ainouss.jdatatools.query.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -4561,8 +4561,8 @@ public class Employee {
     @Column(name = "ENABLED")
     private String enabled;
 }
---- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Employee.java ---
---- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\EmployeeDetails.java (JAVA) ---
+//--- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\Employee.java ---
+//--- START FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\EmployeeDetails.java (JAVA) ---
 package com.ainouss.jdatatools.query.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
@@ -4577,4 +4577,4 @@ public class EmployeeDetails {
     @Column(name = "DEPARTMENT_ID")
     private Integer departmentId;
 }
---- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\EmployeeDetails.java ---
+//--- END FILE: .\jdatatools-query\src\test\java\com\ainouss\jdatatools\query\model\EmployeeDetails.java ---
