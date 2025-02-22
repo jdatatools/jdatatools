@@ -3,9 +3,11 @@ import re
 import logging
 import argparse
 import subprocess
+from datetime import datetime
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
+# Regex patterns for parsing Gemini response
 JAVA_START_MARKER_RE = re.compile(r'//--- START FILE: (.+) \(JAVA\) - (CREATE|UPDATE|REMOVE) ---')
 JAVA_END_MARKER_RE = re.compile(r'//--- END FILE: (.+) - (CREATE|UPDATE|REMOVE) ---')
 XML_START_MARKER_RE = re.compile(r'<!----- START FILE: (.+) \(XML\) - (CREATE|UPDATE|REMOVE) --- -->')
@@ -13,7 +15,7 @@ XML_END_MARKER_RE = re.compile(r'<!----- END FILE: (.+) - (CREATE|UPDATE|REMOVE)
 EXPLANATIONS_SEPARATOR_RE = re.compile(r'### EXPLANATIONS ###')
 NO_CHANGES_RE = re.compile(r'No changes to: (.+)')
 
-DEFAULT_MAVEN_HOME = r"F:\\app\\apache-maven-3.9.9"  # Update this to your Maven path
+DEFAULT_MAVEN_HOME = r"F:\\app\\apache-maven-3.9.9"
 
 def parse_gemini_response(response_text):
     """Parses Gemini's response text to extract file modifications and explanations."""
@@ -32,10 +34,11 @@ def parse_gemini_response(response_text):
             explanations = (explanations or "") + line + "\n"
             continue
 
+        # CORRECTED LINE WITH PROPER PARENTHESIS
         start_match = (JAVA_START_MARKER_RE.match(line) or
                        XML_START_MARKER_RE.match(line))
         end_match = (JAVA_END_MARKER_RE.match(line) or
-                     XML_END_MARKER_RE.match(line))
+                    XML_END_MARKER_RE.match(line))
 
         if start_match:
             current_file_path = os.path.normpath(start_match.group(1))
@@ -46,18 +49,13 @@ def parse_gemini_response(response_text):
             ended_action = end_match.group(2)
 
             if current_file_path == ended_file_path and current_action == ended_action:
-                file_content = "".join(file_content_lines).rstrip("\n")
+                file_content = "\n".join(file_content_lines)
                 if current_action == "UPDATE":
                     modifications[current_file_path] = file_content
                 elif current_action == "CREATE":
                     creations[current_file_path] = file_content
                 elif current_action == "REMOVE":
                     removals.append(current_file_path)
-                    if file_content:
-                        logging.warning(f"Content ignored for REMOVE action in: {current_file_path}")
-            else:
-                logging.warning(f"Marker mismatch: Start({current_file_path}/{current_action}) vs End({ended_file_path}/{ended_action})")
-
             current_file_path = None
             current_action = None
             file_content_lines = []
@@ -67,60 +65,51 @@ def parse_gemini_response(response_text):
         elif NO_CHANGES_RE.match(line):
             no_changes_files.append(os.path.normpath(NO_CHANGES_RE.match(line).group(1)))
         elif current_file_path and current_action != "REMOVE":
-            file_content_lines.append(line + "\n")
+            file_content_lines.append(line)
 
     return modifications, removals, creations, no_changes_files, explanations
 
-def normalize_lines(content):
-    """Normalizes file content for comparison."""
-    return [line.strip() for line in content.splitlines() if line.strip()]
-
-def apply_modifications(modifications, removals, creations, project_dir):
-    """Applies file changes and runs Maven build with proper environment setup."""
-    # Set up Maven paths
+def apply_modifications(modifications, removals, creations, project_dir, verbose=False):
+    """Applies file changes and runs Maven build with enhanced reporting."""
     maven_home = os.environ.get("MAVEN_HOME") or DEFAULT_MAVEN_HOME
     maven_bin = os.path.join(maven_home, "bin")
     mvn_cmd = os.path.join(maven_bin, "mvn.cmd" if os.name == "nt" else "mvn")
+    build_report_path = os.path.join(project_dir, "build_report.txt")
 
-    # Verify Maven installation
+    # File operations
     try:
-        subprocess.run([mvn_cmd, "-v"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        logging.info("Maven verification successful")
-    except (subprocess.CalledProcessError, FileNotFoundError) as e:
-        logging.error(f"Maven verification failed: {str(e)}")
-        return
+        for action, items in [("UPDATE", modifications), ("CREATE", creations), ("REMOVE", removals)]:
+            for path in (items if isinstance(items, list) else items.keys()):
+                full_path = os.path.join(project_dir, path)
+                if verbose:
+                    logging.debug(f"Processing {action} for {full_path}")
 
-    # Apply file operations
-    try:
-        for action_name, items in [
-            ("Updating", modifications.items()),
-            ("Creating", creations.items()),
-            ("Removing", [(f, None) for f in removals])
-        ]:
-            for file_path, content in items:
-                full_path = os.path.join(project_dir, file_path)
-                if action_name == "Removing":
+                if action == "REMOVE":
                     if os.path.exists(full_path):
                         os.remove(full_path)
-                        logging.info(f"Removed: {file_path}")
+                        logging.info(f"Removed: {path}")
                     else:
-                        logging.warning(f"File not found for removal: {file_path}")
+                        logging.warning(f"File not found: {path}")
                 else:
+                    content = items[path]
                     os.makedirs(os.path.dirname(full_path), exist_ok=True)
-                    if action_name == "Updating":
+
+                    if action == "UPDATE" and os.path.exists(full_path):
                         with open(full_path, "r", encoding="utf-8") as f:
-                            existing = normalize_lines(f.read())
-                        if existing == normalize_lines(content):
-                            logging.info(f"No changes needed: {file_path}")
-                            continue
+                            if f.read() == content:
+                                if verbose:
+                                    logging.debug(f"No changes needed: {path}")
+                                continue
+
                     with open(full_path, "w", encoding="utf-8") as f:
                         f.write(content)
-                    logging.info(f"{action_name[:-3]}ed: {file_path}")
+                    logging.info(f"{action}d: {path}")
+
     except Exception as e:
         logging.error(f"File operation failed: {str(e)}")
         return
 
-    # Run Maven build with proper environment
+    # Maven build execution
     try:
         env = os.environ.copy()
         env["PATH"] = f"{maven_bin}{os.pathsep}{env['PATH']}"
@@ -134,30 +123,43 @@ def apply_modifications(modifications, removals, creations, project_dir):
             stdout=subprocess.PIPE,
             stderr=subprocess.STDOUT
         )
-        logging.info("Maven build succeeded\n" + result.stdout)
+
+        # Successful build report
+        with open(build_report_path, "w") as f:
+            f.write(f"build successful {datetime.now().isoformat()}\n")
+            f.write(result.stdout)
+
+        logging.info(f"Maven build succeeded - report saved to {build_report_path}")
+
     except subprocess.CalledProcessError as e:
-        error_msg = f"Maven build failed (code {e.returncode}):\n{e.stdout}"
-        logging.error(error_msg)
-        with open(os.path.join(project_dir, "build_error.txt"), "w") as f:
-            f.write(error_msg)
+        # Failed build report
+        with open(build_report_path, "w") as f:
+            f.write(f"BUILD FAILED ({datetime.now().isoformat()})\n")
+            f.write(e.stdout)
+
+        logging.error(f"Maven build failed (code {e.returncode})")
+        if verbose:
+            logging.error(f"Error details:\n{e.stdout}")
+        logging.error(f"Build report saved to {build_report_path}")
 
 def main():
-    parser = argparse.ArgumentParser(description="Apply code changes and run Maven build")
+    parser = argparse.ArgumentParser(description="Code Modification and Build System")
     parser.add_argument("response_file", help="Path to Gemini response file")
     parser.add_argument("project_dir", help="Project root directory")
     parser.add_argument("--explanations", help="Output file for explanations")
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose output")
 
     args = parser.parse_args()
+    logging.getLogger().setLevel(logging.DEBUG if args.verbose else logging.INFO)
 
     try:
         with open(args.response_file, "r", encoding="utf-8") as f:
-            response = f.read()
+            changes = parse_gemini_response(f.read())
     except Exception as e:
-        logging.error(f"Failed to read response file: {str(e)}")
+        logging.error(f"Failed to process response file: {str(e)}")
         return
 
-    changes = parse_gemini_response(response)
-    apply_modifications(*changes[:3], os.path.normpath(args.project_dir))
+    apply_modifications(*changes[:3], os.path.normpath(args.project_dir), args.verbose)
 
     if changes[3]:
         logging.info(f"No changes indicated for: {', '.join(changes[3])}")
