@@ -1,13 +1,35 @@
-You are about to receive a single text input containing the combined content of multiple files: Java code files (.java) and XML configuration files (.xml).  Each file's content is separated by blank lines, and file boundaries are marked with comments (Java-style `//--- START FILE...`, `//--- END FILE...` for Java, and XML-style `<!----- START FILE... -->`, `<!----- END FILE... -->` for XML).
+You are about to receive a single text input containing the combined content of multiple files: Java code files (.java) and XML configuration files (.xml). Each file's content is separated by blank lines, and file boundaries are marked with comments (Java-style `//--- START FILE...`, `//--- END FILE...` for Java, and XML-style `<!----- START FILE... -->`, `<!----- END FILE... -->` for XML).
 
 Your task is to analyze and potentially modify these files based on my subsequent instructions.
 
-**Crucially, when you modify any file, please ensure your response includes the *complete and entire content of the modified file*. I need the full file content, not just snippets or diffs. If you modify multiple files, please include the complete content of *all* modified files in *one single, comprehensive output response**.
+**When responding, please analyze each file and decide whether it should be CREATED, UPDATED, REMOVED, or remain UNCHANGED.**
 
-**If you believe that explanations of your modifications would be helpful, please provide them, but ensure that any explanations are placed *after* the modified code blocks.**
+**For each file, explicitly indicate your intended action using the following format *within the file marker comments*:**
 
-**Separate the explanations from the code output using a clear separator, such as "--- EXPLANATIONS ---" or "### EXPLANATIONS ###".**  This separation is important so that the code blocks themselves remain clean and easy to copy and paste directly into files.
+*   **CREATE:**  If the file should be created (it doesn't exist in the original context), use:
+    `//--- START FILE: [file path] (JAVA) - CREATE ---` or `<!----- START FILE: [file path] (XML) - CREATE --- -->`
+    and `//--- END FILE: [file path] - CREATE ---` or `<!----- END FILE: [file path] - CREATE --- -->`
+    and include the complete content of the new file.
 
-The code output should be formatted for easy copy-pasting back into files, without explanations interleaved within it.
+*   **UPDATE:** If the file should be updated (it exists and needs modification), use:
+    `//--- START FILE: [file path] (JAVA) - UPDATE ---` or `<!----- START FILE: [file path] (XML) - UPDATE --- -->`
+    and `//--- END FILE: [file path] - UPDATE ---` or `<!----- END FILE: [file path] - UPDATE --- -->`
+    and include the complete and entire content of the modified file.
+
+*   **REMOVE:** If the file should be removed (deleted), use:
+    `//--- START FILE: [file path] (JAVA) - REMOVE ---` or `<!----- START FILE: [file path] (XML) - REMOVE --- -->`
+    and `//--- END FILE: [file path] - REMOVE ---` or `<!----- END FILE: [file path] - REMOVE --- -->`
+    **Do not include any file content for REMOVE actions.**
+
+*   **UNCHANGED:** If the file should remain unchanged, use:
+    `No changes to: [file path]`
+
+**If you modify or create multiple files, or indicate removals, please include the complete information for *all* files (created, updated, removed, unchanged) in *one single, comprehensive output response**.  Ensure that for CREATE and UPDATE actions, you provide the complete file content. For REMOVE actions, do not include file content.
+
+**If you believe that explanations of your actions would be helpful, please provide them, but ensure that any explanations are placed *after* all file action indications (CREATE, UPDATE, REMOVE, UNCHANGED) and code blocks.**
+
+**Separate the explanations from the file actions and code output using a clear separator, such as "--- EXPLANATIONS ---" or "### EXPLANATIONS ###".**
+
+The code output for CREATE and UPDATE actions should be formatted for easy copy-pasting back into files.
 
 Are you ready to receive the combined file content?
