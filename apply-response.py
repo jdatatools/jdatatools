@@ -2,218 +2,173 @@ import os
 import re
 import logging
 import argparse
+import subprocess
 
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
-JAVA_START_MARKER_RE = re.compile(r'//--- START FILE: (.+) \(JAVA\) - (CREATE|UPDATE|REMOVE) ---') # Capture action
-JAVA_END_MARKER_RE = re.compile(r'//--- END FILE: (.+) - (CREATE|UPDATE|REMOVE) ---')       # Capture action
-XML_START_MARKER_RE = re.compile(r'<!----- START FILE: (.+) \(XML\) - (CREATE|UPDATE|REMOVE) --- -->') # Capture action
-XML_END_MARKER_RE = re.compile(r'<!----- END FILE: (.+) - (CREATE|UPDATE|REMOVE) --- -->')         # Capture action
+JAVA_START_MARKER_RE = re.compile(r'//--- START FILE: (.+) \(JAVA\) - (CREATE|UPDATE|REMOVE) ---')
+JAVA_END_MARKER_RE = re.compile(r'//--- END FILE: (.+) - (CREATE|UPDATE|REMOVE) ---')
+XML_START_MARKER_RE = re.compile(r'<!----- START FILE: (.+) \(XML\) - (CREATE|UPDATE|REMOVE) --- -->')
+XML_END_MARKER_RE = re.compile(r'<!----- END FILE: (.+) - (CREATE|UPDATE|REMOVE) --- -->')
 EXPLANATIONS_SEPARATOR_RE = re.compile(r'### EXPLANATIONS ###')
 NO_CHANGES_RE = re.compile(r'No changes to: (.+)')
 
-def parse_gemini_response(response_text):
-    """
-    Parses Gemini's response to extract file modifications, removals, creations, no-changes, and explanations.
+DEFAULT_MAVEN_HOME = r"F:\\app\\apache-maven-3.9.9"  # Update this to your Maven path
 
-    Returns:
-        tuple: (modifications, removals, creations, no_changes_files, explanations)
-            - modifications (dict): {filepath: content} for updates.
-            - removals (list): List of file paths to remove.
-            - creations (dict): {filepath: content} for new files.
-            - no_changes_files (list): List of file paths with "No changes" indication.
-            - explanations (str, optional): Explanations from Gemini.
-    """
+def parse_gemini_response(response_text):
+    """Parses Gemini's response text to extract file modifications and explanations."""
     modifications = {}
     removals = []
     creations = {}
     explanations = None
     current_file_path = None
-    current_action = None # To track CREATE, UPDATE, REMOVE
+    current_action = None
     file_content_lines = []
     in_explanations_section = False
     no_changes_files = []
 
     for line in response_text.splitlines():
         if in_explanations_section:
-            if explanations is None:
-                explanations = line + "\n"
-            else:
-                explanations += line + "\n"
+            explanations = (explanations or "") + line + "\n"
             continue
 
-        start_match_java = JAVA_START_MARKER_RE.match(line)
-        start_match_xml = XML_START_MARKER_RE.match(line)
-        end_match_java = JAVA_END_MARKER_RE.match(line)
-        end_match_xml = XML_END_MARKER_RE.match(line)
-        explanations_match = EXPLANATIONS_SEPARATOR_RE.match(line)
-        no_changes_match = NO_CHANGES_RE.match(line)
-
-        start_match = start_match_java or start_match_xml
-        end_match = end_match_java or end_match_xml
-
+        start_match = (JAVA_START_MARKER_RE.match(line) or
+                       XML_START_MARKER_RE.match(line))
+        end_match = (JAVA_END_MARKER_RE.match(line) or
+                     XML_END_MARKER_RE.match(line))
 
         if start_match:
-            if current_file_path:
-                logging.warning(f"Unexpected start marker found before end marker for file: {current_file_path}")
-            current_file_path = start_match.group(1)
-            current_action = start_match.group(2) # Extract action (CREATE, UPDATE, REMOVE)
+            current_file_path = os.path.normpath(start_match.group(1))
+            current_action = start_match.group(2)
             file_content_lines = []
-
         elif end_match:
-            if current_file_path:
-                ended_file_path = end_match.group(1)
-                ended_action = end_match.group(2)
+            ended_file_path = os.path.normpath(end_match.group(1))
+            ended_action = end_match.group(2)
 
-                if current_file_path != ended_file_path or current_action != ended_action:
-                    logging.warning(f"Start/End marker mismatch: start='{current_file_path} ({current_action})', end='{ended_file_path} ({ended_action})'")
-
+            if current_file_path == ended_file_path and current_action == ended_action:
                 file_content = "".join(file_content_lines).rstrip("\n")
-
                 if current_action == "UPDATE":
                     modifications[current_file_path] = file_content
                 elif current_action == "CREATE":
                     creations[current_file_path] = file_content
                 elif current_action == "REMOVE":
                     removals.append(current_file_path)
-                    if file_content: # Warn if content is provided for REMOVE (should be empty)
-                        logging.warning(f"Content found for REMOVE action in file: {current_file_path}, content will be ignored.")
-
-                current_file_path = None
-                current_action = None
-                file_content_lines = []
+                    if file_content:
+                        logging.warning(f"Content ignored for REMOVE action in: {current_file_path}")
             else:
-                logging.warning("Unexpected end marker without a start marker.")
+                logging.warning(f"Marker mismatch: Start({current_file_path}/{current_action}) vs End({ended_file_path}/{ended_action})")
 
-
-        elif explanations_match:
+            current_file_path = None
+            current_action = None
+            file_content_lines = []
+        elif EXPLANATIONS_SEPARATOR_RE.match(line):
             in_explanations_section = True
             explanations = ""
-
-        elif no_changes_match:
-            no_changes_file_path = no_changes_match.group(1)
-            no_changes_files.append(no_changes_file_path)
-            logging.info(f"Gemini indicated no changes for file: {no_changes_file_path}")
-
-        elif current_file_path and current_action != "REMOVE": # Only accumulate content for CREATE/UPDATE
+        elif NO_CHANGES_RE.match(line):
+            no_changes_files.append(os.path.normpath(NO_CHANGES_RE.match(line).group(1)))
+        elif current_file_path and current_action != "REMOVE":
             file_content_lines.append(line + "\n")
-
-    if current_file_path:
-        logging.warning(f"File started but not properly ended in response: {current_file_path}. Content discarded.")
 
     return modifications, removals, creations, no_changes_files, explanations
 
-
 def normalize_lines(content):
-    """Normalizes file content (no changes)."""
-    lines = content.splitlines()
-    normalized_lines = [line.strip() for line in lines if line.strip()]
-    return normalized_lines
+    """Normalizes file content for comparison."""
+    return [line.strip() for line in content.splitlines() if line.strip()]
 
+def apply_modifications(modifications, removals, creations, project_dir):
+    """Applies file changes and runs Maven build with proper environment setup."""
+    # Set up Maven paths
+    maven_home = os.environ.get("MAVEN_HOME") or DEFAULT_MAVEN_HOME
+    maven_bin = os.path.join(maven_home, "bin")
+    mvn_cmd = os.path.join(maven_bin, "mvn.cmd" if os.name == "nt" else "mvn")
 
-def apply_modifications(modifications, removals, creations):
-    """
-    Applies modifications, removals, and creations based on Gemini's response.
-    Now creates new files if they don't exist, even for "UPDATE" actions (if original not found).
-    """
-    if modifications:
-        logging.info("Applying file updates and creations...") # Updated log message
-        for filepath, new_content in modifications.items():
-            filepath = filepath.replace("/", "\\") # Normalize path for Windows
-            if os.path.exists(filepath):
-                try:
-                    with open(filepath, "r", encoding="utf-8") as infile:
-                        original_content = infile.read()
+    # Verify Maven installation
+    try:
+        subprocess.run([mvn_cmd, "-v"], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        logging.info("Maven verification successful")
+    except (subprocess.CalledProcessError, FileNotFoundError) as e:
+        logging.error(f"Maven verification failed: {str(e)}")
+        return
 
-                    original_lines_normalized = normalize_lines(original_content)
-                    new_lines_normalized = normalize_lines(new_content)
-
-                    if original_lines_normalized != new_lines_normalized:
-                        logging.info(f"Updating existing file: {filepath} (content changed)")
-                        with open(filepath, "w", encoding="utf-8", errors='replace') as outfile:
-                            outfile.write(new_content)
+    # Apply file operations
+    try:
+        for action_name, items in [
+            ("Updating", modifications.items()),
+            ("Creating", creations.items()),
+            ("Removing", [(f, None) for f in removals])
+        ]:
+            for file_path, content in items:
+                full_path = os.path.join(project_dir, file_path)
+                if action_name == "Removing":
+                    if os.path.exists(full_path):
+                        os.remove(full_path)
+                        logging.info(f"Removed: {file_path}")
                     else:
-                        logging.info(f"Skipping update for existing file: {filepath} (no significant content changes)")
+                        logging.warning(f"File not found for removal: {file_path}")
+                else:
+                    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+                    if action_name == "Updating":
+                        with open(full_path, "r", encoding="utf-8") as f:
+                            existing = normalize_lines(f.read())
+                        if existing == normalize_lines(content):
+                            logging.info(f"No changes needed: {file_path}")
+                            continue
+                    with open(full_path, "w", encoding="utf-8") as f:
+                        f.write(content)
+                    logging.info(f"{action_name[:-3]}ed: {file_path}")
+    except Exception as e:
+        logging.error(f"File operation failed: {str(e)}")
+        return
 
-                except Exception as e:
-                    logging.error(f"Error processing existing file '{filepath}': {e}")
-            else:
-                # File not found for UPDATE, creating it instead
-                try:
-                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-                    with open(filepath, "w", encoding="utf-8", errors='replace') as outfile:
-                        outfile.write(new_content)
-                    logging.info(f"File not found for update, CREATING new file: {filepath}") # Modified log message
-                except Exception as e:
-                    logging.error(f"Error creating file (even though marked for UPDATE) '{filepath}': {e}")
+    # Run Maven build with proper environment
+    try:
+        env = os.environ.copy()
+        env["PATH"] = f"{maven_bin}{os.pathsep}{env['PATH']}"
 
-
-    if creations:
-        logging.info("Creating new files...")
-        for filepath, new_content in creations.items():
-            filepath = filepath.replace("/", "\\") # Normalize path for Windows
-            if not os.path.exists(filepath):
-                try:
-                    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-                    with open(filepath, "w", encoding="utf-8", errors='replace') as outfile:
-                        outfile.write(new_content)
-                    logging.info(f"Created new file: {filepath}")
-                except Exception as e:
-                    logging.error(f"Error creating new file '{filepath}': {e}")
-            else:
-                logging.warning(f"File already exists, skipping creation: {filepath}") # Should not happen in CREATE flow
-
-    if removals:
-        logging.info("Removing files...")
-        for filepath in removals:
-            filepath = filepath.replace("/", "\\") # Normalize path for Windows
-            if os.path.exists(filepath):
-                try:
-                    os.remove(filepath)
-                    logging.info(f"Removed file: {filepath}")
-                except Exception as e:
-                    logging.error(f"Error removing file '{filepath}': {e}")
-            else:
-                logging.warning(f"File to remove not found: {filepath}")
-
+        result = subprocess.run(
+            [mvn_cmd, "clean", "install"],
+            cwd=project_dir,
+            env=env,
+            check=True,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT
+        )
+        logging.info("Maven build succeeded\n" + result.stdout)
+    except subprocess.CalledProcessError as e:
+        error_msg = f"Maven build failed (code {e.returncode}):\n{e.stdout}"
+        logging.error(error_msg)
+        with open(os.path.join(project_dir, "build_error.txt"), "w") as f:
+            f.write(error_msg)
 
 def main():
-    parser = argparse.ArgumentParser(description="Parses Gemini response, applies file modifications, removals, creations, and handles 'No changes'.")
-    parser.add_argument("response_file", help="Path to Gemini response file.")
-    parser.add_argument("--explanations-output", help="Optional file for explanations.")
+    parser = argparse.ArgumentParser(description="Apply code changes and run Maven build")
+    parser.add_argument("response_file", help="Path to Gemini response file")
+    parser.add_argument("project_dir", help="Project root directory")
+    parser.add_argument("--explanations", help="Output file for explanations")
 
     args = parser.parse_args()
 
     try:
-        with open(args.response_file, "r", encoding="utf-8") as infile:
-            gemini_response_text = infile.read()
+        with open(args.response_file, "r", encoding="utf-8") as f:
+            response = f.read()
     except Exception as e:
-        logging.error(f"Error reading response file: '{args.response_file}': {e}")
+        logging.error(f"Failed to read response file: {str(e)}")
         return
 
-    modifications, removals, creations, no_changes_files, explanations = parse_gemini_response(gemini_response_text)
+    changes = parse_gemini_response(response)
+    apply_modifications(*changes[:3], os.path.normpath(args.project_dir))
 
-    apply_modifications(modifications, removals, creations)
+    if changes[3]:
+        logging.info(f"No changes indicated for: {', '.join(changes[3])}")
 
-    if modifications or creations or removals:
-        logging.info("File operations (updates, creations, removals) applied based on Gemini response.")
-    else:
-        logging.info("No file modifications, creations, or removals detected in Gemini response.")
-        if no_changes_files:
-            logging.info(f"No changes indicated for the following files: {', '.join(no_changes_files)}")
-
-    if explanations is not None:
-        if args.explanations_output:
-            try:
-                with open(args.explanations_output, "w", encoding="utf-8") as exp_outfile:
-                    exp_outfile.write(explanations)
-                logging.info(f"Explanations saved to: '{args.explanations_output}'")
-            except Exception as e:
-                logging.error(f"Error saving explanations: '{args.explanations_output}': {e}")
-        else:
-            print("\n--- EXPLANATIONS FROM GEMINI ---")
-            print(explanations)
-
+    if changes[4] and args.explanations:
+        try:
+            with open(args.explanations, "w", encoding="utf-8") as f:
+                f.write(changes[4])
+            logging.info(f"Explanations saved to {args.explanations}")
+        except Exception as e:
+            logging.error(f"Failed to save explanations: {str(e)}")
 
 if __name__ == "__main__":
     main()
