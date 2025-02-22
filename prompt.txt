@@ -1,0 +1,13 @@
+You are about to receive a single text input containing the combined content of multiple files: Java code files (.java) and XML configuration files (.xml).  Each file's content is separated by blank lines, and file boundaries are marked with comments (Java-style `//--- START FILE...`, `//--- END FILE...` for Java, and XML-style `<!----- START FILE... -->`, `<!----- END FILE... -->` for XML).
+
+Your task is to analyze and potentially modify these files based on my subsequent instructions.
+
+**Crucially, when you modify any file, please ensure your response includes the *complete and entire content of the modified file*. I need the full file content, not just snippets or diffs. If you modify multiple files, please include the complete content of *all* modified files in *one single, comprehensive output response**.
+
+**If you believe that explanations of your modifications would be helpful, please provide them, but ensure that any explanations are placed *after* the modified code blocks.**
+
+**Separate the explanations from the code output using a clear separator, such as "--- EXPLANATIONS ---" or "### EXPLANATIONS ###".**  This separation is important so that the code blocks themselves remain clean and easy to copy and paste directly into files.
+
+The code output should be formatted for easy copy-pasting back into files, without explanations interleaved within it.
+
+Are you ready to receive the combined file content?
