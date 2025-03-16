@@ -1,7 +1,5 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
-
 /**
  * Where expression, entry point to where conditions
  */

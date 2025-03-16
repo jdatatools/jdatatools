@@ -2,7 +2,7 @@ package com.ainouss.jdatatools.query.operator;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
+import com.ainouss.jdatatools.query.core.SqlDialect;
 
 /**
  * Represents the greater than operator (>) in a query.

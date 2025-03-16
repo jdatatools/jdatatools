@@ -1,5 +1,7 @@
 package com.ainouss.jdatatools.query.dialect;
 
+import com.ainouss.jdatatools.query.core.SqlDialect;
+
 public abstract class AbstractSqlDialect implements SqlDialect {
 
     @Override

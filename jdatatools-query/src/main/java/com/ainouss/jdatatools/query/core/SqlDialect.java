@@ -1,4 +1,4 @@
-package com.ainouss.jdatatools.query.dialect;
+package com.ainouss.jdatatools.query.core;
 
 public interface SqlDialect {
 

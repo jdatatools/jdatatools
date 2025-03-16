@@ -3,7 +3,7 @@ package com.ainouss.jdatatools.query.subquery;
 
 import com.ainouss.jdatatools.query.core.CriteriaQuery;
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
+import com.ainouss.jdatatools.query.core.SqlDialect;
 
 public class Exists implements Selectable {
 

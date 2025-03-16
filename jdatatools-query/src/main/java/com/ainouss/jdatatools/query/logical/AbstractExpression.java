@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.Expression;
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
+import com.ainouss.jdatatools.query.core.SqlDialect;
 
 import java.util.ArrayList;
 import java.util.Arrays;

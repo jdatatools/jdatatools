@@ -1,6 +1,5 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
 import com.ainouss.jdatatools.query.join.Join;
 import com.ainouss.jdatatools.query.order.Order;
 import com.ainouss.jdatatools.query.order.OrderDirection;

@@ -1,7 +1,5 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
-
 public class Subquery extends Alias implements Source {
 
     private final CriteriaQuery<?> cr;

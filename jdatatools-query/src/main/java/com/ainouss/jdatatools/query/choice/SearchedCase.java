@@ -3,7 +3,7 @@ package com.ainouss.jdatatools.query.choice;
 
 import com.ainouss.jdatatools.query.core.Expression;
 import com.ainouss.jdatatools.query.core.LiteralValue;
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
+import com.ainouss.jdatatools.query.core.SqlDialect;
 
 public class SearchedCase extends Case {
 

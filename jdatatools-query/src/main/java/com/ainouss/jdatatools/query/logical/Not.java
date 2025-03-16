@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.logical;
 
 import com.ainouss.jdatatools.query.core.Expression;
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
+import com.ainouss.jdatatools.query.core.SqlDialect;
 
 /**
  * Represents the logical NOT operator in a query.

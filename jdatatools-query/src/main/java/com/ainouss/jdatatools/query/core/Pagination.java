@@ -1,6 +1,5 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
 import lombok.Data;
 
 @Data

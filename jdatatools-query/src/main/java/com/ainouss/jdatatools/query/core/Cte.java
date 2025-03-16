@@ -1,7 +1,5 @@
 package com.ainouss.jdatatools.query.core;
 
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
-
 public class Cte<T> extends CriteriaQuery<T> implements Source {
 
     private CriteriaQuery<?> cr;

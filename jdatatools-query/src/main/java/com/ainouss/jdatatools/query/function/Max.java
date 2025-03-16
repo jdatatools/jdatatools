@@ -1,7 +1,7 @@
 package com.ainouss.jdatatools.query.function;
 
 import com.ainouss.jdatatools.query.core.Selectable;
-import com.ainouss.jdatatools.query.dialect.SqlDialect;
+import com.ainouss.jdatatools.query.core.SqlDialect;
 
 /**
  * Avg aggregate function

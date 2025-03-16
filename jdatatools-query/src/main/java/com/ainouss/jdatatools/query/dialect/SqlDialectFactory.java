@@ -1,5 +1,7 @@
 package com.ainouss.jdatatools.query.dialect;
 
+import com.ainouss.jdatatools.query.core.SqlDialect;
+
 public class SqlDialectFactory {
 
     public static SqlDialect getDialect(String dialectName) {
