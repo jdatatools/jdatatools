@@ -16,7 +16,7 @@ public class SimpleCase extends Case {
         this.sqlDialect = sqlDialect;
     }
 
-    public SimpleCase() { // For CTE - default constructor
+    public SimpleCase() {
         this(null, null);
     }
     public SimpleCase(SqlDialect sqlDialect) { // For CriteriaBuilder default constructor

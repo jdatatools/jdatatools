@@ -4,24 +4,28 @@ public class OracleDialect extends AbstractSqlDialect {
 
     @Override
     public String getStringConcatenation(String... parts) {
-        return String.join(" || ", parts); // Oracle uses || for concatenation
+        return String.join(" || ", parts);
     }
 
     @Override
     public String escapeIdentifier(String identifier) {
-        return "\"" + identifier + "\""; // Oracle uses double quotes
+        String[] parts = identifier.split("\\.");
+        StringBuilder escaped = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            if (i > 0) escaped.append(".");
+            escaped.append("\"").append(parts[i]).append("\"");
+        }
+        return escaped.toString();
     }
 
     @Override
     public String getLimitOffsetSql(Integer limit, Integer offset) {
         if (limit != null && offset != null) {
-            return "OFFSET " + offset + " ROWS FETCH NEXT " + limit + " ROWS ONLY"; // Oracle 12c+ syntax
+            return "offset " + offset + " rows fetch next " + limit + " rows only";
         } else if (limit != null) {
-            return "FETCH FIRST " + limit + " ROWS ONLY"; // Oracle 12c+ for limit only
+            return "fetch first " + limit + " rows only";
         } else if (offset != null) {
-            // For older versions or when only offset is needed (less common), may require row_number() and subquery
-            // A simpler approach, though less performant for large offsets, is using a subquery with ROWNUM
-            return "WHERE ROWNUM > " + offset; // Be cautious with this for large offsets in Oracle
+            return "offset " + offset + " rows";
         }
         return "";
     }
